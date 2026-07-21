@@ -34,7 +34,7 @@ Use headers with Size | Points | Est (min) | Actual (min) and `—` placeholder 
 # Team velocity
 
 Last synced: <now UTC ISO-8601>
-Window: last 20 done tasks/bugs (or all if fewer)
+Window: rolling 30 days (done tasks/bugs by completed_at)
 
 ## Throughput
 
@@ -43,7 +43,7 @@ Window: last 20 done tasks/bugs (or all if fewer)
 | Done items in window | 0 |
 | Sum points | 0 |
 | Median points | — |
-| Median actual_minutes | — |
+| Median effort_minutes | — |
 | Median minutes per point | insufficient data |
 | Points per week (approx) | insufficient data |
 
@@ -58,7 +58,7 @@ Window: last 20 done tasks/bugs (or all if fewer)
 
 ## Notes
 
-- Actuals use billable work-log minutes only (idle auto-cap + session cap).
+- Speed uses **effort_minutes** (session billable) over 30 days; `actual_minutes` is wall-clock lead time.
 ```
 
 ## Seed SIZING.md

@@ -19,7 +19,7 @@ Parent story exists. Read [templates](../taskmark-conventions/references/templat
 3. Allocate next `T-NNN` or `B-NNN`.
 4. Create item file from template (Prompt & feedback, Commits, Work log).
 5. Set `parent` / `epic`.
-6. **Calibrate** per sizing ref: `size`, `points`, `estimate_minutes`, sources/basis; `actual_minutes: 0`, `session_cap_minutes: 480`.
+6. **Calibrate** per sizing ref: prefer 30-day velocity × points for `estimate_minutes` (else seeds); set `estimate_source` / `estimate_basis`; `effort_minutes: 0`, `actual_minutes: 0`, `session_cap_minutes: 480`.
 7. Link from story Tasks; refresh INDEX; roll up story/epic; refresh VELOCITY if useful.
 8. Run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 9. Reply with id, path, size, points, estimate_minutes, basis.

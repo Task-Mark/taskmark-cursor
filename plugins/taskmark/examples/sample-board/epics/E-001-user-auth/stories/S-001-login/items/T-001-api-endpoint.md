@@ -10,6 +10,7 @@ size_basis: []
 points: 3
 points_source: suggested
 estimate_minutes: 480
+effort_minutes: 285
 actual_minutes: 285
 estimate_basis: []
 session_cap_minutes: 480

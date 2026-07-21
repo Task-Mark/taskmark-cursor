@@ -44,6 +44,6 @@ Board root: `taskmark/` inside a single product repo, or the root of a dedicated
 - Tasks and bugs live under the story’s `items/`
 - Do not hand-set `status` except via `blocked` / `cancelled` latches; run sync-status after changes
 - Work log + Commits on every item; Prompt & feedback on stories, tasks, and bugs
-- Track `size` + `points` + `estimate_minutes` + `actual_minutes` (billable sessions only — never calendar span)
+- Track `size` + `points` + `estimate_minutes` + `effort_minutes` (billable sessions) + `actual_minutes` (wall-clock start→complete)
 - Idle: auto-close open sessions at next-day 12:00 UTC; session_cap_minutes default 480
 - Multi-root: sibling `<common>-taskmark` git repo **is** the board root (no nested `taskmark/`); never copy into product repos

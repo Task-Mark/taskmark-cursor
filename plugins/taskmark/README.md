@@ -16,9 +16,11 @@ examples/sample-board/            # docs fixture (also under the plugin)
 
 - Convention-enforced board files (frontmatter, IDs, folders)
 - **T-shirt sizing** + **Fibonacci story points** with calibrated suggestions
-- **Estimate vs actual minutes** from work-log sessions (never calendar span)
+- **Effort minutes** from work-log sessions (never calendar span for effort)
+- **Actual minutes** as wall-clock `started_at` → `completed_at`
 - **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
-- **VELOCITY.md** — team median minutes/point and delivery ETA
+- **VELOCITY.md** — rolling 30-day median min/point (effort) and delivery ETA
+- Start/end cascade for task → story → epic timestamps
 - Work log, commits log, prompt/feedback logs
 - Single- or multi-git board location (`<common>-taskmark` sibling) + commit-all
 - Derived status; project-memory rule; stop hook for open/idle sessions

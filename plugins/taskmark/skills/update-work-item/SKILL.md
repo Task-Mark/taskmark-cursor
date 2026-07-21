@@ -27,7 +27,7 @@ description: >-
 ## Do not
 
 - Hand-set `status` directly (use latches + sync)
-- Set `actual_minutes` from calendar span — recompute from work-log via sync
+- Set `effort_minutes` or `actual_minutes` by hand — always recompute via sync
 - Delete work-log or prompt/feedback history rows
 
 ## Steps

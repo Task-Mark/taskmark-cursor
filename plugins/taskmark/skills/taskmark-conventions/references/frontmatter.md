@@ -14,9 +14,10 @@ size_source: suggested   # suggested | manual
 size_basis: [T-014, T-022]
 points: 3           # 1 | 2 | 3 | 5 | 8 | 13
 points_source: suggested # suggested | manual
-estimate_minutes: 480    # planned effort
-actual_minutes: 0        # sum of billable session minutes; sync updates
-estimate_basis: [T-014]  # prior items for estimate / points suggestion
+estimate_minutes: 480    # Est: velocity × points or seed
+actual_minutes: 0        # Actual: billable start-work→complete-work sessions
+estimate_source: suggested  # suggested | manual
+estimate_basis: [T-014]  # prior items or [velocity:30d:Nmin/pt]
 session_cap_minutes: 480 # max billable minutes per session (default 480)
 parent: S-001
 epic: E-001
@@ -37,12 +38,13 @@ completed_at: null
 |-------|--------|
 | `status` | Derived by sync-status. Do not edit directly. |
 | `blocked` / `cancelled` | Manual latches that force status |
-| `size` / `points` | T-shirt and Fibonacci points together; default map XS→1 … XL→8 |
-| `estimate_minutes` | Planned effort; suggested on create |
-| `actual_minutes` | Sum of **billable** work-log session minutes only — never `completed_at − started_at` |
-| `session_cap_minutes` | Cap per session (default 480). See [effort-time](effort-time.md) |
-| `started_at` | Set once on first work-session start (ISO-8601 UTC) |
-| `completed_at` | Set when status becomes `done` |
+| `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points. |
+| `estimate_minutes` | **Est** — planned time from 30-day velocity × points or seeds |
+| `estimate_source` | `suggested` (may refresh on calibrate) or `manual` (never overwrite) |
+| `actual_minutes` | **Actual** — billable work-log sessions from start-work / complete-work |
+| `session_cap_minutes` | Cap per session for Actual (default 480). See [effort-time](effort-time.md) |
+| `started_at` | Set on start (leaf + parent cascade). ISO-8601 UTC |
+| `completed_at` | Set when status becomes `done` (leaf + parent end cascade) |
 | `updated` | Bump on every meaningful edit |
 
 Epic: `parent: null`, `epic: null`.  

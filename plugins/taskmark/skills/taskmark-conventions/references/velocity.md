@@ -1,14 +1,14 @@
 # Velocity board file
 
-Path: `taskmark/VELOCITY.md`
+Path: board root `VELOCITY.md`.
 
-Refreshed by `sync-status`, `complete-work`, and `taskmark-velocity`. Use **actual_minutes** (idle-capped), never calendar span.
+Refreshed by `sync-status`, `complete-work`, and `taskmark-velocity`. Speed uses **actual_minutes** (start-work → complete-work sessions) over a rolling **30-day** window.
 
 ```markdown
 # Team velocity
 
 Last synced: YYYY-MM-DDTHH:MM:SSZ
-Window: last 20 done tasks/bugs (or all if fewer)
+Window: rolling 30 days (done tasks/bugs by completed_at)
 
 ## Throughput
 
@@ -32,13 +32,13 @@ Window: last 20 done tasks/bugs (or all if fewer)
 
 ## Notes
 
-- Actuals exclude idle via next-day 12:00 UTC auto-cap and session_cap_minutes.
-- ETA = remaining estimate_minutes / recent throughput when enough data exists.
+- Speed uses **actual_minutes** (start-work → complete-work sessions) over 30 days.
+- Est = points × median min/point when ≥3 trustworthy samples exist.
 ```
 
 ## Rules
 
-1. Only **done** tasks/bugs with `points > 0` and `actual_minutes > 0` feed minutes-per-point.
-2. Median minutes/point = median of `(actual_minutes / points)` per item in the window.
-3. Remaining = non-done, non-cancelled items (tasks/bugs; optionally include stories without children).
-4. If fewer than 3 done items with ratios, mark velocity/ETA as **insufficient data**.
+1. Window = done tasks/bugs with `completed_at` in the last **30 days**.
+2. Trustworthy sample: `actual_minutes > 2` and `points > 0`.
+3. Median minutes/point = median of `(actual_minutes / points)`. Require **≥3** samples.
+4. Create/suggest estimates prefer this median × points; else SIZING seeds.

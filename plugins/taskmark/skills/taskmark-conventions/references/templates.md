@@ -12,6 +12,7 @@ points: 3
 points_source: suggested
 estimate_minutes: 480
 actual_minutes: 0
+estimate_source: suggested
 estimate_basis: []
 session_cap_minutes: 480
 ```
@@ -25,14 +26,15 @@ type: epic
 title: Title here
 status: backlog
 priority: medium
-size: M
-size_source: suggested
-size_basis: []
-points: 3
-points_source: suggested
-estimate_minutes: 480
+size: null
+size_source: rolled_up
+size_basis: [sum:stories]
+points: 0
+points_source: rolled_up
+estimate_minutes: 0
 actual_minutes: 0
-estimate_basis: []
+estimate_source: rolled_up
+estimate_basis: [sum:stories]
 session_cap_minutes: 480
 parent: null
 epic: null
@@ -85,6 +87,7 @@ points: 3
 points_source: suggested
 estimate_minutes: 480
 actual_minutes: 0
+estimate_source: suggested
 estimate_basis: []
 session_cap_minutes: 480
 parent: E-NNN
@@ -143,6 +146,7 @@ points: 3
 points_source: suggested
 estimate_minutes: 480
 actual_minutes: 0
+estimate_source: suggested
 estimate_basis: []
 session_cap_minutes: 480
 parent: S-NNN

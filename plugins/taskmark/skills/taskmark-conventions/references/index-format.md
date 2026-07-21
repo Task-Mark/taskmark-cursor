@@ -13,7 +13,7 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 | ID | Title | Status | Size | Points | Est (min) | Actual (min) | Path |
 |----|-------|--------|------|--------|-----------|--------------|------|
-| E-001 | User authentication | in_progress | M | 5 | 960 | 225 | [epic.md](epics/E-001-user-auth/epic.md) |
+| E-001 | User authentication | in_progress | — | 13 | 960 | 225 | [epic.md](epics/E-001-user-auth/epic.md) |
 
 ## Stories
 
@@ -36,9 +36,11 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 ## Rules
 
-- Paths are relative to `taskmark/`
+- Paths are relative to the board root
 - Include all epics, stories, tasks, and bugs
+- Epic **Size** is always `—` (epics have no t-shirt size); epic **Points** = sum of story points
+- Story **Points** = sum of task/bug points when the story has children
 - Open work sessions lists every item with an open Work log row (after idle auto-close, stale sessions should be gone)
 - Sort by id ascending within each table
 - Prefer one `—` placeholder row when a section is empty
-- Also refresh `taskmark/VELOCITY.md` when syncing
+- Also refresh `VELOCITY.md` when syncing
