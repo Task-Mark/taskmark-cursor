@@ -1,0 +1,22 @@
+{
+  "name": "taskmark",
+  "version": "0.1.0",
+  "description": "Hierarchical epic, story, and task markdown planning for Cursor — with calibrated t-shirt sizing, work-session logs, prompt/feedback trails, and derived status.",
+  "author": {
+    "name": "menda0"
+  },
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "agile",
+    "markdown",
+    "epics",
+    "stories",
+    "tasks",
+    "sizing",
+    "commits",
+    "multi-repo",
+    "product-management"
+  ],
+  "logo": "assets/logo.svg"
+}

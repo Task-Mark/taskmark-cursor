@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Taskmark">
+  <rect width="128" height="128" rx="24" fill="#1a2332"/>
+  <path d="M28 36h72v12H28V36zm0 22h48v12H28V58zm0 22h56v12H28V80z" fill="#7eb8da"/>
+  <circle cx="96" cy="88" r="18" fill="#3d8b6e"/>
+  <path d="M88 88l5 5 11-12" fill="none" stroke="#e8f0ea" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

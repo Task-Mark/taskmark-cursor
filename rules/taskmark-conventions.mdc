@@ -1,0 +1,19 @@
+---
+description: Enforce Taskmark markdown conventions when editing board files under taskmark/
+globs: taskmark/**/*.md
+alwaysApply: false
+---
+
+# Taskmark file conventions
+
+When creating or editing files under `taskmark/`:
+
+- Keep required YAML frontmatter fields (`id`, `type`, `title`, `status`, `priority`, `size`, `size_source`, `size_basis`, `parent`, `epic`, `owner`, `blocked`, `cancelled`, `tags`, `created`, `updated`, `started_at`, `completed_at`).
+- Do **not** hand-set `status` except by toggling `blocked` / `cancelled` latches; after AC, work-log, or child changes, derive status and refresh `INDEX.md` (follow `sync-status`).
+- **Work log** table required on every epic/story/task/bug (Session, Actor, Started, Ended, Summary). Open sessions use `—` for Ended.
+- **Commits** table required on every epic/story/task/bug (`SHA | Repo | Date | Message`). Append when commits land; include repo short name in multi-repo workspaces.
+- **Prompt & feedback log** required on stories, tasks, and bugs (Kind is only `prompt` or `feedback`; faithful summaries, append-only).
+- IDs: `E-NNN` / `S-NNN` / `T-NNN` / `B-NNN`; paths match folder-layout conventions.
+- Multi-root: keep `taskmark/REPOS.md` current; after board edits sync copies into every linked git root.
+- Bump `updated` on every meaningful edit.
+- Follow templates and references in the `taskmark-conventions` skill.
