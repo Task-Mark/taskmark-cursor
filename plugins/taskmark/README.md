@@ -20,7 +20,7 @@ examples/sample-board/            # docs fixture (also under the plugin)
 - **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
 - **VELOCITY.md** — team median minutes/point and delivery ETA
 - Work log, commits log, prompt/feedback logs
-- Multi-repo board copies + commit-all
+- Single- or multi-git board location (`<common>-taskmark` sibling) + commit-all
 - Derived status; project-memory rule; stop hook for open/idle sessions
 
 ## Install
@@ -74,7 +74,7 @@ See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish th
 | `/sync-plugin-local` | `sync-plugin-local` | Rsync plugin → `~/.cursor/plugins/local` |
 | `/board-status` | `taskmark-overview` | Board summary |
 | `/log-commits` | `log-commits` | Record commits |
-| `/sync-repos` | `sync-taskmark-repos` | Copy board to all git roots |
+| `/sync-repos` | `sync-taskmark-repos` | Ensure board location + REPOS.md |
 | `/commit-all` | `commit-all` | Commit every dirty repo |
 
 ## Board layout

@@ -1,26 +1,28 @@
 ---
 name: taskmark-init
 description: >-
-  Initialize a Taskmark board by creating taskmark/README.md, INDEX.md, SIZING.md,
-  VELOCITY.md, REPOS.md, and an empty epics/ folder. Use when setting up Taskmark
-  or when create skills find no taskmark/ root. In multi-root workspaces, follow
-  with sync-taskmark-repos.
+  Initialize a Taskmark board (INDEX, SIZING, VELOCITY, REPOS, epics). Single-git:
+  under <project>/taskmark/. Multi-git: at sibling <common>-taskmark repo root
+  (flat). Use when setting up Taskmark or when create skills find no board.
 ---
 
 # taskmark-init
 
 ## Steps
 
-1. If `taskmark/` already exists with `INDEX.md`, tell the user it is initialized and stop (unless they ask to repair missing files).
-2. Create:
-   - `taskmark/README.md`
-   - `taskmark/INDEX.md` — [index-format](../taskmark-conventions/references/index-format.md) (include Points / Est / Actual columns)
-   - `taskmark/SIZING.md` — [sizing](../taskmark-conventions/references/sizing.md)
-   - `taskmark/VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) empty template
-   - `taskmark/REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
-   - `taskmark/epics/` (optional `.gitkeep`)
-3. If multiple git roots, run `sync-taskmark-repos`.
-4. Confirm paths; point to `/new-epic`.
+1. Discover git roots. Decide mode per [multi-repo](../taskmark-conventions/references/multi-repo.md):
+   - **One product git root:** target = that root’s `taskmark/`.
+   - **Multiple product git roots:** ensure sibling `<common>-taskmark` (ask user if name ambiguous; `git init` if new), target = **that repo’s root** (board files at root — no nested `taskmark/`).
+2. If target already has `INDEX.md`, tell the user it is initialized and stop (unless they ask to repair missing files).
+3. Create under the target:
+   - `README.md`
+   - `INDEX.md` — [index-format](../taskmark-conventions/references/index-format.md)
+   - `SIZING.md` — [sizing](../taskmark-conventions/references/sizing.md)
+   - `VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) empty template
+   - `REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
+   - `epics/` (optional `.gitkeep`)
+4. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
+5. Confirm paths; point to `/new-epic`.
 
 ## Seed INDEX.md
 

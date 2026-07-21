@@ -1,45 +1,49 @@
 ---
 name: sync-taskmark-repos
 description: >-
-  Discover git roots in a multi-folder workspace and copy the Taskmark board
-  (taskmark/) into every git project so each repo has the same epics, stories,
-  tasks, commits, and logs. Use at session start for multi-root work, after board
-  edits, or when the user asks to sync Taskmark across repositories.
+  Ensure the Taskmark board is in the correct location for the workspace mode:
+  <project>/taskmark for single-git, or sibling <common>-taskmark repo root
+  (flat — no nested taskmark/) for multi-git. Refresh REPOS.md. Never copy the
+  board into every product repo. Use at session start, after board layout
+  changes, or when the user asks to sync Taskmark repos.
 ---
 
 # sync-taskmark-repos
 
 ## When
 
-- Multi-root / multi-folder Cursor workspace with more than one git repository
-- After create / start-work / complete-work / log-commits / sync-status
-- User asks to copy or sync Taskmark into all projects
+- Multi-root / multi-folder Cursor workspace
+- After init or migration of board layout
+- User asks to sync Taskmark repos / ensure board location
 
 ## Prerequisites
 
 - Read [multi-repo](../taskmark-conventions/references/multi-repo.md).
-- Prefer the helper script: `scripts/sync-taskmark-repos.sh` (from the plugin), or perform equivalent copy steps.
+- Prefer `scripts/sync-taskmark-repos.sh` from the plugin package.
 
 ## Steps
 
-1. **Discover git roots** under all workspace folders (directories that contain `.git`). Include nested project folders the user is developing.
-2. **Find canonical board**:
-   - Prefer path named Canonical in an existing `taskmark/REPOS.md`
-   - Else the `taskmark/` with the most epic folders / newest INDEX “Last synced”
-   - Else run `taskmark-init` in the primary root first
-3. **Write/update `REPOS.md`** on the canonical board listing every git root (Name, Path, Git, Last synced).
-4. **Copy** the entire canonical `taskmark/` directory into each other git root (replace destination `taskmark/` with an identical tree). Do not copy unrelated project files.
-5. Verify each root has `taskmark/INDEX.md` and matching epic ids.
-6. Report which repos were updated and which was canonical.
+1. **Discover git roots** under workspace folders.
+2. **Classify** product roots vs dedicated `*-taskmark` board roots.
+3. **Single product root:** board at `<project>/taskmark/`; refresh `REPOS.md`. Do **not** create a sibling `-taskmark` project.
+4. **Multiple product roots:**
+   - Derive `<common_project_name>` (shared parent basename, else shared prefix). If ambiguous, **ask the user** (or re-run with `--name`).
+   - Ensure sibling `<common>-taskmark` exists; `git init` if needed.
+   - Board files live at **`<common>-taskmark/` root** (`INDEX.md`, `epics/`, …) — **not** under `<common>-taskmark/taskmark/`.
+   - Flatten any legacy nested `taskmark/` folder inside the dedicated repo.
+   - Write `REPOS.md` at the board repo root listing the board + product roots.
+   - Do **not** copy the board into product repos.
+5. **`--migrate`:** promote richest existing board into the dedicated project (flat), then delete leftover `taskmark/` directories from product repos.
+6. Report mode, canonical path, and common name.
 
-## Conflict policy
+## Ambiguous name
 
-If a non-canonical copy has newer item `updated` timestamps than canonical, warn the user and either:
-- promote that copy to canonical for this sync, or
-- merge manually before overwriting
+Script exits `2` when the common name cannot be derived. Ask the user for the common project name, then:
 
-Default when timestamps are equal or destination is older: overwrite destination from canonical.
+```bash
+scripts/sync-taskmark-repos.sh --name <common> --migrate [workspace…]
+```
 
 ## Single-repo
 
-Still ensure `taskmark/REPOS.md` exists with one row; no copy needed.
+Refresh `REPOS.md` under `<project>/taskmark/` only.

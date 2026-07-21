@@ -13,7 +13,7 @@ description: >-
 
 # Taskmark conventions
 
-Board root: `taskmark/` at the project root.
+Board root: `taskmark/` inside a single product repo, or the root of a dedicated `<common>-taskmark` git repo in multi-git workspaces (see [folder-layout](references/folder-layout.md), [multi-repo](references/multi-repo.md)).
 
 ## Before writing any board file
 
@@ -46,4 +46,4 @@ Board root: `taskmark/` at the project root.
 - Work log + Commits on every item; Prompt & feedback on stories, tasks, and bugs
 - Track `size` + `points` + `estimate_minutes` + `actual_minutes` (billable sessions only — never calendar span)
 - Idle: auto-close open sessions at next-day 12:00 UTC; session_cap_minutes default 480
-- Multi-root: every git project gets a full `taskmark/` copy (`sync-taskmark-repos`)
+- Multi-root: sibling `<common>-taskmark` git repo **is** the board root (no nested `taskmark/`); never copy into product repos

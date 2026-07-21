@@ -29,7 +29,7 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
 ## Steps
 
 1. Resolve git roots: `taskmark/REPOS.md` if present, else discover under workspace folders.
-2. Optionally run `sync-taskmark-repos` first if the board was edited and copies may be stale.
+2. Optionally run `sync-taskmark-repos` first if `REPOS.md` or board location may be stale.
 3. For each root, run `git status --porcelain`. Skip clean repos (report “skipped — clean”).
 4. **Generate message** for that repo:
    - If the user gave one message for all repos, use it everywhere.
@@ -47,7 +47,7 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
 
    Prefer the helper: `scripts/commit-all-repos.sh --message "…" [workspace…]` when committing many roots with one shared message; for per-repo messages, commit each root separately following the same one-liner rule.
 6. Never commit secrets (`.env`, credentials). Warn and skip those files if present.
-7. After commits succeed, run `log-commits` on the active Taskmark item(s) when known; then `sync-taskmark-repos` if board files were part of the commit set.
+7. After commits succeed, run `log-commits` on the active Taskmark item(s) when known; refresh `REPOS.md` via `sync-taskmark-repos` if needed (board lives only in the canonical project).
 8. Reply with a table: Repo | SHA | Message | or “skipped”.
 
 ## Safety

@@ -31,5 +31,5 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
    `python3 scripts/recompute-actuals.py <project>/taskmark --calibrate`
    (or `scripts/recompute-actuals.sh`). This closes commit-span undercounts, writes leaf `actual_minutes`, rolls up parents, refreshes INDEX/VELOCITY, and calibrates estimates/SIZING when `|actual/estimate|` is outside `[0.5, 2]`.
 9. Confirm `completed_at` when status is `done` after sync.
-10. Propagate with `sync-taskmark-repos` if multi-repo.
+10. Refresh `REPOS.md` with `sync-taskmark-repos` if multi-repo (does not copy board into product repos).
 11. Reply with closed session, billable minutes added, status, and rollups.

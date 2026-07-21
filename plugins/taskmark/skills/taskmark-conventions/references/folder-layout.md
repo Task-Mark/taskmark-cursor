@@ -1,29 +1,52 @@
 # Folder layout
 
+## Single-project board
+
+Board under the product repo:
+
 ```text
-taskmark/
+my-app/
+└── taskmark/
+    ├── README.md
+    ├── INDEX.md
+    ├── SIZING.md
+    ├── VELOCITY.md
+    ├── REPOS.md
+    └── epics/
+        └── E-001-user-auth/
+            ├── epic.md
+            └── stories/
+                └── S-001-login/
+                    ├── story.md
+                    └── items/
+                        ├── T-001-api-endpoint.md
+                        └── B-001-token-refresh.md
+```
+
+## Multi-project board
+
+Dedicated sibling git repo — **repo root is the board** (no nested `taskmark/`):
+
+```text
+acme-taskmark/
 ├── README.md
 ├── INDEX.md
 ├── SIZING.md
-├── VELOCITY.md               # team speed / ETA (from actual_minutes)
-├── REPOS.md                  # linked git roots (multi-repo)
-└── epics/
-    └── E-001-user-auth/
-        ├── epic.md
-        └── stories/
-            └── S-001-login/
-                ├── story.md
-                └── items/
-                    ├── T-001-api-endpoint.md
-                    └── B-001-token-refresh.md
+├── VELOCITY.md
+├── REPOS.md
+├── epics/
+│   └── …
+└── .git/
 ```
 
-## Rules
+## Path patterns
+
+Paths below are relative to the **board root** (`taskmark/` in single mode, or the `*-taskmark` repo root in multi mode).
 
 | Artifact | Path pattern |
 |----------|----------------|
-| Epic | `taskmark/epics/{E-NNN}-{slug}/epic.md` |
-| Story | `.../stories/{S-NNN}-{slug}/story.md` |
+| Epic | `epics/{E-NNN}-{slug}/epic.md` |
+| Story | `epics/.../stories/{S-NNN}-{slug}/story.md` |
 | Task | `.../items/T-NNN-{slug}.md` |
 | Bug | `.../items/B-NNN-{slug}.md` |
 

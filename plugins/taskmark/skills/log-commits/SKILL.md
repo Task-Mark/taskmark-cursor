@@ -28,5 +28,5 @@ description: >-
 4. Append new rows `| SHA | Repo | Date (UTC) | Message |` — skip SHAs already listed for that repo on this item.
 5. Optionally append the same notable SHAs to parent story and/or epic Commits tables.
 6. Bump `updated` on edited files.
-7. If multiple linked roots exist, run `sync-taskmark-repos` so every copy gets the commit rows.
+7. Board commit rows live only on the canonical board; do not copy the board into product repos.
 8. Reply with the list of commits added.

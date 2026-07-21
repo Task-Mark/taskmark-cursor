@@ -16,7 +16,7 @@ description: >-
 1. Gather title + goal (and optional scope fields).
 2. Allocate next `E-NNN`; create `epic.md` from template.
 3. Suggest `size`, `points`, `estimate_minutes`; `actual_minutes: 0`, `session_cap_minutes: 480`.
-4. Empty Commits + Work log headers; refresh INDEX; multi-repo sync if needed.
+4. Empty Commits + Work log headers; refresh INDEX; run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 5. Reply with id, path, size, points, estimate.
 
 Do not create stories unless asked. Status on create = `backlog`.

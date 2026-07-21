@@ -21,5 +21,5 @@ Parent story exists. Read [templates](../taskmark-conventions/references/templat
 5. Set `parent` / `epic`.
 6. **Calibrate** per sizing ref: `size`, `points`, `estimate_minutes`, sources/basis; `actual_minutes: 0`, `session_cap_minutes: 480`.
 7. Link from story Tasks; refresh INDEX; roll up story/epic; refresh VELOCITY if useful.
-8. Multi-repo sync if linked.
+8. Run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 9. Reply with id, path, size, points, estimate_minutes, basis.

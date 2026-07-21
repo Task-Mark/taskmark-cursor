@@ -18,5 +18,5 @@ Parent epic exists. Read [templates](../taskmark-conventions/references/template
 2. Gather title, user story, AC, priority, tags.
 3. Allocate next `S-NNN`; create `story.md` from template.
 4. Suggest `size`, `points`, `estimate_minutes` from history; set `actual_minutes: 0`, `session_cap_minutes: 480`.
-5. Link from epic; refresh INDEX; roll up epic; multi-repo sync if needed.
+5. Link from epic; refresh INDEX; roll up epic; run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 6. Reply with id, path, size, points, estimate.

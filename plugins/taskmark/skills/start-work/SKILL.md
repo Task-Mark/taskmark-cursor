@@ -27,5 +27,5 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 5. Append next Work log session: Actor `agent` or `user`, Started=now UTC, Ended=`—`, Summary “In progress: …”.
 6. Set `started_at` if null; bump `updated`.
 7. Sync status for item + ancestors (`sync-status` / recompute script); refresh INDEX.
-8. Multi-repo: `sync-taskmark-repos` if needed.
+8. Multi-repo: `sync-taskmark-repos` if `REPOS.md` / board location needs refresh.
 9. Confirm id, session number, status, and any idle auto-close.
