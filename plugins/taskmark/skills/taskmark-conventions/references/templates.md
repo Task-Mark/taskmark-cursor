@@ -2,6 +2,20 @@
 
 Copy these structures when creating files. Fill real content; keep section headings exact.
 
+Shared frontmatter fields to include on every item (adjust id/type/parent/epic):
+
+```yaml
+size: M
+size_source: suggested
+size_basis: []
+points: 3
+points_source: suggested
+estimate_minutes: 480
+actual_minutes: 0
+estimate_basis: []
+session_cap_minutes: 480
+```
+
 ## Epic (`epic.md`)
 
 ```markdown
@@ -14,6 +28,12 @@ priority: medium
 size: M
 size_source: suggested
 size_basis: []
+points: 3
+points_source: suggested
+estimate_minutes: 480
+actual_minutes: 0
+estimate_basis: []
+session_cap_minutes: 480
 parent: null
 epic: null
 owner: ""
@@ -61,6 +81,12 @@ priority: medium
 size: M
 size_source: suggested
 size_basis: []
+points: 3
+points_source: suggested
+estimate_minutes: 480
+actual_minutes: 0
+estimate_basis: []
+session_cap_minutes: 480
 parent: E-NNN
 epic: E-NNN
 owner: ""
@@ -113,6 +139,12 @@ priority: medium
 size: M
 size_source: suggested
 size_basis: []
+points: 3
+points_source: suggested
+estimate_minutes: 480
+actual_minutes: 0
+estimate_basis: []
+session_cap_minutes: 480
 parent: S-NNN
 epic: E-NNN
 owner: ""
@@ -153,20 +185,4 @@ completed_at: null
 
 ## Bug
 
-Same as task, but `type: bug`, id `B-NNN`, and replace Description/Acceptance with:
-
-```markdown
-## Description
-
-## Repro steps
-
-1. …
-
-## Fix criteria
-
-- [ ] Criterion
-
-## Notes
-```
-
-Keep **Prompt & feedback**, **Commits**, and **Work log** sections on bugs as on tasks.
+Same as task, but `type: bug`, id `B-NNN`, and replace Description/Acceptance with Description / Repro steps / Fix criteria. Keep Prompt & feedback, Commits, and Work log.

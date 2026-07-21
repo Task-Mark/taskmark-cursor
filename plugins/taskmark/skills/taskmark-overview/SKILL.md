@@ -1,20 +1,19 @@
 ---
 name: taskmark-overview
 description: >-
-  Summarize the Taskmark board from INDEX.md and item frontmatter — by status,
-  size, epic, and open work sessions. Use when the user asks what is on the board,
-  board status, progress, or an overview of epics, stories, and tasks.
+  Summarize the Taskmark board by status, size, points, estimate vs actual, and
+  open sessions. Use when the user asks for board status or progress overview.
 ---
 
 # taskmark-overview
 
 ## Steps
 
-1. Read `taskmark/INDEX.md` if present; otherwise offer `taskmark-init`.
-2. Optionally spot-check open session rows and `in_progress` items’ Work logs for accuracy.
-3. Present a concise overview:
-   - Counts by status (backlog / in_progress / blocked / done / cancelled)
-   - Epics with status and size
-   - Open work sessions (item, actor, started)
-   - Blocked or cancelled items called out
-4. Do not modify files unless the user also asks to sync; if INDEX looks stale vs files, suggest `/sync-status`.
+1. Read `taskmark/INDEX.md` and optionally `VELOCITY.md`.
+2. Present:
+   - Counts by status
+   - Epics/stories with size, points, est vs actual
+   - Open work sessions
+   - Short velocity snapshot (median min/point, remaining points) or “insufficient data”
+   - Blocked/cancelled callouts
+3. If INDEX looks stale, suggest `/sync-status`. Do not modify files unless asked to sync.

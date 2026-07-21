@@ -1,65 +1,64 @@
 ---
 name: taskmark-init
 description: >-
-  Initialize a Taskmark board in the current project by creating taskmark/README.md,
-  INDEX.md, SIZING.md, REPOS.md, and an empty epics/ folder. Use when the user asks
-  to set up Taskmark, start a planning board, or when create skills find no
-  taskmark/ root. In multi-root workspaces, follow with sync-taskmark-repos.
+  Initialize a Taskmark board by creating taskmark/README.md, INDEX.md, SIZING.md,
+  VELOCITY.md, REPOS.md, and an empty epics/ folder. Use when setting up Taskmark
+  or when create skills find no taskmark/ root. In multi-root workspaces, follow
+  with sync-taskmark-repos.
 ---
 
 # taskmark-init
-
-## When
-
-- User asks to set up Taskmark / a planning board
-- Another Taskmark skill needs `taskmark/` and it is missing
 
 ## Steps
 
 1. If `taskmark/` already exists with `INDEX.md`, tell the user it is initialized and stop (unless they ask to repair missing files).
 2. Create:
-   - `taskmark/README.md` — short explanation that this folder is the product board
-   - `taskmark/INDEX.md` — empty board index per [index-format](../taskmark-conventions/references/index-format.md)
-   - `taskmark/SIZING.md` — t-shirt scale + empty calibration log per [sizing](../taskmark-conventions/references/sizing.md)
-   - `taskmark/REPOS.md` — linked git roots per [multi-repo](../taskmark-conventions/references/multi-repo.md) (at least the current repo)
-   - `taskmark/epics/` — empty directory (add `.gitkeep` if the VCS needs a file)
-3. If the workspace has multiple git roots, immediately follow `sync-taskmark-repos` so every git project gets a copy.
-4. Do not create sample epics unless the user asks.
-5. Confirm paths created and point the user to `/new-epic` or `create-epic`.
+   - `taskmark/README.md`
+   - `taskmark/INDEX.md` — [index-format](../taskmark-conventions/references/index-format.md) (include Points / Est / Actual columns)
+   - `taskmark/SIZING.md` — [sizing](../taskmark-conventions/references/sizing.md)
+   - `taskmark/VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) empty template
+   - `taskmark/REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
+   - `taskmark/epics/` (optional `.gitkeep`)
+3. If multiple git roots, run `sync-taskmark-repos`.
+4. Confirm paths; point to `/new-epic`.
 
 ## Seed INDEX.md
 
+Use headers with Size | Points | Est (min) | Actual (min) and `—` placeholder rows per [index-format](../taskmark-conventions/references/index-format.md).
+
+## Seed VELOCITY.md
+
 ```markdown
-# Board index
+# Team velocity
 
 Last synced: <now UTC ISO-8601>
+Window: last 20 done tasks/bugs (or all if fewer)
 
-## Epics
+## Throughput
 
-| ID | Title | Status | Size | Path |
-|----|-------|--------|------|------|
-| — | — | — | — | — |
+| Metric | Value |
+|--------|-------|
+| Done items in window | 0 |
+| Sum points | 0 |
+| Median points | — |
+| Median actual_minutes | — |
+| Median minutes per point | insufficient data |
+| Points per week (approx) | insufficient data |
 
-## Stories
+## Remaining backlog
 
-| ID | Title | Epic | Status | Size | Path |
-|----|-------|------|--------|------|------|
-| — | — | — | — | — | — |
+| Metric | Value |
+|--------|-------|
+| Open items (excl. cancelled) | 0 |
+| Sum points remaining | 0 |
+| Sum estimate_minutes remaining | 0 |
+| ETA (from median min/point) | insufficient data |
 
-## Open work sessions
+## Notes
 
-| Item | Actor | Started (UTC) |
-|------|-------|---------------|
-| — | — | — |
-
-## Items
-
-| ID | Title | Story | Status | Size | Path |
-|----|-------|-------|--------|------|------|
-| — | — | — | — | — | — |
+- Actuals use billable work-log minutes only (idle auto-cap + session cap).
 ```
 
-## Seed REPOS.md
+## Seed SIZING.md
 
-List every git root in the workspace (name = folder basename, path = absolute). Mark one as Canonical. See [multi-repo](../taskmark-conventions/references/multi-repo.md).
-
+Include size↔points↔seed estimate table and empty calibration log.

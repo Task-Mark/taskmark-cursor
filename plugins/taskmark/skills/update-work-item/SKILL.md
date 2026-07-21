@@ -19,16 +19,20 @@ description: >-
 | `owner` | String |
 | `blocked` / `cancelled` | Latches — then sync-status |
 | `size` | Set `size_source: manual`; keep or clear `size_basis` |
+| `points` | Set `points_source: manual` |
+| `estimate_minutes` | Manual plan override; set `estimate_basis` as needed |
+| `session_cap_minutes` | Max billable minutes per session (default 480) |
 | Body sections | Goal, AC, notes, etc. |
 
 ## Do not
 
 - Hand-set `status` directly (use latches + sync)
+- Set `actual_minutes` from calendar span — recompute from work-log via sync
 - Delete work-log or prompt/feedback history rows
 
 ## Steps
 
 1. Resolve item; apply requested edits; bump `updated`.
 2. If title/path rename, update parent link lists and INDEX paths.
-3. Run sync-status for the item and ancestors.
+3. Run sync-status for the item and ancestors (refreshes actuals / VELOCITY).
 4. Confirm diff of changed fields.

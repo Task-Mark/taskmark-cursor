@@ -11,15 +11,15 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 ## Epics
 
-| ID | Title | Status | Size | Path |
-|----|-------|--------|------|------|
-| E-001 | User authentication | in_progress | M | [epic.md](epics/E-001-user-auth/epic.md) |
+| ID | Title | Status | Size | Points | Est (min) | Actual (min) | Path |
+|----|-------|--------|------|--------|-----------|--------------|------|
+| E-001 | User authentication | in_progress | M | 5 | 960 | 225 | [epic.md](epics/E-001-user-auth/epic.md) |
 
 ## Stories
 
-| ID | Title | Epic | Status | Size | Path |
-|----|-------|------|--------|------|------|
-| S-001 | Login | E-001 | in_progress | M | [story.md](epics/E-001-user-auth/stories/S-001-login/story.md) |
+| ID | Title | Epic | Status | Size | Points | Est (min) | Actual (min) | Path |
+|----|-------|------|--------|------|--------|-----------|--------------|------|
+| S-001 | Login | E-001 | in_progress | M | 5 | 960 | 225 | [story.md](epics/E-001-user-auth/stories/S-001-login/story.md) |
 
 ## Open work sessions
 
@@ -29,15 +29,16 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 ## Items
 
-| ID | Title | Story | Status | Size | Path |
-|----|-------|-------|--------|------|------|
-| T-001 | Add login API endpoint | S-001 | done | M | [T-001](epics/.../items/T-001-api-endpoint.md) |
+| ID | Title | Story | Status | Size | Points | Est (min) | Actual (min) | Path |
+|----|-------|-------|--------|------|--------|-----------|--------------|------|
+| T-001 | Add login API endpoint | S-001 | done | M | 3 | 480 | 225 | [T-001](epics/.../items/T-001-api-endpoint.md) |
 ```
 
 ## Rules
 
 - Paths are relative to `taskmark/`
 - Include all epics, stories, tasks, and bugs
-- Open work sessions lists every item with an open Work log row
+- Open work sessions lists every item with an open Work log row (after idle auto-close, stale sessions should be gone)
 - Sort by id ascending within each table
-- If a section has no rows, keep the header and a single placeholder row of `—` cells, or leave the table header with no data rows — prefer one `—` row for clarity
+- Prefer one `—` placeholder row when a section is empty
+- Also refresh `taskmark/VELOCITY.md` when syncing

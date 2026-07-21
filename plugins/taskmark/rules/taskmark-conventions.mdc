@@ -8,12 +8,10 @@ alwaysApply: false
 
 When creating or editing files under `taskmark/`:
 
-- Keep required YAML frontmatter fields (`id`, `type`, `title`, `status`, `priority`, `size`, `size_source`, `size_basis`, `parent`, `epic`, `owner`, `blocked`, `cancelled`, `tags`, `created`, `updated`, `started_at`, `completed_at`).
-- Do **not** hand-set `status` except by toggling `blocked` / `cancelled` latches; after AC, work-log, or child changes, derive status and refresh `INDEX.md` (follow `sync-status`).
-- **Work log** table required on every epic/story/task/bug (Session, Actor, Started, Ended, Summary). Open sessions use `—` for Ended.
-- **Commits** table required on every epic/story/task/bug (`SHA | Repo | Date | Message`). Append when commits land; include repo short name in multi-repo workspaces.
-- **Prompt & feedback log** required on stories, tasks, and bugs (Kind is only `prompt` or `feedback`; faithful summaries, append-only).
-- IDs: `E-NNN` / `S-NNN` / `T-NNN` / `B-NNN`; paths match folder-layout conventions.
-- Multi-root: keep `taskmark/REPOS.md` current; after board edits sync copies into every linked git root.
-- Bump `updated` on every meaningful edit.
-- Follow templates and references in the `taskmark-conventions` skill.
+- Keep required YAML frontmatter including `size`, `points`, `estimate_minutes`, `actual_minutes`, `session_cap_minutes`, sources/basis fields, and standard id/status/parent fields.
+- Do **not** hand-set `status` except via `blocked` / `cancelled`; after edits run sync-status.
+- **Never** set `actual_minutes` from calendar span (`completed_at − started_at`). Use billable work-log sessions only (idle auto-cap: next-day 12:00 UTC; session_cap_minutes default 480).
+- Idle: auto-close open sessions at next-day 12:00 UTC when syncing / starting / completing work.
+- **Work log** and **Commits** on every item; **Prompt & feedback** on stories/tasks/bugs.
+- Refresh `INDEX.md` (Points / Est / Actual) and `VELOCITY.md` on sync.
+- Follow `taskmark-conventions` skill templates.

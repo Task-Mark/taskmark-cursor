@@ -9,95 +9,73 @@ This repository is a **plugin marketplace** layout:
 plugins/taskmark/                 # the plugin itself
   .cursor-plugin/plugin.json
   skills/ rules/ commands/ hooks/ scripts/ assets/
-examples/sample-board/            # docs fixture (also copied under the plugin)
+examples/sample-board/            # docs fixture (also under the plugin)
 ```
 
 ## Features
 
 - Convention-enforced board files (frontmatter, IDs, folders)
-- Calibrated **t-shirt sizing** (XS–XL) from prior done items
-- **Work log** (actor, start, end) on every item
-- **Commits log** (SHA, repo, date, message) on every epic, story, task, and bug
-- **Prompt & feedback log** on stories, tasks, and bugs
-- **Multi-repo sync** — every git project in a multi-folder workspace gets a full `taskmark/` copy
-- **Commit all** — commit every dirty git project with a very simple one-line message
-- **Derived status** from acceptance criteria, open sessions, and children
-- Always-on project-memory rule so the board informs later product work
-- Stop hook that nudges when an agent work session was left open
+- **T-shirt sizing** + **Fibonacci story points** with calibrated suggestions
+- **Estimate vs actual minutes** from work-log sessions (never calendar span)
+- **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
+- **VELOCITY.md** — team median minutes/point and delivery ETA
+- Work log, commits log, prompt/feedback logs
+- Multi-repo board copies + commit-all
+- Derived status; project-memory rule; stop hook for open/idle sessions
 
 ## Install
 
 ### A. Add local folder (Customize → Plugins)
 
 1. Open **Customize → Plugins**.
-2. If an old **taskmark** entry shows “Error loading plugin”, remove it first.
-3. Choose **Add local** / select folder.
-4. Select this **repository root**: `/Users/menda0/Projects/taskmark`  
-   (the folder that contains `.cursor-plugin/marketplace.json`, not `plugins/taskmark`).
-5. Enable **taskmark**, then **Developer: Reload Window**.
+2. Remove any broken **taskmark** entry first.
+3. **Add local** → select this repo root: `…/taskmark-cursor` (folder with `.cursor-plugin/marketplace.json`).
+4. Enable **taskmark**, then **Developer: Reload Window**.
 
-Cursor clones the marketplace from **git**. After layout changes, commit on `main` before re-adding. If load still fails, delete stale caches and re-add:
+After layout changes, **commit** before re-adding (Cursor packages from git). Clear stale caches if needed:
 
 ```bash
 rm -rf ~/.cursor/plugins/cache/taskmark-marketplace
 rm -rf ~/.cursor/plugins/marketplaces/_/users/menda0/*
 ```
 
-### B. Local development (copy into `~/.cursor/plugins/local`)
+### B. Local development (copy)
 
-Cursor **rejects symlinks** that point outside `~/.cursor/plugins/local`. Use a real copy of the plugin package:
-
-```bash
-rm -rf ~/.cursor/plugins/local/taskmark
-mkdir -p ~/.cursor/plugins/local
-rsync -a --delete /absolute/path/to/taskmark/plugins/taskmark/ ~/.cursor/plugins/local/taskmark/
-```
-
-Then **Developer: Reload Window**. Re-run the `rsync` after you change plugin files.
-
-### C. Vendor into a project (no marketplace)
+Cursor rejects external symlinks. Copy the plugin package:
 
 ```bash
-PLUGIN=/path/to/taskmark/plugins/taskmark
-cp -R "$PLUGIN/skills/"* /path/to/your-project/.cursor/skills/
-cp -R "$PLUGIN/rules/"* /path/to/your-project/.cursor/rules/
-mkdir -p /path/to/your-project/.cursor/hooks /path/to/your-project/.cursor/scripts
-cp "$PLUGIN/hooks/hooks.json" /path/to/your-project/.cursor/hooks.json
-cp "$PLUGIN/scripts/"*.sh /path/to/your-project/.cursor/scripts/
-chmod +x /path/to/your-project/.cursor/scripts/*.sh
+plugins/taskmark/scripts/rsync-plugin-local.sh
+# or:
+rsync -a --delete /absolute/path/to/taskmark-cursor/plugins/taskmark/ ~/.cursor/plugins/local/taskmark/
 ```
 
-When vendoring the stop hook, point the command at `.cursor/scripts/check-open-sessions.sh`.
+After editing the plugin in this repo, the agent must run **`sync-plugin-local`** (`/sync-plugin-local`) so the local install stays current. Reload the window if new skills do not appear.
 
-Board data still lives at **`taskmark/`** in each product git project (created by `taskmark-init`), not inside `.cursor/`.
+### C. Vendor / D. Marketplace
 
-### D. Cursor Marketplace
-
-1. Push this repo to a **public** GitHub repository.
-2. Test via local install (A or B).
-3. Submit at [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish).
+See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish the public git repo.
 
 ## Quick start
 
-1. Install the plugin (A, B, C, or D).
-2. In a product repo, ask the agent to run **taskmark-init**.
-3. **Multi-folder / multi-git workspaces:** run **`/sync-repos`**.
-4. Create and track work:
+1. Install the plugin.
+2. Run **taskmark-init** in a product repo.
+3. Multi-git workspaces: **`/sync-repos`**.
+4. Commands:
 
 | Command | Skill | Purpose |
 |---------|-------|---------|
 | `/new-epic` | `create-epic` | New epic |
-| `/new-story` | `create-story` | New story under an epic |
-| `/new-task` | `create-task` | New task or bug under a story |
-| `/start-work` | `start-work` | Open work session + prompt log |
-| `/complete-work` | `complete-work` | Close session, log commits, sync status |
-| `/log-commits` | `log-commits` | Append commits to an item |
-| `/sync-repos` | `sync-taskmark-repos` | Copy board into every git root |
-| `/commit-all` | `commit-all` | Commit every dirty repo (simple one-liner) |
-| `/sync-status` | `sync-status` | Recompute status / sizes / INDEX |
-| `/board-status` | `taskmark-overview` | Summarize the board |
-
-Also: `taskmark-conventions` (spec), `update-work-item` (edit fields / latches).
+| `/new-story` | `create-story` | New story |
+| `/new-task` | `create-task` | New task or bug |
+| `/start-work` | `start-work` | Open session (idle-closes stale first) |
+| `/complete-work` | `complete-work` | Close session + actual minutes |
+| `/sync-status` | `sync-status` | Status, actuals, INDEX, VELOCITY |
+| `/velocity` | `taskmark-velocity` | Team speed / ETA |
+| `/sync-plugin-local` | `sync-plugin-local` | Rsync plugin → `~/.cursor/plugins/local` |
+| `/board-status` | `taskmark-overview` | Board summary |
+| `/log-commits` | `log-commits` | Record commits |
+| `/sync-repos` | `sync-taskmark-repos` | Copy board to all git roots |
+| `/commit-all` | `commit-all` | Commit every dirty repo |
 
 ## Board layout
 
@@ -106,19 +84,12 @@ taskmark/
 ├── README.md
 ├── INDEX.md
 ├── SIZING.md
+├── VELOCITY.md
 ├── REPOS.md
-└── epics/
-    └── E-001-…/
-        ├── epic.md
-        └── stories/
-            └── S-001-…/
-                ├── story.md
-                └── items/
-                    ├── T-001-….md
-                    └── B-001-….md
+└── epics/…
 ```
 
-See [`examples/sample-board/`](examples/sample-board/) or [`plugins/taskmark/examples/sample-board/`](plugins/taskmark/examples/sample-board/).
+Effort rules: billable work-log minutes only; idle deadline = next UTC day at 12:00; `session_cap_minutes` default 480.
 
 ## License
 

@@ -12,8 +12,14 @@ priority: medium    # critical | high | medium | low
 size: M             # XS | S | M | L | XL
 size_source: suggested   # suggested | manual
 size_basis: [T-014, T-022]
-parent: S-001       # story→epic; task/bug→story; epic→null
-epic: E-001         # denormalized on story/task/bug; null on epic
+points: 3           # 1 | 2 | 3 | 5 | 8 | 13
+points_source: suggested # suggested | manual
+estimate_minutes: 480    # planned effort
+actual_minutes: 0        # sum of billable session minutes; sync updates
+estimate_basis: [T-014]  # prior items for estimate / points suggestion
+session_cap_minutes: 480 # max billable minutes per session (default 480)
+parent: S-001
+epic: E-001
 owner: ""
 blocked: false
 cancelled: false
@@ -31,11 +37,13 @@ completed_at: null
 |-------|--------|
 | `status` | Derived by sync-status. Do not edit directly. |
 | `blocked` / `cancelled` | Manual latches that force status |
-| `size_basis` | Prior item ids used for suggestion; `[]` if manual or none |
+| `size` / `points` | T-shirt and Fibonacci points together; default map XS→1 … XL→8 |
+| `estimate_minutes` | Planned effort; suggested on create |
+| `actual_minutes` | Sum of **billable** work-log session minutes only — never `completed_at − started_at` |
+| `session_cap_minutes` | Cap per session (default 480). See [effort-time](effort-time.md) |
 | `started_at` | Set once on first work-session start (ISO-8601 UTC) |
 | `completed_at` | Set when status becomes `done` |
-| `updated` | Bump on every meaningful edit (ISO-8601 UTC preferred) |
-| `created` | Date or datetime when the file was created |
+| `updated` | Bump on every meaningful edit |
 
 Epic: `parent: null`, `epic: null`.  
 Story: `parent` = epic id, `epic` = same epic id.  

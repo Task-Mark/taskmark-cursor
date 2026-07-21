@@ -7,6 +7,12 @@ priority: high
 size: M
 size_source: suggested
 size_basis: []
+points: 3
+points_source: suggested
+estimate_minutes: 480
+actual_minutes: 285
+estimate_basis: []
+session_cap_minutes: 480
 parent: S-001
 epic: E-001
 owner: ""

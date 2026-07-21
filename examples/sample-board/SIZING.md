@@ -1,17 +1,19 @@
-# T-shirt sizing
+# T-shirt sizing and story points
 
-| Size | Meaning | Rough effort signal |
-|------|---------|---------------------|
-| XS | Trivial | Minutes; one-liner / config |
-| S | Small | Under ~half day; single focused change |
-| M | Medium | About a day; clear scope, few files |
-| L | Large | Multi-day; several components or unknowns |
-| XL | Extra large | Should usually be split into smaller tasks |
+| Size | Points | Meaning | Seed estimate |
+|------|--------|---------|---------------|
+| XS | 1 | Trivial | 30 min |
+| S | 2 | Small | 2 h |
+| M | 3 | Medium | 1 day (480 min) |
+| L | 5 | Large | 2 days |
+| XL | 8 | Extra large (prefer split) | 3+ days |
 
-Weights for rollups: XS=1, S=2, M=3, L=4, XL=5.
+Weights for size rollups: XS=1, S=2, M=3, L=4, XL=5.
+
+Effort uses **billable work-log minutes** only (idle auto-cap: next-day 12:00 UTC; session cap default 480). Never use calendar span.
 
 ## Calibration log
 
-| Date | Item | Sized | Actual signal | Note |
-|------|------|-------|---------------|------|
-| 2026-07-20 | T-001 | M | ~3h work log | Fit M well |
+| Date | Item | Sized | Points | Est | Actual | Note |
+|------|------|-------|--------|-----|--------|------|
+| 2026-07-20 | T-001 | M | 3 | 480 | 285 | Under estimate; fit M |

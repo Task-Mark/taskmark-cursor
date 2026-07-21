@@ -21,3 +21,4 @@ Required on **every** epic, story, task, and bug.
 - Only one open session per item at a time
 - On first open session, set frontmatter `started_at` if null
 - Always bump `updated` when changing the work log
+- **Effort:** billable minutes feed `actual_minutes` — see [effort-time](effort-time.md) (idle auto-cap + session cap). Never use calendar span for effort.

@@ -1,0 +1,17 @@
+---
+description: After editing the Taskmark plugin package, rsync to ~/.cursor/plugins/local/taskmark
+globs: plugins/taskmark/**
+alwaysApply: false
+---
+
+# Sync local plugin after edits
+
+This repository develops the Taskmark Cursor plugin under `plugins/taskmark/`.
+
+After **any** change to files under `plugins/taskmark/` in this turn:
+
+1. Run `plugins/taskmark/scripts/rsync-plugin-local.sh` (or follow the `sync-plugin-local` skill).
+2. Confirm the copy under `~/.cursor/plugins/local/taskmark` updated.
+3. Mention that **Developer: Reload Window** may be needed for new skills/commands.
+
+Do not finish a turn that edited the plugin without rsyncing.

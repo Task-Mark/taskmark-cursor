@@ -5,6 +5,7 @@ taskmark/
 ├── README.md
 ├── INDEX.md
 ├── SIZING.md
+├── VELOCITY.md               # team speed / ETA (from actual_minutes)
 ├── REPOS.md                  # linked git roots (multi-repo)
 └── epics/
     └── E-001-user-auth/

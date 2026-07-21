@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "./plugins/taskmark/scripts/rsync-plugin-local.sh",
+        "matcher": "plugins/taskmark/"
+      }
+    ]
+  }
+}

@@ -1,27 +1,28 @@
 ---
 name: sync-status
 description: >-
-  Recompute derived Taskmark status and size rollups for an item and its ancestors,
-  then refresh taskmark/INDEX.md. Use after acceptance-criteria edits, work-log
-  changes, creating children, or when the user asks to sync or recalculate board
-  status.
+  Idle-close stale Taskmark work sessions, recompute status, size/points rollups,
+  actual_minutes from billable sessions, refresh INDEX.md and VELOCITY.md. Use
+  after AC edits, work-log changes, or when the user asks to sync board status.
 ---
 
 # sync-status
 
 ## Prerequisites
 
-- Read [status-derivation](../taskmark-conventions/references/status-derivation.md), [sizing](../taskmark-conventions/references/sizing.md), [index-format](../taskmark-conventions/references/index-format.md).
+Read [status-derivation](../taskmark-conventions/references/status-derivation.md), [effort-time](../taskmark-conventions/references/effort-time.md), [sizing](../taskmark-conventions/references/sizing.md), [velocity](../taskmark-conventions/references/velocity.md), [index-format](../taskmark-conventions/references/index-format.md).
 
 ## Steps
 
-1. Resolve starting item (id/path) or sync the **entire board** if the user asks for a full sync / board refresh.
-2. For each task/bug in scope: derive `status` from latches, AC checkboxes, open sessions, `started_at`; set `completed_at` when entering `done`.
-3. For each story: roll up child item statuses; recompute `size` from child weights; bump `updated` if changed.
-4. For each epic: roll up child stories; recompute `size`; bump `updated` if changed.
-5. Rewrite `taskmark/INDEX.md` completely from current frontmatter (all epics, stories, items, open sessions).
-6. Report what changed (ids + old → new status/size).
+1. Resolve starting item or sync the **entire board**.
+2. **Idle auto-close:** for every open Work log session past idle deadline (12:00 UTC next day after Started), set Ended to that deadline, append `auto-closed: idle cap (next-day 12:00 UTC)` to Summary.
+3. For each task/bug: recompute `actual_minutes` from billable sessions ([effort-time](../taskmark-conventions/references/effort-time.md)); derive `status`; set `completed_at` when entering `done`.
+4. For each story: roll up child status, `size`, `points` (sum), `estimate_minutes` (sum), `actual_minutes` (sum of children).
+5. For each epic: same against child stories.
+6. Rewrite `taskmark/INDEX.md` (include Points / Est / Actual columns).
+7. Rewrite `taskmark/VELOCITY.md` from done tasks/bugs (last 20) + remaining backlog.
+8. Report changes (status, actual_minutes, idle closes).
 
 ## Full board sync
 
-Scan `taskmark/epics/**/*.md`, process leaves (items) first, then stories, then epics, then INDEX.
+Leaves (items) first → stories → epics → INDEX → VELOCITY.
