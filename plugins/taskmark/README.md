@@ -30,21 +30,30 @@ examples/sample-board/            # docs fixture (also copied under the plugin)
 ### A. Add local folder (Customize → Plugins)
 
 1. Open **Customize → Plugins**.
-2. Choose **Add local** / select folder.
-3. Select this **repository root**: `/Users/menda0/Projects/taskmark`  
+2. If an old **taskmark** entry shows “Error loading plugin”, remove it first.
+3. Choose **Add local** / select folder.
+4. Select this **repository root**: `/Users/menda0/Projects/taskmark`  
    (the folder that contains `.cursor-plugin/marketplace.json`, not `plugins/taskmark`).
-4. Enable the **taskmark** plugin, then reload if prompted.
+5. Enable **taskmark**, then **Developer: Reload Window**.
 
-### B. Local development (symlink)
-
-Symlink the **plugin package** (not the repo root):
+Cursor clones the marketplace from **git**. After layout changes, commit on `main` before re-adding. If load still fails, delete stale caches and re-add:
 
 ```bash
-mkdir -p ~/.cursor/plugins/local
-ln -s /absolute/path/to/taskmark/plugins/taskmark ~/.cursor/plugins/local/taskmark
+rm -rf ~/.cursor/plugins/cache/taskmark-marketplace
+rm -rf ~/.cursor/plugins/marketplaces/_/users/menda0/*
 ```
 
-Then **Developer: Reload Window**.
+### B. Local development (copy into `~/.cursor/plugins/local`)
+
+Cursor **rejects symlinks** that point outside `~/.cursor/plugins/local`. Use a real copy of the plugin package:
+
+```bash
+rm -rf ~/.cursor/plugins/local/taskmark
+mkdir -p ~/.cursor/plugins/local
+rsync -a --delete /absolute/path/to/taskmark/plugins/taskmark/ ~/.cursor/plugins/local/taskmark/
+```
+
+Then **Developer: Reload Window**. Re-run the `rsync` after you change plugin files.
 
 ### C. Vendor into a project (no marketplace)
 
