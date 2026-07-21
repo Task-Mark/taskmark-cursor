@@ -13,6 +13,8 @@ Taskmark shows **two** time columns:
 
 **Never** invent ≤2 minute closed Work log sessions to mark delivery. Close the real open session with **now** UTC via `complete-work`.
 
+**Done ⇒ work log:** every `done` epic/story/task/bug must have Work log session(s) totaling **> 2** billable minutes. If completing without a session, run `start-work` first. Historical gaps may be backfilled with a closed session of `points × 30-day median min/point` (see [velocity](velocity.md)), never a ≤2 minute stub.
+
 ## Billable minutes (Actual)
 
 `actual_minutes` = sum over Work log sessions of each session’s **billable** minutes (open sessions use **now** as provisional end until closed).
