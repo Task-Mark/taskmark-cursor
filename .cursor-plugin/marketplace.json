@@ -1,0 +1,17 @@
+{
+  "name": "taskmark-marketplace",
+  "owner": {
+    "name": "menda0"
+  },
+  "metadata": {
+    "description": "Taskmark — hierarchical epic, story, and task markdown planning for Cursor",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "taskmark",
+      "source": "./plugins/taskmark",
+      "description": "Hierarchical epic, story, and task markdown planning with sizing, work logs, commits, and multi-repo sync"
+    }
+  ]
+}

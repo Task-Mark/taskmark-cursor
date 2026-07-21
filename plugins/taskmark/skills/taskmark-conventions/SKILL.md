@@ -7,7 +7,7 @@ description: >-
   board copies, status derivation, and INDEX. Use when creating or editing
   Taskmark files, answering Taskmark questions, multi-root workspaces, or
   before create-epic, create-story, create-task, start-work, complete-work,
-  log-commits, sync-taskmark-repos, or sync-status.
+  log-commits, sync-taskmark-repos, commit-all, or sync-status.
 ---
 
 # Taskmark conventions
