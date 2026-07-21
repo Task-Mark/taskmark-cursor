@@ -10,8 +10,10 @@ When creating or editing files under `taskmark/`:
 
 - Keep required YAML frontmatter including `size`, `points`, `estimate_minutes`, `actual_minutes`, `session_cap_minutes`, sources/basis fields, and standard id/status/parent fields.
 - Do **not** hand-set `status` except via `blocked` / `cancelled`; after edits run sync-status.
-- **Never** set `actual_minutes` from calendar span (`completed_at − started_at`). Use billable work-log sessions only (idle auto-cap: next-day 12:00 UTC; session_cap_minutes default 480).
+- **Never** hand-set `actual_minutes`. Run `scripts/recompute-actuals.py` (from sync-status / complete-work).
+- **Never** invent ≤2 minute closed Work log sessions for delivered work. Close real open sessions with **now** UTC.
+- **Never** set `actual_minutes` from calendar span (`completed_at − started_at`). Use billable work-log sessions only (idle auto-cap: next-day 12:00 UTC; session_cap_minutes default 480). Commit-span recovery via the recompute script is the only allowed auto-fill when logs undercount commits.
 - Idle: auto-close open sessions at next-day 12:00 UTC when syncing / starting / completing work.
 - **Work log** and **Commits** on every item; **Prompt & feedback** on stories/tasks/bugs.
-- Refresh `INDEX.md` (Points / Est / Actual) and `VELOCITY.md` on sync.
+- Refresh `INDEX.md` (Points / Est / Actual) and `VELOCITY.md` via recompute / sync-status; calibrate estimates with `--calibrate` when finishing work.
 - Follow `taskmark-conventions` skill templates.

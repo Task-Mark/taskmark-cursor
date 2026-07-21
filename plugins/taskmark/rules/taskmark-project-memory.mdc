@@ -8,11 +8,9 @@ alwaysApply: true
 If `taskmark/` exists in any workspace folder, treat Taskmark as the source of truth for planned, in-flight, and done product work.
 
 1. **Multi-repo:** When the workspace has multiple folders / git repositories and the user is developing across them with AI, ensure **every** git project has a full copy of `taskmark/` (run `sync-taskmark-repos` at session start and after board edits). Do not keep the board in only one repo.
-2. Before implementing a feature, bugfix, or product refactor: search the board for a matching epic/story/task/bug and **link work to it**.
+2. Before implementing a feature, bug fix, or product refactor: search the board for a matching epic/story/task/bug and **link work to it**.
 3. If none exists and the work is real product scope, **create** items (`create-epic` / `create-story` / `create-task`) — no orphan product changes without a board trail.
 4. When planning a new iteration, read `INDEX.md`, `VELOCITY.md`, **Prompt & feedback** logs, and **Commits** so prior decisions, sizes/points, and shipped work carry forward.
-5. On each user turn tied to an item: append prompt/feedback, manage Work log (`start-work` / `complete-work`), **log commits** for touched repos, then implement; run `sync-status` after AC or session changes (idle-caps abandoned sessions). When asking about speed/ETA, use `taskmark-velocity`. When committing across projects, use `commit-all`.
+5. On each user turn tied to an item: append prompt/feedback, manage Work log (`start-work` / `complete-work`), **log commits** for touched repos, then implement; run `sync-status` after AC or session changes (idle-caps abandoned sessions; runs `recompute-actuals.py --calibrate`). When asking about speed/ETA, use `taskmark-velocity`. When committing across projects, use `commit-all`.
 6. Never invent a parallel todo list in chat; update markdown under `taskmark/` instead, then propagate copies across linked repos.
-7. Never treat calendar span as effort — only billable work-log minutes.
-
-If `taskmark/` is missing and the user wants structured planning, offer `taskmark-init` (then `sync-taskmark-repos` for multi-root).
+7. Never treat calendar span as effort — only billable work-log minutes. Never hand-set `actual_minutes` or invent ≤2 minute closed sessions for delivered work; always recompute + calibrate via the script on complete/sync.
