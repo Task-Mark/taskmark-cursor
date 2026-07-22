@@ -18,7 +18,7 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 - Do **not** invent closed sessions (especially ≤2 minutes) at start or later to backfill delivery.
 - Do **not** hand-set `effort_minutes` or `actual_minutes`.
 - Do **not** open Work log sessions on parent story/epic just for cascade (avoids double-counting effort).
-
+- When the user asks to implement a **whole epic** (or many leaves) in one sitting, prefer **one** open session on the epic or the first leaf, then on complete-work **split** minutes across delivered leaves by points (see complete-work shared-batch / effort-time). Do not open the same full-span session on every task up front.
 ## Steps
 
 1. Locate the item markdown under the board root.

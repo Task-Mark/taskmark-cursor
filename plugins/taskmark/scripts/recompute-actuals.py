@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Recompute Taskmark actual_minutes and estimates.
+"""Recompute Taskmark actual_minutes / actual_ms and estimates.
 
-actual_minutes  = billable Work log sessions from start-work → complete-work
-                  (idle + session caps; commit-span recovery)
+actual_ms       = billable Work log sessions in milliseconds (idle + session caps;
+                  shared-batch redistribution; commit-span recovery)
+actual_minutes  = floor(actual_ms / 60000) — used for velocity
 estimate_minutes = points × 30-day median min/point (on create / calibrate),
                   else SIZING seeds
 
@@ -72,7 +73,11 @@ def parse_ts(s: str) -> datetime | None:
 
 
 def fmt_ts(dt: datetime) -> str:
-    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    dt = dt.astimezone(timezone.utc)
+    ms = dt.microsecond // 1000
+    if ms:
+        return dt.strftime("%Y-%m-%dT%H:%M:%S.") + f"{ms:03d}Z"
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def idle_deadline(started: datetime) -> datetime:
@@ -80,9 +85,10 @@ def idle_deadline(started: datetime) -> datetime:
     return datetime(d.year, d.month, d.day, 12, 0, 0, tzinfo=timezone.utc)
 
 
-def billable_minutes(
+def billable_ms(
     started: datetime, ended: datetime | None, session_cap: int, now: datetime
 ) -> int:
+    """Billable duration in milliseconds (idle + session caps)."""
     if ended is None:
         end_eff = now
     else:
@@ -90,8 +96,14 @@ def billable_minutes(
     idle = idle_deadline(started)
     cap_end = started + timedelta(minutes=session_cap)
     billable_end = min(end_eff, idle, cap_end)
-    mins = math.floor((billable_end - started).total_seconds() / 60)
-    return max(0, mins)
+    ms = math.floor((billable_end - started).total_seconds() * 1000)
+    return max(0, ms)
+
+
+def billable_minutes(
+    started: datetime, ended: datetime | None, session_cap: int, now: datetime
+) -> int:
+    return billable_ms(started, ended, session_cap, now) // 60_000
 
 
 def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
@@ -209,13 +221,184 @@ def session_cap(fm: dict[str, str]) -> int:
         return 480
 
 
+def worklog_billable_ms(sessions: list[Session], cap: int, now: datetime) -> int:
+    return sum(billable_ms(s.started, s.ended, cap, now) for s in sessions)
+
+
 def worklog_billable(sessions: list[Session], cap: int, now: datetime) -> int:
-    return sum(billable_minutes(s.started, s.ended, cap, now) for s in sessions)
+    return worklog_billable_ms(sessions, cap, now) // 60_000
+
+
+def own_actual_ms(item: Item, now: datetime) -> int:
+    return worklog_billable_ms(item.sessions, session_cap(item.fm), now)
 
 
 def own_actual(item: Item, now: datetime) -> int:
     """Billable minutes from Work log sessions (start-work → complete-work)."""
-    return worklog_billable(item.sessions, session_cap(item.fm), now)
+    return own_actual_ms(item, now) // 60_000
+
+
+def allocate_by_weights(total: int, weights: list[int]) -> list[int]:
+    """Largest-remainder allocation so parts sum exactly to total."""
+    n = len(weights)
+    if n == 0:
+        return []
+    if total <= 0:
+        return [0] * n
+    safe = [max(0, int(w)) for w in weights]
+    if sum(safe) <= 0:
+        safe = [1] * n
+    wsum = sum(safe)
+    raw = [total * w / wsum for w in safe]
+    floors = [math.floor(x) for x in raw]
+    rem = total - sum(floors)
+    order = sorted(
+        range(n),
+        key=lambda i: (raw[i] - floors[i], safe[i], -i),
+        reverse=True,
+    )
+    for i in order[:rem]:
+        floors[i] += 1
+    return floors
+
+
+def item_weight(item: Item) -> int:
+    try:
+        pts = int(item.fm.get("points") or 0)
+    except ValueError:
+        pts = 0
+    if pts > 0:
+        return pts
+    try:
+        est = int(item.fm.get("estimate_minutes") or 0)
+    except ValueError:
+        est = 0
+    return max(1, est) if est > 0 else 1
+
+
+def redistribute_shared_batch_sessions(items: list[Item], now: datetime) -> int:
+    """Split identical parallel leaf sessions so one wall-clock batch is not counted N times.
+
+    When 2+ task/bug leaves under the same epic share the same closed (Started, Ended),
+    treat that span as one shared batch: allocate billable **milliseconds** by points (else
+    estimate_minutes) with largest-remainder, rewrite each leaf Ended to
+    Started + allocated, and zero matching parent story/epic sessions so rollup
+    Actual equals the batch total.
+    """
+    by_id = {i.fm.get("id"): i for i in items if i.fm.get("id")}
+    leaves = [i for i in items if i.fm.get("type") in {"task", "bug"}]
+
+    # epic_id -> list of leaves
+    by_epic: dict[str, list[Item]] = {}
+    for leaf in leaves:
+        epic_id = (leaf.fm.get("epic") or "").strip()
+        if not epic_id or epic_id in {"null", "None"}:
+            # fall back to parent story's epic
+            parent = by_id.get((leaf.fm.get("parent") or "").strip())
+            if parent:
+                epic_id = (parent.fm.get("epic") or parent.fm.get("id") or "").strip()
+        if not epic_id or epic_id in {"null", "None"}:
+            continue
+        by_epic.setdefault(epic_id, []).append(leaf)
+
+    changed = 0
+    batch_keys: set[tuple[str, str]] = set()  # (started_iso, ended_iso)
+
+    for epic_id, epic_leaves in by_epic.items():
+        # group (leaf, session_index) by (started, ended)
+        groups: dict[tuple[datetime, datetime], list[tuple[Item, int]]] = {}
+        for leaf in epic_leaves:
+            for idx, sess in enumerate(leaf.sessions):
+                if sess.ended is None:
+                    continue
+                # Already proportionally allocated — do not re-split
+                if "shared-batch:" in (sess.summary or ""):
+                    continue
+                key = (sess.started, sess.ended)
+                groups.setdefault(key, []).append((leaf, idx))
+
+        for (started, ended), members in groups.items():
+            # unique leaves only (one session per leaf in this batch)
+            uniq: dict[str, tuple[Item, int]] = {}
+            for leaf, idx in members:
+                lid = leaf.fm.get("id") or str(leaf.path)
+                # prefer first matching session
+                if lid not in uniq:
+                    uniq[lid] = (leaf, idx)
+            if len(uniq) < 2:
+                continue
+
+            # Only redistribute when the parallel copy would inflate (same full span)
+            cap = max(session_cap(m[0].fm) for m in uniq.values())
+            total_ms = billable_ms(started, ended, cap, now)
+            if total_ms <= 0:
+                continue
+
+            ordered = sorted(uniq.values(), key=lambda t: t[0].fm.get("id") or "")
+            weights = [item_weight(leaf) for leaf, _ in ordered]
+            allocs = allocate_by_weights(total_ms, weights)
+            start_iso = fmt_ts(started)
+            end_iso = fmt_ts(ended)
+            batch_keys.add((start_iso, end_iso))
+
+            for (leaf, idx), ms in zip(ordered, allocs):
+                sess = leaf.sessions[idx]
+                new_ended = started + timedelta(milliseconds=ms)
+                note = f"shared-batch: {ms} of {total_ms}ms by points"
+                summary = sess.summary
+                if "shared-batch:" not in summary:
+                    summary = f"{summary}; {note}" if summary else note
+                else:
+                    summary = re.sub(
+                        r"shared-batch:.*?by points",
+                        note,
+                        summary,
+                    )
+                leaf.sessions[idx] = Session(
+                    num=sess.num,
+                    actor=sess.actor,
+                    started=started,
+                    ended=new_ended,
+                    summary=summary,
+                )
+                leaf.text = replace_work_log_rows(leaf.text, leaf.sessions)
+                leaf.text = set_frontmatter(leaf.text, {"updated": fmt_ts(now)})
+                changed += 1
+
+    if not batch_keys:
+        return changed
+
+    # Zero parent story/epic sessions that duplicated the full batch span
+    for item in items:
+        if item.fm.get("type") not in {"story", "epic"}:
+            continue
+        mutated = False
+        for idx, sess in enumerate(item.sessions):
+            if sess.ended is None:
+                continue
+            if "shared-batch:" in (sess.summary or ""):
+                continue
+            key = (fmt_ts(sess.started), fmt_ts(sess.ended))
+            if key not in batch_keys:
+                continue
+            summary = sess.summary
+            note = "shared-batch: 0ms rollup (children hold allocation)"
+            if "shared-batch:" not in summary:
+                summary = f"{summary}; {note}" if summary else note
+            item.sessions[idx] = Session(
+                num=sess.num,
+                actor=sess.actor,
+                started=sess.started,
+                ended=sess.started,  # 0 billable
+                summary=summary,
+            )
+            mutated = True
+        if mutated:
+            item.text = replace_work_log_rows(item.text, item.sessions)
+            item.text = set_frontmatter(item.text, {"updated": fmt_ts(now)})
+            changed += 1
+
+    return changed
 
 
 def ensure_started_at_from_sessions(item: Item) -> bool:
@@ -570,13 +753,19 @@ def rollup_parent(item: Item, now: datetime) -> None:
         return
     est = sum(int(c.fm.get("estimate_minutes") or 0) for c in item.children)
     points = sum(int(c.fm.get("points") or 0) for c in item.children)
-    child_actual = sum(int(c.fm.get("actual_minutes") or 0) for c in item.children)
-    actual = max(child_actual, own_actual(item, now))
+    child_ms = sum(int(c.fm.get("actual_ms") or 0) for c in item.children)
+    # Fallback for children not yet migrated to actual_ms
+    if child_ms == 0:
+        child_ms = sum(int(c.fm.get("actual_minutes") or 0) * 60_000 for c in item.children)
+    own_ms = own_actual_ms(item, now)
+    actual_ms = max(child_ms, own_ms)
+    actual = actual_ms // 60_000
     updates: dict[str, Any] = {
         "estimate_minutes": est,
         "points": points,
         "points_source": "rolled_up",
         "actual_minutes": actual,
+        "actual_ms": actual_ms,
         "updated": fmt_ts(now),
     }
     if item.fm.get("type") == "epic":
@@ -659,6 +848,9 @@ def main() -> None:
             recovered += 1
             item.text = replace_work_log_rows(item.text, item.sessions)
 
+    # After commit-span recovery: split any identical parallel leaf spans
+    shared_batch = redistribute_shared_batch_sessions(items, now)
+
     started_recovered = 0
     for item in items:
         if ensure_started_at_from_sessions(item):
@@ -668,13 +860,16 @@ def main() -> None:
             )
 
     for item in items:
-        actual = own_actual(item, now)
+        actual_ms = own_actual_ms(item, now)
+        actual = actual_ms // 60_000
         item.fm["actual_minutes"] = str(actual)
+        item.fm["actual_ms"] = str(actual_ms)
         # Drop legacy effort_minutes; Actual is session time only
         item.text = set_frontmatter(
             item.text,
             {
                 "actual_minutes": actual,
+                "actual_ms": actual_ms,
                 "updated": fmt_ts(now),
             },
             drop_keys=["effort_minutes"],
@@ -763,7 +958,8 @@ def main() -> None:
 
     print(f"taskmark: {taskmark}")
     print(
-        f"items: {len(items)}; recovered commit-span: {recovered}; "
+        f"items: {len(items)}; shared-batch redistributed: {shared_batch}; "
+        f"recovered commit-span: {recovered}; "
         f"started_at from sessions: {started_recovered}"
     )
     if args.calibrate:
@@ -777,6 +973,7 @@ def main() -> None:
         print(
             f"  {item.fm['id']} type={item.fm.get('type')} "
             f"actual={item.fm.get('actual_minutes')} "
+            f"actual_ms={item.fm.get('actual_ms')} "
             f"est={item.fm.get('estimate_minutes')} "
             f"size={item.fm.get('size')} points={item.fm.get('points')}"
         )

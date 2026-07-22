@@ -25,6 +25,7 @@ Read [status-derivation](../taskmark-conventions/references/status-derivation.md
 4. **Recompute (required):** run
    `python3 <plugin>/scripts/recompute-actuals.py <board-root> --calibrate`
    This:
+   - redistributes identical parallel leaf Work log spans (shared-batch) by points
    - applies commit-span recovery into **effort** when work-log billable ≪ commit span
    - recovers missing `started_at` from first work-log session when done
    - writes `effort_minutes` (sessions) and `actual_minutes` (wall-clock)
