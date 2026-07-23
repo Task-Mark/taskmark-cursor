@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Ensure the reserved General epic (and Unattached catch-all story) exist on a board.
+"""Ensure the reserved General epic exists on a board (with epic-level items/).
 
 Usage:
   ensure-general-epic.py <board-root>
 
-Prints JSON: {"epic_id","epic_path","story_id","story_path","created_epic","created_story"}
+Prints JSON: {"epic_id","epic_path","items_dir","created_epic"}
 
 Identification (any match):
   - epic title equals "General" (case-insensitive)
   - folder slug is "{id}-general"
   - tags include "general"
 
-Catch-all story under General:
-  - title "Unattached" (case-insensitive), or slug "{id}-unattached", or tag "unattached"
+General tasks/bugs attach under epics/{E-NNN}-general/items/ (no story).
+Do not create an Unattached catch-all story.
 """
 
 from __future__ import annotations
@@ -90,36 +90,15 @@ def find_general_epic(epics_dir: Path) -> tuple[Path, str] | None:
         title = fm.get("title", "")
         tags = tags_list(fm.get("tags", ""))
         slug_general = entry.name.endswith("-general") or entry.name == "general"
-        if (
-            title.lower() == "general"
-            or "general" in tags
-            or slug_general
-        ):
+        if title.lower() == "general" or "general" in tags or slug_general:
             return epic_md, eid or entry.name.split("-")[0]
-    return None
-
-
-def find_unattached_story(stories_dir: Path) -> tuple[Path, str] | None:
-    if not stories_dir.is_dir():
-        return None
-    for entry in sorted(stories_dir.iterdir()):
-        if not entry.is_dir() or entry.name.startswith("."):
-            continue
-        story_md = entry / "story.md"
-        if not story_md.is_file():
-            continue
-        fm = parse_frontmatter(story_md.read_text(encoding="utf-8"))
-        sid = fm.get("id", "")
-        title = fm.get("title", "")
-        tags = tags_list(fm.get("tags", ""))
-        slug_ok = entry.name.endswith("-unattached") or entry.name == "unattached"
-        if title.lower() == "unattached" or "unattached" in tags or slug_ok:
-            return story_md, sid or entry.name.split("-")[0]
     return None
 
 
 def write_general_epic(path: Path, eid: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    (path.parent / "items").mkdir(exist_ok=True)
+    (path.parent / "stories").mkdir(exist_ok=True)
     ts = now_iso()
     path.write_text(
         f"""---
@@ -130,13 +109,13 @@ status: backlog
 priority: medium
 size: null
 size_source: rolled_up
-size_basis: [sum:stories]
+size_basis: [sum:children]
 points: 0
 points_source: rolled_up
 estimate_minutes: 0
 actual_minutes: 0
 estimate_source: rolled_up
-estimate_basis: [sum:stories]
+estimate_basis: [sum:children]
 session_cap_minutes: 480
 parent: null
 epic: null
@@ -154,12 +133,12 @@ completed_at: null
 
 ## Goal
 
-Default home for stories and tasks that do not have a clearer epic.
+Default home for general tasks and user stories that do not have a clearer epic.
 
 ## Scope
 
-- Unattached stories created without an explicit epic.
-- Catch-all story **Unattached** for tasks/bugs without an explicit story.
+- General user stories created without an explicit epic.
+- General tasks/bugs without an explicit story (`items/` under this epic).
 
 ## Out of scope
 
@@ -167,7 +146,7 @@ Default home for stories and tasks that do not have a clearer epic.
 
 ## Success metrics
 
-- Unattached work remains visible in the epic list under General.
+- General tasks and user stories remain visible in the epic list under General.
 
 ## Stories
 
@@ -183,84 +162,6 @@ Default home for stories and tasks that do not have a clearer epic.
 """,
         encoding="utf-8",
     )
-
-
-def write_unattached_story(path: Path, sid: str, eid: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    (path.parent / "items").mkdir(exist_ok=True)
-    ts = now_iso()
-    path.write_text(
-        f"""---
-id: {sid}
-type: story
-title: Unattached
-status: backlog
-priority: medium
-size: XS
-size_source: suggested
-size_basis: [general:catch-all]
-points: 0
-points_source: rolled_up
-estimate_minutes: 0
-actual_minutes: 0
-estimate_source: rolled_up
-estimate_basis: [sum:tasks]
-session_cap_minutes: 480
-parent: {eid}
-epic: {eid}
-owner: ""
-blocked: false
-cancelled: false
-tags: [unattached, general]
-created: {today()}
-updated: {ts}
-started_at: null
-completed_at: null
----
-
-# {sid}: Unattached
-
-## User story
-
-As a user, I want a catch-all story under General so tasks without a named story still have a valid board path.
-
-## Acceptance criteria
-
-- [ ] Tasks/bugs without an explicit story can live under this story.
-- [ ] Prefer moving work to a real story when one becomes clear.
-
-## Tasks
-
-## Prompt & feedback log
-
-| # | When (UTC) | Kind | Summary |
-|---|------------|------|---------|
-
-## Commits
-
-| SHA | Repo | Date (UTC) | Message |
-|-----|------|------------|---------|
-
-## Work log
-
-| Session | Actor | Started (UTC) | Ended (UTC) | Summary |
-|---------|-------|---------------|-------------|---------|
-""",
-        encoding="utf-8",
-    )
-
-
-def link_story_from_epic(epic_md: Path, sid: str, title: str, rel: str) -> None:
-    text = epic_md.read_text(encoding="utf-8")
-    marker = f"[{sid}:"
-    if marker in text:
-        return
-    link = f"- [{sid}: {title}]({rel})\n"
-    if "## Stories\n" in text:
-        text = text.replace("## Stories\n", f"## Stories\n\n{link}", 1)
-    else:
-        text += f"\n## Stories\n\n{link}"
-    epic_md.write_text(text, encoding="utf-8")
 
 
 def main() -> int:
@@ -285,28 +186,15 @@ def main() -> int:
         write_general_epic(epic_md, eid)
         created_epic = True
 
-    stories_dir = epic_md.parent / "stories"
-    stories_dir.mkdir(parents=True, exist_ok=True)
-
-    created_story = False
-    found_story = find_unattached_story(stories_dir)
-    if found_story:
-        story_md, sid = found_story
-    else:
-        sid = next_id(board, "S")
-        story_md = stories_dir / f"{sid}-unattached" / "story.md"
-        write_unattached_story(story_md, sid, eid)
-        created_story = True
-        rel = f"stories/{story_md.parent.name}/story.md"
-        link_story_from_epic(epic_md, sid, "Unattached", rel)
+    items_dir = epic_md.parent / "items"
+    items_dir.mkdir(parents=True, exist_ok=True)
+    (epic_md.parent / "stories").mkdir(parents=True, exist_ok=True)
 
     result = {
         "epic_id": eid,
         "epic_path": str(epic_md),
-        "story_id": sid,
-        "story_path": str(story_md),
+        "items_dir": str(items_dir),
         "created_epic": created_epic,
-        "created_story": created_story,
     }
     print(json.dumps(result))
     return 0

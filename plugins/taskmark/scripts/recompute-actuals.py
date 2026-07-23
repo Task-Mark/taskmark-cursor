@@ -771,8 +771,8 @@ def rollup_parent(item: Item, now: datetime) -> None:
     if item.fm.get("type") == "epic":
         updates["size"] = None
         updates["size_source"] = "rolled_up"
-        updates["size_basis"] = "[sum:stories]"
-        updates["estimate_basis"] = "[sum:stories]"
+        updates["size_basis"] = "[sum:children]"
+        updates["estimate_basis"] = "[sum:children]"
     else:
         weight = 0
         for c in item.children:

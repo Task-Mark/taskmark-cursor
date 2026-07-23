@@ -189,7 +189,7 @@ completed_at: null
 |---------|-------|---------------|-------------|---------|
 ```
 
-When no clearer story fits, set `parent` to General’s **Unattached** story and `epic` to General (run `ensure-general-epic.py` first).
+When no clearer story fits but an epic is known (or after soft-attach to **General**), set `parent` and `epic` to that epic id and place the file under `epics/{E-NNN}-{slug}/items/` (run `ensure-general-epic.py` when falling back to General).
 
 ## Bug
 

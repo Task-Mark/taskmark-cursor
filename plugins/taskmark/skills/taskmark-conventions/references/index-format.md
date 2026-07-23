@@ -38,7 +38,7 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 - Paths are relative to the board root
 - Include all epics, stories, tasks, and bugs
-- Stories under **General** and tasks under **Unattached** appear like any other row (Epic/Story columns show those ids)
+- Stories under **General** and epic-direct tasks (Story column `—` or the epic id) appear like any other row
 - Size column for epics is always `—` (epics have no t-shirt size)
 - Epic **Size** is always `—` (epics have no t-shirt size); epic **Points** = sum of story points
 - Story **Points** = sum of task/bug points when the story has children

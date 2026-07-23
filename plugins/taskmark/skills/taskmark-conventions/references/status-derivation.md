@@ -34,7 +34,7 @@ When starting a task/bug (or story/epic directly):
 2. If starting a **task/bug**: also set parent **story** `started_at` if null (skip if parent missing), then parent **epic** `started_at` if null (skip if missing).
 3. If starting a **story**: also set parent **epic** `started_at` if null (skip if missing / null parent).
 4. Do **not** open Work log sessions on parents unless the user is working the parent itself (avoids double-counting effort).
-5. Ancestor status becomes `in_progress` via child rules on sync. General / Unattached parents cascade like any other epic/story.
+5. Ancestor status becomes `in_progress` via child rules on sync. Epic-direct tasks cascade to the epic only (no story). General parents cascade like any other epic.
 
 ## End cascade (`completed_at`)
 
@@ -44,14 +44,14 @@ When completing a leaf (or after sync-status):
 2. Set target `completed_at` if unset when status → `done`.
 3. Recompute parent **story**: if all children done/cancelled and ≥1 done → story `done`, set `completed_at` if unset. Skip when parent story is missing.
 4. Recompute parent **epic**: same against stories. Skip when parent epic is missing.
-5. Do not invent ≤2 min sessions; do not leave parents `in_progress` when all children are terminal. Completing the last child under **Unattached** / **General** may mark those parents done — that is OK; recreate via ensure if needed for new orphans.
+5. Do not invent ≤2 min sessions; do not leave parents `in_progress` when all children are terminal. Completing the last child under **General** (or an epic with only direct leaves) may mark that epic done — that is OK; recreate via ensure if needed for new orphans.
 
 ## Propagation
 
 After updating an item:
 
 1. Recompute that item’s status (and size rollup for story/epic).
-2. Recompute parent story (if task/bug), then parent epic — including start/end timestamp cascades above.
+2. Recompute parent story (if task/bug under a story), then parent epic — including start/end timestamp cascades above. Epic-direct leaves recompute the epic only.
 3. Refresh board `INDEX.md`.
 4. Bump `updated` on rewritten files.
 5. Run `recompute-actuals.py` (optionally `--calibrate`).

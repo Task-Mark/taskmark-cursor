@@ -30,12 +30,12 @@ completed_at: null
 
 ## Goal
 
-Default home for stories and tasks that do not have a clearer epic.
+Default home for general tasks and user stories that do not have a clearer epic.
 
 ## Scope
 
-- Unattached stories created without an explicit epic.
-- Catch-all story **Unattached** for tasks/bugs without an explicit story.
+- General user stories created without an explicit epic.
+- General tasks/bugs without an explicit story (`items/` under this epic).
 
 ## Out of scope
 
@@ -43,11 +43,9 @@ Default home for stories and tasks that do not have a clearer epic.
 
 ## Success metrics
 
-- Unattached work remains visible in the epic list under General.
+- General tasks and user stories remain visible in the epic list under General.
 
 ## Stories
-
-- [S-002: Unattached](stories/S-002-unattached/story.md)
 
 ## Commits
 

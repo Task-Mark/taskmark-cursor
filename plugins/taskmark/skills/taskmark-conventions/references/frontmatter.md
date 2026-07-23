@@ -49,11 +49,12 @@ completed_at: null
 
 Epic: `parent: null`, `epic: null`.  
 Story: `parent` = epic id, `epic` = same epic id (preferred). May be `null` only transiently; prefer attaching under the reserved **General** epic when no clearer epic fits.  
-Task/bug: `parent` = story id, `epic` = ancestor epic id (preferred). When the user has no story, attach under General’s catch-all **Unattached** story (still a real `parent`/`epic` on disk).
+Task/bug under a story: `parent` = story id, `epic` = ancestor epic id.  
+Task/bug under an epic (no story): `parent` = epic id, `epic` = same epic id. Files live in `epics/{E-NNN}/items/`.
 
 ### Optional hierarchy
 
 - Stories and tasks do **not** require a user-invented epic/story. Soft-attach from prompt/context when possible; otherwise use **General**.
 - Reserved epic: title `General`, folder slug `{E-NNN}-general`, tag `general`. Do not delete; recreate via `ensure-general-epic.py` if missing.
-- Reserved catch-all story under General: title `Unattached`, slug `{S-NNN}-unattached`, tag `unattached`.
-- Files always live under `epics/…/stories/…/items/` — “standalone” means optional *user* hierarchy, not free-floating markdown outside that tree.
+- Files always live under `epics/…` — either `stories/…/items/` or epic-level `items/`. “Standalone” means optional *user* hierarchy, not free-floating markdown outside that tree.
+- Do **not** use a catch-all Unattached story; story-less tasks/bugs attach under an epic’s `items/` (or General’s `items/` when no epic is clear).

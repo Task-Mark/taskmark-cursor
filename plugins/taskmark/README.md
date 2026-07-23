@@ -1,6 +1,6 @@
 # Taskmark
 
-Cursor plugin for hierarchical product planning as markdown: **epics → stories → tasks/bugs** under `taskmark/` in your project(s). Hierarchy is preferred but optional — unattached stories/tasks live under a reserved **General** epic.
+Cursor plugin for hierarchical product planning as markdown: **epics → stories → tasks/bugs** under `taskmark/` in your project(s). Hierarchy is preferred but optional — general tasks and user stories live under a reserved **General** epic.
 
 This repository is a **plugin marketplace** layout:
 
@@ -15,7 +15,7 @@ examples/sample-board/            # docs fixture (also under the plugin)
 ## Features
 
 - Convention-enforced board files (frontmatter, IDs, folders)
-- **Optional parents** — create stories/tasks without naming an epic/story; soft-attach from context or fall back to **General** / **Unattached**
+- **Optional parents** — create stories/tasks without naming an epic/story; soft-attach from context or fall back to **General**. Tasks/bugs may live under an epic with no story.
 - **T-shirt sizing** + **Fibonacci story points** with calibrated suggestions
 - **Effort minutes** from work-log sessions (never calendar span for effort)
 - **Actual minutes** as wall-clock `started_at` → `completed_at`
@@ -69,7 +69,7 @@ See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish th
 |---------|-------|---------|
 | `/new-epic` | `create-epic` | New epic |
 | `/new-story` | `create-story` | New story (epic optional → General) |
-| `/new-task` | `create-task` | New task or bug (story optional → Unattached) |
+| `/new-task` | `create-task` | New task or bug (story optional → epic `items/`) |
 | `/start-work` | `start-work` | Open session (idle-closes stale first) |
 | `/complete-work` | `complete-work` | Close session + actual minutes |
 | `/sync-status` | `sync-status` | Status, actuals, INDEX, VELOCITY |

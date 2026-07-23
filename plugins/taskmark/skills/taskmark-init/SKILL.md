@@ -21,7 +21,7 @@ description: >-
    - `VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) empty template
    - `REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
    - `epics/` (optional `.gitkeep`)
-4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic and **Unattached** catch-all story exist (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
+4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
 5. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
 6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
 
