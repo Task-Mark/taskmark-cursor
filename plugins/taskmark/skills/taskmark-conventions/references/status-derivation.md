@@ -31,10 +31,10 @@ Same as story, against child **stories**.
 When starting a task/bug (or story/epic directly):
 
 1. Set the target’s `started_at` if null (same UTC timestamp as session start).
-2. If starting a **task/bug**: also set parent **story** `started_at` if null, then parent **epic** `started_at` if null.
-3. If starting a **story**: also set parent **epic** `started_at` if null.
+2. If starting a **task/bug**: also set parent **story** `started_at` if null (skip if parent missing), then parent **epic** `started_at` if null (skip if missing).
+3. If starting a **story**: also set parent **epic** `started_at` if null (skip if missing / null parent).
 4. Do **not** open Work log sessions on parents unless the user is working the parent itself (avoids double-counting effort).
-5. Ancestor status becomes `in_progress` via child rules on sync.
+5. Ancestor status becomes `in_progress` via child rules on sync. General / Unattached parents cascade like any other epic/story.
 
 ## End cascade (`completed_at`)
 
@@ -42,9 +42,9 @@ When completing a leaf (or after sync-status):
 
 1. Close open Work log sessions on the target with real Ended = now (or idle deadline).
 2. Set target `completed_at` if unset when status → `done`.
-3. Recompute parent **story**: if all children done/cancelled and ≥1 done → story `done`, set `completed_at` if unset.
-4. Recompute parent **epic**: same against stories.
-5. Do not invent ≤2 min sessions; do not leave parents `in_progress` when all children are terminal.
+3. Recompute parent **story**: if all children done/cancelled and ≥1 done → story `done`, set `completed_at` if unset. Skip when parent story is missing.
+4. Recompute parent **epic**: same against stories. Skip when parent epic is missing.
+5. Do not invent ≤2 min sessions; do not leave parents `in_progress` when all children are terminal. Completing the last child under **Unattached** / **General** may mark those parents done — that is OK; recreate via ensure if needed for new orphans.
 
 ## Propagation
 

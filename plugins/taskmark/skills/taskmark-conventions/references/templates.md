@@ -130,6 +130,8 @@ As a …, I want … so that ….
 |---------|-------|---------------|-------------|---------|
 ```
 
+When no clearer epic fits, set `parent`/`epic` to the reserved **General** epic id (see [folder-layout](folder-layout.md)). Do not leave stories outside `epics/`.
+
 ## Task
 
 ```markdown
@@ -186,6 +188,8 @@ completed_at: null
 | Session | Actor | Started (UTC) | Ended (UTC) | Summary |
 |---------|-------|---------------|-------------|---------|
 ```
+
+When no clearer story fits, set `parent` to General’s **Unattached** story and `epic` to General (run `ensure-general-epic.py` first).
 
 ## Bug
 

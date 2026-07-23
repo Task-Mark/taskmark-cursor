@@ -54,3 +54,23 @@ Paths below are relative to the **board root** (`taskmark/` in single mode, or t
 - One epic file per epic folder (`epic.md`); one story file per story folder (`story.md`)
 - Tasks and bugs are sibling files under `items/` (not nested further)
 - Scan the board for the next free numeric id before allocating (`E-`, `S-`, `T-`, `B-` namespaces are independent)
+
+## Reserved General epic
+
+Every board should include a default **General** epic for unattached stories/tasks:
+
+```text
+epics/
+└── E-NNN-general/
+    ├── epic.md                 # title: General, tags: [general]
+    └── stories/
+        └── S-NNN-unattached/
+            ├── story.md        # title: Unattached, tags: [unattached, general]
+            └── items/          # orphan tasks/bugs land here
+```
+
+- Identify General by title `General`, slug `*-general`, or tag `general` (do not duplicate).
+- Identify the catch-all story by title `Unattached`, slug `*-unattached`, or tag `unattached`.
+- Run `scripts/ensure-general-epic.py <board-root>` from init and create soft-fallback paths.
+- Prefer a contextual epic/story when the user’s prompt clearly matches one; otherwise attach under General / Unattached.
+- Do not delete General; it keeps unattached work visible in the epic list.

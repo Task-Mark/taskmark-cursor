@@ -28,8 +28,8 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 5. Append next Work log session on the **target**: Actor `agent` or `user`, Started=now UTC, Ended=`—`, Summary “In progress: …”.
 6. Set target `started_at` if null (same timestamp).
 7. **Start cascade:**
-   - Task/bug → if parent story `started_at` is null, set it; then if epic `started_at` is null, set it.
-   - Story → if epic `started_at` is null, set it.
+   - Task/bug → if parent story exists and `started_at` is null, set it; then if epic exists and `started_at` is null, set it. Skip missing parents (General/Unattached still cascade when present).
+   - Story → if epic exists and `started_at` is null, set it.
    - Epic → only own `started_at`.
 8. Bump `updated` on edited files; set ancestors to `in_progress` via sync.
 9. Sync status for item + ancestors (`sync-status` / recompute script); refresh INDEX.

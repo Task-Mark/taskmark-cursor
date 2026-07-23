@@ -41,7 +41,8 @@ Board root: `taskmark/` inside a single product repo, or the root of a dedicated
 
 - IDs: `E-NNN`, `S-NNN`, `T-NNN`, `B-NNN` (zero-padded, unique board-wide)
 - Folder slug: `{id}-{kebab-title}`
-- Tasks and bugs live under the story’s `items/`
+- Tasks and bugs live under a story’s `items/` (use General → Unattached when no story is named)
+- Stories and tasks do not require a user-invented parent; prefer contextual attach, else reserved **General** epic
 - Do not hand-set `status` except via `blocked` / `cancelled` latches; run sync-status after changes
 - Work log + Commits on every item; Prompt & feedback on stories, tasks, and bugs
 - Track `size` + `points` + `estimate_minutes` + `effort_minutes` (billable sessions) + `actual_minutes` (wall-clock start→complete)

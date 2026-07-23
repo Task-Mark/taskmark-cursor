@@ -1,8 +1,8 @@
 ---
 name: new-story
-description: Create a new Taskmark user story under an epic
+description: Create a new Taskmark user story (epic optional; defaults to General)
 ---
 
 # New story
 
-Follow the `create-story` skill. Require a parent epic id or path. Create the story folder, suggest size, link from the epic, and update `INDEX.md`.
+Follow the `create-story` skill. Prefer a parent epic when named or clear from context; otherwise attach under the reserved **General** epic. Create the story folder, suggest size, link from the epic, and update `INDEX.md`.

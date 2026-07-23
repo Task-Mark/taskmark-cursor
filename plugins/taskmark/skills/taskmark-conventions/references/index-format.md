@@ -38,6 +38,8 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 
 - Paths are relative to the board root
 - Include all epics, stories, tasks, and bugs
+- Stories under **General** and tasks under **Unattached** appear like any other row (Epic/Story columns show those ids)
+- Size column for epics is always `—` (epics have no t-shirt size)
 - Epic **Size** is always `—` (epics have no t-shirt size); epic **Points** = sum of story points
 - Story **Points** = sum of task/bug points when the story has children
 - Open work sessions lists every item with an open Work log row (after idle auto-close, stale sessions should be gone)

@@ -8,7 +8,7 @@ alwaysApply: false
 
 When creating or editing files under `taskmark/`:
 
-- Keep required YAML frontmatter including `size` (null on epics), `points`, `estimate_minutes`, `actual_minutes`, `session_cap_minutes`, sources/basis fields, and standard id/status/parent fields. Epic points = sum of stories; story points = sum of tasks when children exist.
+- Keep required YAML frontmatter including `size` (null on epics), `points`, `estimate_minutes`, `actual_minutes`, `session_cap_minutes`, sources/basis fields, and standard id/status fields. `parent`/`epic` are preferred when known; otherwise attach under the reserved **General** epic (and **Unattached** story for tasks). Epic points = sum of stories; story points = sum of tasks when children exist.
 - Do **not** hand-set `status` except via `blocked` / `cancelled`; after edits run sync-status.
 - **Never** hand-set `effort_minutes` or `actual_minutes`. Run `scripts/recompute-actuals.py` (from sync-status / complete-work).
 - **Never** invent ≤2 minute closed Work log sessions for delivered work. Close real open sessions with **now** UTC.
