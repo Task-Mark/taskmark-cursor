@@ -22,6 +22,8 @@ session_cap_minutes: 480 # max billable minutes per session (default 480)
 parent: S-001
 epic: E-001
 owner: ""
+reporters: []
+resolvers: []
 blocked: false
 cancelled: false
 tags: []
@@ -38,6 +40,8 @@ completed_at: null
 |-------|--------|
 | `status` | Derived by sync-status. Do not edit directly. |
 | `blocked` / `cancelled` | Manual latches that force status |
+| `owner` | Optional display string; prefer `reporters` / `resolvers` for attribution |
+| `reporters` / `resolvers` | Lists of `{name, email, initials}` from git config — see [identity](identity.md) |
 | `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points **plus epic-direct task/bug points**. |
 | `estimate_minutes` | **Est** — planned time from 30-day velocity × points or seeds |
 | `estimate_source` | `suggested` (may refresh on calibrate) or `manual` (never overwrite) |

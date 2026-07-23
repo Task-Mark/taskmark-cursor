@@ -39,6 +39,8 @@ session_cap_minutes: 480
 parent: null
 epic: null
 owner: ""
+reporters: []
+resolvers: []
 blocked: false
 cancelled: false
 tags: []
@@ -62,14 +64,16 @@ completed_at: null
 
 ## Commits
 
-| SHA | Repo | Date (UTC) | Message |
-|-----|------|------------|---------|
+| SHA | Repo | Date (UTC) | Author | Message |
+|-----|------|------------|--------|---------|
 
 ## Work log
 
 | Session | Actor | Started (UTC) | Ended (UTC) | Summary |
 |---------|-------|---------------|-------------|---------|
 ```
+
+Stamp `reporters` from current git identity via `scripts/git-identity.py` (see [identity](identity.md)).
 
 ## Story (`story.md`)
 
@@ -93,6 +97,8 @@ session_cap_minutes: 480
 parent: E-NNN
 epic: E-NNN
 owner: ""
+reporters: []
+resolvers: []
 blocked: false
 cancelled: false
 tags: []
@@ -116,13 +122,13 @@ As a …, I want … so that ….
 
 ## Prompt & feedback log
 
-| # | When (UTC) | Kind | Summary |
-|---|------------|------|---------|
+| # | When (UTC) | Kind | Author | Summary |
+|---|------------|------|--------|---------|
 
 ## Commits
 
-| SHA | Repo | Date (UTC) | Message |
-|-----|------|------------|---------|
+| SHA | Repo | Date (UTC) | Author | Message |
+|-----|------|------------|--------|---------|
 
 ## Work log
 
@@ -154,6 +160,8 @@ session_cap_minutes: 480
 parent: S-NNN
 epic: E-NNN
 owner: ""
+reporters: []
+resolvers: []
 blocked: false
 cancelled: false
 tags: []
@@ -175,13 +183,13 @@ completed_at: null
 
 ## Prompt & feedback log
 
-| # | When (UTC) | Kind | Summary |
-|---|------------|------|---------|
+| # | When (UTC) | Kind | Author | Summary |
+|---|------------|------|--------|---------|
 
 ## Commits
 
-| SHA | Repo | Date (UTC) | Message |
-|-----|------|------------|---------|
+| SHA | Repo | Date (UTC) | Author | Message |
+|-----|------|------------|--------|---------|
 
 ## Work log
 

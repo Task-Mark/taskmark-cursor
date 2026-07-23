@@ -94,3 +94,12 @@ Effort rules: billable work-log minutes only; idle deadline = next UTC day at 12
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+<!-- taskmark:contributors:begin -->
+## Contributors
+
+People who created or resolved work items on this board (from local git config).
+
+- Marco Mendão <marco.mendao@betacode.tech>
+
+<!-- taskmark:contributors:end -->

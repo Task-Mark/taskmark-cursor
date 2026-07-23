@@ -21,11 +21,11 @@ description: >-
 3. For each repo, run (from that root):
 
    ```bash
-   git log --since="<ISO or relative>" --pretty=format:'%h|%cI|%s'
+   git log --since="<ISO or relative>" --pretty=format:'%h|%cI|%an|%s'
    ```
 
    Filter to commits relevant to this item when possible (paths touched, message keywords, user confirmation).
-4. Append new rows `| SHA | Repo | Date (UTC) | Message |` — skip SHAs already listed for that repo on this item.
+4. Append new rows `| SHA | Repo | Date (UTC) | Author | Message |` — skip SHAs already listed for that repo on this item. Prefer upgrading older 4-column tables to include Author when appending.
 5. Optionally append the same notable SHAs to parent story and/or epic Commits tables.
 6. Bump `updated` on edited files.
 7. Board commit rows live only on the canonical board; do not copy the board into product repos.

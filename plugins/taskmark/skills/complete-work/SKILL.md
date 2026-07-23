@@ -27,14 +27,14 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 3. Set Ended to **now UTC** (if now is past idle deadline, use idle deadline and note auto-cap).
 4. Update Session Summary with what was accomplished.
 5. Align AC / fix criteria checkboxes with reality.
-6. Append `feedback` row if the user accepted/rejected or gave final notes.
-7. Bump `updated`. Set target `completed_at` if status will be `done` and it is unset.
+6. Append `feedback` row if the user accepted/rejected or gave final notes (Author from git identity).
+7. Bump `updated`. Set target `completed_at` if status will be `done` and it is unset. Merge current git identity into `resolvers` via `scripts/git-identity.py` (see [identity](../taskmark-conventions/references/identity.md)). Upsert README contributors when the email is new.
 8. Log commits for touched repos since session start (`log-commits`).
 9. **Shared-batch (whole epic/story in one sitting):** if this close finishes a multi-leaf delivery:
    - Let `batch_started` = earliest open/closed session start among the leaves delivered together; `batch_ended` = now (or idle/session cap).
    - Allocate billable minutes across those leaves by **points** (largest-remainder); write each leaf’s Ended as `batch_started + allocated` (same Started). Summaries may include `shared-batch: X of Ymin by points`.
    - Parents get a 0-minute rollup row or no billable session — do not also store the full batch on the parent.
-10. **End cascade:** after leaf/story is done, if all siblings are done/cancelled and ≥1 done → set parent story/epic `status: done` and `completed_at` if unset. **Parents that become done must also have a Work log** (0-minute rollup note is OK when children hold the shared-batch split).
+10. **End cascade:** after leaf/story is done, if all siblings are done/cancelled and ≥1 done → set parent story/epic `status: done` and `completed_at` if unset. **Parents that become done must also have a Work log** (0-minute rollup note is OK when children hold the shared-batch split). Stamp resolver on each newly completed item.
 11. **Recompute (required):**  
     `python3 scripts/recompute-actuals.py <board-root> --calibrate`  
     Redistributes any remaining identical parallel leaf sessions, writes `actual_minutes`, rolls up parents, refreshes INDEX/VELOCITY.

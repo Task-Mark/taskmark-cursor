@@ -36,6 +36,7 @@ Board root: `taskmark/` inside a single product repo, or the root of a dedicated
 - [Status derivation](references/status-derivation.md)
 - [INDEX format](references/index-format.md)
 - [Velocity](references/velocity.md)
+- [Contributor identity](references/identity.md)
 
 ## Quick rules
 

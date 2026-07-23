@@ -24,8 +24,8 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 1. Locate the item markdown under the board root.
 2. **Idle auto-close:** if an open session exists and now > idle deadline, close it at the deadline with Summary note `auto-closed: idle cap (next-day 12:00 UTC)`, then run `recompute-actuals.py` (or sync-status).
 3. If an open session still exists (within idle window), do not open another — reuse it and tell the user.
-4. **Prompt & feedback** (story/task/bug): append a `prompt` row for the current user request.
-5. Append next Work log session on the **target**: Actor `agent` or `user`, Started=now UTC, Ended=`—`, Summary “In progress: …”.
+4. **Prompt & feedback** (story/task/bug): append a `prompt` row for the current user request; set **Author** from `scripts/git-identity.py` name when available.
+5. Append next Work log session on the **target**: Actor = git `user.name` when available (else `agent` or `user`), Started=now UTC, Ended=`—`, Summary “In progress: …”.
 6. Set target `started_at` if null (same timestamp).
 7. **Start cascade:**
    - Task/bug → if parent is a story and `started_at` is null, set it; then if epic exists and `started_at` is null, set it. If parent is an epic (epic-direct leaf), only cascade to that epic. Skip missing parents.
