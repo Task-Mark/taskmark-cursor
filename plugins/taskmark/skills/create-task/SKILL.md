@@ -24,7 +24,7 @@ Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/re
 4. Create item file from template under the resolved `items/` folder (Prompt & feedback, Commits, Work log).
 5. Set frontmatter:
    - Under story: `parent` = story id, `epic` = ancestor epic id.
-   - Under epic: `parent` = epic id, `epic` = same epic id.
+   - Under epic (no story): `parent` = epic id **and** `epic` = same epic id (never leave `parent: null` — rollups attach via parent/epic).
 6. **Calibrate** per sizing ref: prefer 30-day velocity × points for `estimate_minutes` (else seeds); set `estimate_source` / `estimate_basis`; `effort_minutes: 0`, `actual_minutes: 0`, `session_cap_minutes: 480`.
 7. Link from the parent’s Tasks (or epic body list if epic-direct); refresh INDEX; roll up story/epic; refresh VELOCITY if useful.
 8. Run `sync-taskmark-repos` only if board location / REPOS needs refresh.

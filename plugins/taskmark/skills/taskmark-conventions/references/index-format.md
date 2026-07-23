@@ -40,7 +40,7 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 - Include all epics, stories, tasks, and bugs
 - Stories under **General** and epic-direct tasks (Story column `—` or the epic id) appear like any other row
 - Size column for epics is always `—` (epics have no t-shirt size)
-- Epic **Size** is always `—` (epics have no t-shirt size); epic **Points** = sum of story points
+- Epic **Size** is always `—` (epics have no t-shirt size); epic **Points** = sum of story points + epic-direct task/bug points
 - Story **Points** = sum of task/bug points when the story has children
 - Open work sessions lists every item with an open Work log row (after idle auto-close, stale sessions should be gone)
 - Sort by id ascending within each table

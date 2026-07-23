@@ -503,11 +503,26 @@ def load_items(taskmark: Path) -> list[Item]:
 
 
 def build_tree(items: list[Item]) -> None:
-    by_id = {i.fm["id"]: i for i in items}
+    """Attach children via parent id; epic-direct leaves also attach via epic.
+
+    Tasks/bugs may have ``parent: null`` (or a missing parent) while still setting
+    ``epic: E-NNN``. Those must hang under the epic so points/estimates roll up.
+    """
+    by_id = {i.fm["id"]: i for i in items if i.fm.get("id")}
     for item in items:
-        parent_id = item.fm.get("parent")
-        if parent_id and parent_id != "null" and parent_id in by_id:
+        parent_id = (item.fm.get("parent") or "").strip()
+        if parent_id in {"", "null", "None", "—", "-"}:
+            parent_id = ""
+        if parent_id and parent_id in by_id:
             by_id[parent_id].children.append(item)
+            continue
+        # Fallback: attach story / leaf to epic when parent is missing or unknown
+        if item.fm.get("type") in {"task", "bug", "story"}:
+            epic_id = (item.fm.get("epic") or "").strip()
+            if epic_id in {"", "null", "None", "—", "-"}:
+                epic_id = ""
+            if epic_id and epic_id in by_id and epic_id != item.fm.get("id"):
+                by_id[epic_id].children.append(item)
 
 
 def median_or_none(vals: list[int]) -> int | None:
@@ -747,9 +762,26 @@ def rollup_parent(item: Item, now: datetime) -> None:
     """Roll points/estimate from children; actual = max(sum children, own sessions).
 
     - Story points = sum of child task/bug points; size rolls from child t-shirts.
-    - Epic points = sum of child story points; epic has **no** t-shirt size.
+    - Epic points = sum of child story points **and** epic-direct task/bug points;
+      epic has **no** t-shirt size.
     """
     if not item.children:
+        # Clear stale rolled-up totals when all children are gone (e.g. moved/deleted).
+        if item.fm.get("type") in {"story", "epic"} and item.fm.get("points_source") == "rolled_up":
+            updates: dict[str, Any] = {
+                "points": 0,
+                "estimate_minutes": 0,
+                "points_source": "rolled_up",
+                "updated": fmt_ts(now),
+            }
+            if item.fm.get("type") == "epic":
+                updates["size"] = None
+                updates["size_source"] = "rolled_up"
+                updates["size_basis"] = "[sum:children]"
+                updates["estimate_source"] = "rolled_up"
+                updates["estimate_basis"] = "[sum:children]"
+            item.fm.update({k: ("null" if v is None else str(v)) for k, v in updates.items()})
+            item.text = set_frontmatter(item.text, updates, drop_keys=["effort_minutes"])
         return
     est = sum(int(c.fm.get("estimate_minutes") or 0) for c in item.children)
     points = sum(int(c.fm.get("points") or 0) for c in item.children)
@@ -760,7 +792,7 @@ def rollup_parent(item: Item, now: datetime) -> None:
     own_ms = own_actual_ms(item, now)
     actual_ms = max(child_ms, own_ms)
     actual = actual_ms // 60_000
-    updates: dict[str, Any] = {
+    updates = {
         "estimate_minutes": est,
         "points": points,
         "points_source": "rolled_up",
@@ -772,6 +804,7 @@ def rollup_parent(item: Item, now: datetime) -> None:
         updates["size"] = None
         updates["size_source"] = "rolled_up"
         updates["size_basis"] = "[sum:children]"
+        updates["estimate_source"] = "rolled_up"
         updates["estimate_basis"] = "[sum:children]"
     else:
         weight = 0
@@ -876,10 +909,10 @@ def main() -> None:
         )
 
     for item in items:
-        if item.fm.get("type") == "story" and item.children:
+        if item.fm.get("type") == "story":
             rollup_parent(item, now)
     for item in items:
-        if item.fm.get("type") == "epic" and item.children:
+        if item.fm.get("type") == "epic":
             rollup_parent(item, now)
 
     calibration_rows: list[str] = []
@@ -941,10 +974,10 @@ def main() -> None:
         refreshed = refresh_suggested_estimates(items, leaves, now)
 
         for item in items:
-            if item.fm.get("type") == "story" and item.children:
+            if item.fm.get("type") == "story":
                 rollup_parent(item, now)
         for item in items:
-            if item.fm.get("type") == "epic" and item.children:
+            if item.fm.get("type") == "epic":
                 rollup_parent(item, now)
 
         update_sizing_md(taskmark / "SIZING.md", seeds, calibration_rows, args.dry_run)

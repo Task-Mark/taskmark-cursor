@@ -21,5 +21,5 @@ Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/re
 2. Gather title, user story, AC, priority, tags.
 3. Allocate next `S-NNN`; create `story.md` from template under that epic’s `stories/`.
 4. Suggest initial `size`, `points`, `estimate_minutes` from 30-day velocity × points (else seeds) when the story has **no tasks yet**. Once tasks exist, **points = sum of task/bug points** (and est rolls up) via sync/`recompute-actuals`. Set `actual_minutes: 0`, `session_cap_minutes: 480`.
-5. Set `parent` / `epic` to the resolved epic id. Link from epic; refresh INDEX; roll up epic **points** (sum of stories; epic has no size); run `sync-taskmark-repos` only if board location / REPOS needs refresh.
+5. Set `parent` / `epic` to the resolved epic id. Link from epic; refresh INDEX; roll up epic **points** (sum of stories + epic-direct tasks; epic has no size); run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 6. Reply with id, path, size, points, estimate, and **assigned epic** (including General when used).

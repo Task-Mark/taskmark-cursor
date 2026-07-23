@@ -38,7 +38,7 @@ completed_at: null
 |-------|--------|
 | `status` | Derived by sync-status. Do not edit directly. |
 | `blocked` / `cancelled` | Manual latches that force status |
-| `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points. |
+| `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points **plus epic-direct task/bug points**. |
 | `estimate_minutes` | **Est** — planned time from 30-day velocity × points or seeds |
 | `estimate_source` | `suggested` (may refresh on calibrate) or `manual` (never overwrite) |
 | `actual_minutes` | **Actual** — billable work-log sessions from start-work / complete-work |

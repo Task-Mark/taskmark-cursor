@@ -35,9 +35,9 @@ Required for `create-task` and `create-story` (recommended for epics):
 - Story **size**: from sum of child t-shirt weights (see mapping below) when children exist.
 - Story **estimate_minutes**: sum of children when children exist.
 - Story **actual_minutes**: max(sum of children, own work-log billable) when children exist.
-- Epic **points**: **sum of child story `points`** (which already include task sums).
+- Epic **points**: **sum of child story `points` plus epic-direct task/bug `points`**.
 - Epic **size**: **none** (`null`) — epics do not use t-shirt size; only points.
-- Epic **estimate_minutes** / **actual_minutes**: sum / max rollup from stories like above.
+- Epic **estimate_minutes** / **actual_minutes**: sum / max rollup from stories and epic-direct leaves.
 
 Mapping sum of child weights → shirt:
 
