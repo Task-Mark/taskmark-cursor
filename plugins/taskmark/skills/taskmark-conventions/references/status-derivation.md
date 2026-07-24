@@ -19,12 +19,14 @@ Open work session = a Work log row with empty or `—` Ended.
 1. `cancelled: true` → `cancelled`
 2. `blocked: true` → `blocked`
 3. All child items `done` or `cancelled`, and at least one `done` → `done` (set `completed_at` if unset)
-4. Any child `in_progress` or `blocked`, or mix of done + backlog → `in_progress`
-5. All children `backlog` or no children → `backlog`
+4. Any child `in_progress` or `blocked`, or mix of done + backlog → `in_progress` (clear `completed_at` if leaving `done`)
+5. All children `backlog` or no children → `backlog` (clear `completed_at` if leaving `done`)
 
 ## Epic
 
-Same as story, against child **stories**.
+Same as story, against child **stories and epic-direct tasks/bugs** (leaves under the epic’s `items/` with `parent`/`epic` = that epic). Do **not** look through story children for epic status — those roll into their story first.
+
+When a new open epic-direct leaf is added under a `done` epic, sync must reopen the epic to `in_progress` and clear `completed_at`.
 
 ## Start cascade (`started_at`)
 
@@ -41,9 +43,9 @@ When starting a task/bug (or story/epic directly):
 When completing a leaf (or after sync-status):
 
 1. Close open Work log sessions on the target with real Ended = now (or idle deadline).
-2. Set target `completed_at` if unset when status → `done`.
+2. Set target `completed_at` if unset when status → `done`. Clear `completed_at` when status leaves `done` (e.g. new open child reopens a parent).
 3. Recompute parent **story**: if all children done/cancelled and ≥1 done → story `done`, set `completed_at` if unset. Skip when parent story is missing.
-4. Recompute parent **epic**: same against stories. Skip when parent epic is missing.
+4. Recompute parent **epic**: same against **stories + epic-direct leaves**. Skip when parent epic is missing.
 5. Do not invent ≤2 min sessions; do not leave parents `in_progress` when all children are terminal. Completing the last child under **General** (or an epic with only direct leaves) may mark that epic done — that is OK; recreate via ensure if needed for new orphans.
 
 ## Propagation
