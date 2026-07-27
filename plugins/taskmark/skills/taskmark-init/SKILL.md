@@ -1,7 +1,7 @@
 ---
 name: taskmark-init
 description: >-
-  Initialize a Taskmark board (INDEX, SIZING, VELOCITY, REPOS, epics). Single-git:
+  Initialize a Taskmark board (INDEX, SIZING, REPOS, epics). Single-git:
   under <project>/taskmark/. Multi-git: at sibling <common>-taskmark repo root
   (flat). Use when setting up Taskmark or when create skills find no board.
 ---
@@ -18,50 +18,37 @@ description: >-
    - `README.md`
    - `INDEX.md` — [index-format](../taskmark-conventions/references/index-format.md)
    - `SIZING.md` — [sizing](../taskmark-conventions/references/sizing.md)
-   - `VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) empty template
    - `REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
    - `epics/` (optional `.gitkeep`)
-4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
-5. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
-6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
+4. **Do not** create `VELOCITY.md` (velocity/time-estimate mechanism removed — S-057).
+5. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
+6. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
+7. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
 
 ## Seed INDEX.md
 
 Use headers with Size | Points | Est (min) | Actual (min) and `—` placeholder rows per [index-format](../taskmark-conventions/references/index-format.md).
 
-## Seed VELOCITY.md
-
-```markdown
-# Team velocity
-
-Last synced: <now UTC ISO-8601>
-Window: rolling 30 days (done tasks/bugs by completed_at)
-
-## Throughput
-
-| Metric | Value |
-|--------|-------|
-| Done items in window | 0 |
-| Sum points | 0 |
-| Median points | — |
-| Median effort_minutes | — |
-| Median minutes per point | insufficient data |
-| Points per week (approx) | insufficient data |
-
-## Remaining backlog
-
-| Metric | Value |
-|--------|-------|
-| Open items (excl. cancelled) | 0 |
-| Sum points remaining | 0 |
-| Sum estimate_minutes remaining | 0 |
-| ETA (from median min/point) | insufficient data |
-
-## Notes
-
-- Speed uses **effort_minutes** (session billable) over 30 days; `actual_minutes` is wall-clock lead time.
-```
-
 ## Seed SIZING.md
 
-Include size↔points↔seed estimate table and empty calibration log.
+```markdown
+# T-shirt sizing and story points
+
+| Size | Points | Meaning |
+|------|--------|---------|
+| XS | 1 | Trivial |
+| S | 2 | Small |
+| M | 3 | Medium |
+| L | 5 | Large |
+| XL | 8 | Extra large (prefer split) |
+
+Weights for size rollups: XS=1, S=2, M=3, L=4, XL=5.
+
+Sizing suggests **size + points only**. Do not suggest `estimate_minutes` from size
+(velocity/time-estimate mechanism removed).
+
+## Calibration log
+
+| Date | Item | Sized | Points | Note |
+|------|------|-------|--------|------|
+```

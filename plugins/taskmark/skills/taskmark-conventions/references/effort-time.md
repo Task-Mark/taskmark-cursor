@@ -4,9 +4,9 @@ Taskmark shows **two** time columns:
 
 | Field | Meaning |
 |-------|---------|
-| `estimate_minutes` (**Est**) | Planned time = points × 30-day median min/point (else SIZING seed). |
+| `estimate_minutes` (**Est**) | Optional/historical planned minutes. Sizing does **not** suggest this (S-057); prefer `0` on create. |
 | `actual_ms` | Precise billable Work log duration in **milliseconds** (script-derived). |
-| `actual_minutes` (**Actual**, velocity) | `floor(actual_ms / 60000)` — used for velocity and Est calibration. |
+| `actual_minutes` (**Actual**) | `floor(actual_ms / 60000)` — time spent from sessions. |
 
 **Never** use calendar span (`completed_at − started_at`) for Actual. Overnight gaps must not inflate time spent.
 
@@ -14,7 +14,7 @@ Taskmark shows **two** time columns:
 
 **Never** invent ≤2 minute closed Work log sessions to mark delivery. Close the real open session with **now** UTC via `complete-work`.
 
-**Done ⇒ work log:** every `done` epic/story/task/bug must have Work log session(s) totaling **> 2** billable minutes. If completing without a session, run `start-work` first. Historical gaps may be backfilled with a closed session of `points × 30-day median min/point` (see [velocity](velocity.md)), never a ≤2 minute stub.
+**Done ⇒ work log:** every `done` epic/story/task/bug must have Work log session(s) totaling **> 2** billable minutes. If completing without a session, run `start-work` first. Historical gaps may be backfilled with a closed session from known duration (or ≥5 minutes), never a ≤2 minute stub.
 
 ## Billable minutes (Actual)
 
@@ -31,7 +31,7 @@ Per session:
 
 ## Estimates (Est)
 
-On create (and when refreshing suggested estimates): `estimate_minutes = points × median(actual/points)` over done tasks/bugs with `completed_at` in the last **30 days** and `actual_minutes > 2`. If fewer than 3 samples, use the SIZING seed for the t-shirt size. Record `estimate_basis` as `[velocity:30d:Nmin/pt]` or seed.
+Do **not** suggest `estimate_minutes` from size, points, or a velocity window (removed — S-057). On create set `estimate_minutes: 0` unless the user provides a manual value (`estimate_source: manual`).
 
 ## Idle auto-close
 
@@ -61,7 +61,7 @@ When one wall-clock session delivers **multiple** leaves:
 
 1. Measure **one** batch span: `batch_started` → `batch_ended` (billable after idle/session caps).
 2. **Never** copy that full Started/Ended onto every leaf (that makes Actual ≈ N × batch).
-3. Allocate **milliseconds** by **points** (fallback `estimate_minutes`) with largest-remainder so allocations **sum exactly** to the batch billable total.
+3. Allocate **milliseconds** by **points** (fallback equal split) with largest-remainder so allocations **sum exactly** to the batch billable total.
 4. On each leaf, write a closed Work log row with the **same** `Started` = `batch_started` and `Ended` = `Started + allocated_ms` (not the full batch end). Summary may note `shared-batch: X of Yms by points`.
 5. Parents (story/epic): either omit a billable session or record a **0-minute** rollup row; Actual comes from child sum (= batch total).
 6. Leaf billable may be **≤ 2** when the batch total is **> 2** and the row is a shared-batch allocation. Do not invent extra minutes to satisfy the usual >2 rule on every leaf.

@@ -34,5 +34,5 @@ description: >-
 
 1. Resolve item; apply requested edits; bump `updated`.
 2. If title/path rename, update parent link lists and INDEX paths.
-3. Run sync-status for the item and ancestors (refreshes actuals / VELOCITY).
+3. Run sync-status for the item and ancestors (refreshes actuals / INDEX).
 4. Confirm diff of changed fields.

@@ -45,4 +45,4 @@ Last synced: YYYY-MM-DDTHH:MM:SSZ
 - Open work sessions lists every item with an open Work log row (after idle auto-close, stale sessions should be gone)
 - Sort by id ascending within each table
 - Prefer one `—` placeholder row when a section is empty
-- Also refresh `VELOCITY.md` when syncing
+- Also refresh INDEX when syncing (do not create or refresh `VELOCITY.md` — removed)

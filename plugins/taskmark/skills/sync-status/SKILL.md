@@ -2,7 +2,7 @@
 name: sync-status
 description: >-
   Idle-close stale Taskmark work sessions, recompute status, size/points rollups,
-  effort_minutes and wall-clock actual_minutes, refresh INDEX.md and VELOCITY.md.
+  effort_minutes and wall-clock actual_minutes, refresh INDEX.md.
   Use after AC edits, work-log changes, or when the user asks to sync board status.
 ---
 
@@ -10,7 +10,7 @@ description: >-
 
 ## Prerequisites
 
-Read [status-derivation](../taskmark-conventions/references/status-derivation.md), [effort-time](../taskmark-conventions/references/effort-time.md), [sizing](../taskmark-conventions/references/sizing.md), [velocity](../taskmark-conventions/references/velocity.md), [index-format](../taskmark-conventions/references/index-format.md).
+Read [status-derivation](../taskmark-conventions/references/status-derivation.md), [effort-time](../taskmark-conventions/references/effort-time.md), [sizing](../taskmark-conventions/references/sizing.md), [index-format](../taskmark-conventions/references/index-format.md).
 
 ## Forbidden
 
@@ -28,12 +28,11 @@ Read [status-derivation](../taskmark-conventions/references/status-derivation.md
    - redistributes identical parallel leaf Work log spans (shared-batch) by points
    - applies commit-span recovery into **effort** when work-log billable ≪ commit span
    - recovers missing `started_at` from first work-log session when done
-   - writes `effort_minutes` (sessions) and `actual_minutes` (wall-clock)
-   - rolls up story/epic size, points, estimate, effort, actual
-   - calibrates mismatched done estimates / SIZING seeds from **effort**
-   - refreshes suggested open estimates from 30-day velocity
-   - refreshes `INDEX.md` and `VELOCITY.md` (30-day window)
-5. Report changes (status, effort, actual, idle closes, recoveries, calibrations, cascades).
+   - writes `actual_minutes` / `actual_ms` from billable sessions
+   - rolls up story/epic size, points, estimate (historical), actual
+   - does **not** refresh velocity or suggest time estimates (removed — S-057)
+   - refreshes `INDEX.md`
+5. Report changes (status, effort, actual, idle closes, recoveries, cascades).
 
 ## Full board sync
 

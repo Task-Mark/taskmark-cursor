@@ -10,7 +10,6 @@ my-app/
     ├── README.md
     ├── INDEX.md
     ├── SIZING.md
-    ├── VELOCITY.md
     ├── REPOS.md
     └── epics/
         └── E-001-user-auth/
@@ -32,7 +31,6 @@ acme-taskmark/
 ├── README.md
 ├── INDEX.md
 ├── SIZING.md
-├── VELOCITY.md
 ├── REPOS.md
 ├── epics/
 │   └── …

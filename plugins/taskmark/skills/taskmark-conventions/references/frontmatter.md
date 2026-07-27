@@ -14,10 +14,10 @@ size_source: suggested   # suggested | manual
 size_basis: [T-014, T-022]
 points: 3           # 1 | 2 | 3 | 5 | 8 | 13
 points_source: suggested # suggested | manual
-estimate_minutes: 480    # Est: velocity × points or seed
+estimate_minutes: 0      # Est: unused by sizing (keep 0 unless manual)
 actual_minutes: 0        # Actual: billable start-work→complete-work sessions
 estimate_source: suggested  # suggested | manual
-estimate_basis: [T-014]  # prior items or [velocity:30d:Nmin/pt]
+estimate_basis: []
 session_cap_minutes: 480 # max billable minutes per session (default 480)
 parent: S-001
 epic: E-001
@@ -43,8 +43,8 @@ completed_at: null
 | `owner` | Optional display string; prefer `reporters` / `resolvers` for attribution |
 | `reporters` / `resolvers` | Lists of `{name, email, initials}` from git config — see [identity](identity.md) |
 | `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points **plus epic-direct task/bug points**. |
-| `estimate_minutes` | **Est** — planned time from 30-day velocity × points or seeds |
-| `estimate_source` | `suggested` (may refresh on calibrate) or `manual` (never overwrite) |
+| `estimate_minutes` | **Est** — optional/historical; sizing does **not** suggest time (S-057). Prefer `0` on create. |
+| `estimate_source` | `suggested` or `manual` |
 | `actual_minutes` | **Actual** — billable work-log sessions from start-work / complete-work |
 | `session_cap_minutes` | Cap per session for Actual (default 480). See [effort-time](effort-time.md) |
 | `started_at` | Set on start (leaf + parent cascade). ISO-8601 UTC |

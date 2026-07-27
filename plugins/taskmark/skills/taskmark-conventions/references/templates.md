@@ -10,7 +10,7 @@ size_source: suggested
 size_basis: []
 points: 3
 points_source: suggested
-estimate_minutes: 480
+estimate_minutes: 0
 actual_minutes: 0
 estimate_source: suggested
 estimate_basis: []
@@ -89,7 +89,7 @@ size_source: suggested
 size_basis: []
 points: 3
 points_source: suggested
-estimate_minutes: 480
+estimate_minutes: 0
 actual_minutes: 0
 estimate_source: suggested
 estimate_basis: []
@@ -152,7 +152,7 @@ size_source: suggested
 size_basis: []
 points: 3
 points_source: suggested
-estimate_minutes: 480
+estimate_minutes: 0
 actual_minutes: 0
 estimate_source: suggested
 estimate_basis: []

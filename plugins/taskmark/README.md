@@ -16,11 +16,10 @@ examples/sample-board/            # docs fixture (also under the plugin)
 
 - Convention-enforced board files (frontmatter, IDs, folders)
 - **Optional parents** — create stories/tasks without naming an epic/story; soft-attach from context or fall back to **General**. Tasks/bugs may live under an epic with no story.
-- **T-shirt sizing** + **Fibonacci story points** with calibrated suggestions
+- **T-shirt sizing** + **Fibonacci story points** (size + points only — no time estimates from sizing)
 - **Effort minutes** from work-log sessions (never calendar span for effort)
-- **Actual minutes** as wall-clock `started_at` → `completed_at`
+- **Actual minutes** as billable work-log session time
 - **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
-- **VELOCITY.md** — rolling 30-day median min/point (effort) and delivery ETA
 - Start/end cascade for task → story → epic timestamps
 - Work log, commits log, prompt/feedback logs
 - Single- or multi-git board location (`<common>-taskmark` sibling) + commit-all
@@ -72,8 +71,7 @@ See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish th
 | `/new-task` | `create-task` | New task or bug (story optional → epic `items/`) |
 | `/start-work` | `start-work` | Open session (idle-closes stale first) |
 | `/complete-work` | `complete-work` | Close session + actual minutes |
-| `/sync-status` | `sync-status` | Status, actuals, INDEX, VELOCITY |
-| `/velocity` | `taskmark-velocity` | Team speed / ETA |
+| `/sync-status` | `sync-status` | Status, actuals, INDEX |
 | `/sync-plugin-local` | `sync-plugin-local` | Rsync plugin → `~/.cursor/plugins/local` |
 | `/board-status` | `taskmark-overview` | Board summary |
 | `/log-commits` | `log-commits` | Record commits |
@@ -87,7 +85,6 @@ taskmark/
 ├── README.md
 ├── INDEX.md
 ├── SIZING.md
-├── VELOCITY.md
 ├── REPOS.md
 └── epics/…
 ```

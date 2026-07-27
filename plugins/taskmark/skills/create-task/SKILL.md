@@ -2,8 +2,8 @@
 name: create-task
 description: >-
   Create a Taskmark task or bug under a story or epic, allocate T-NNN or B-NNN,
-  suggest t-shirt size and estimate from history, link from the parent, and
-  update INDEX. Use when the user asks for a new task or bug.
+  suggest t-shirt size and points from history, link from the parent, and update
+  INDEX. Use when the user asks for a new task or bug.
 ---
 
 # create-task
@@ -25,8 +25,8 @@ Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/re
 5. Set frontmatter:
    - Under story: `parent` = story id, `epic` = ancestor epic id.
    - Under epic (no story): `parent` = epic id **and** `epic` = same epic id (never leave `parent: null` — rollups attach via parent/epic).
-6. **Calibrate** per sizing ref: prefer 30-day velocity × points for `estimate_minutes` (else seeds); set `estimate_source` / `estimate_basis`; `effort_minutes: 0`, `actual_minutes: 0`, `session_cap_minutes: 480`.
+6. **Size:** suggest t-shirt + points per [sizing](../taskmark-conventions/references/sizing.md). Set `estimate_minutes: 0` (do not suggest time). `actual_minutes: 0`, `session_cap_minutes: 480`.
 7. Stamp `reporters` from `scripts/git-identity.py` (merge by email). Upsert README contributors when identity is new.
-8. Link from the parent’s Tasks (or epic body list if epic-direct); refresh INDEX; roll up story/epic; refresh VELOCITY if useful. **Re-derive parent status** (story and/or epic): a `done` parent with a new open child becomes `in_progress` and clears `completed_at` (epic status includes epic-direct leaves — see status-derivation).
+8. Link from the parent’s Tasks (or epic body list if epic-direct); refresh INDEX; roll up story/epic. **Re-derive parent status** (story and/or epic): a `done` parent with a new open child becomes `in_progress` and clears `completed_at` (epic status includes epic-direct leaves — see status-derivation).
 9. Run `sync-taskmark-repos` only if board location / REPOS needs refresh.
-10. Reply with id, path, size, points, estimate_minutes, basis, and **assigned parent** (story and/or epic, including General when used).
+10. Reply with id, path, size, points, and **assigned parent** (story and/or epic, including General when used).

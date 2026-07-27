@@ -9,11 +9,11 @@ description: >-
 
 ## Steps
 
-1. Read `taskmark/INDEX.md` and optionally `VELOCITY.md`.
+1. Read board `INDEX.md` (and open Work log sessions via sync if needed).
 2. Present:
    - Counts by status
    - Epics/stories with size, points, est vs actual
    - Open work sessions
-   - Short velocity snapshot (median min/point, remaining points) or “insufficient data”
    - Blocked/cancelled callouts
 3. If INDEX looks stale, suggest `/sync-status`. Do not modify files unless asked to sync.
+4. Do not read or invent `VELOCITY.md` (removed — S-057). For delivery pace UI, see E-015 Current Speed when relevant.
