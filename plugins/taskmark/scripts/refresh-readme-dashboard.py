@@ -44,6 +44,19 @@ OPEN_END = "<!-- taskmark:open-work:end -->"
 CHANGELOG_BEGIN = "<!-- taskmark:changelog:begin -->"
 CHANGELOG_END = "<!-- taskmark:changelog:end -->"
 
+# Board-repo housekeeping subjects excluded from the public changelog.
+# Keep "complete …" / feature-oriented messages; drop sync and commit-log noise.
+CHANGELOG_NOISE_SUBJECT = re.compile(
+    r"""(?ix)^\s*(
+        sync(\s+taskmark)?\s+board
+      | update(\s+taskmark)?\s+board
+      | update\s+readme\s+dashboard
+      | log\b.*
+    )\s*$
+    | \band\s+sync(\s+taskmark)?\s+board\s*$
+    """
+)
+
 SECTION_PATTERNS = {
     "status": re.compile(
         re.escape(STATUS_BEGIN) + r"[\s\S]*?" + re.escape(STATUS_END), re.M
@@ -175,11 +188,22 @@ def render_open_work_block(rows: list[dict[str, str]], synced: str) -> str:
     return "\n".join(lines)
 
 
+def is_changelog_noise(subject: str) -> bool:
+    """True for board housekeeping subjects (sync, readme refresh, commit logs)."""
+    return bool(CHANGELOG_NOISE_SUBJECT.search((subject or "").strip()))
+
+
 def board_git_log(board: Path, limit: int) -> list[tuple[str, str, str, str]]:
-    """Return (sha, iso_date, author, subject) newest first."""
+    """Return meaningful (sha, iso_date, author, subject) newest first.
+
+    Overscans git history so housekeeping subjects can be filtered while still
+    filling ``limit`` rows of meaningful commits.
+    """
     if not (board / ".git").exists() and not (board / ".git").is_file():
         # may be worktree; still try git -C
         pass
+    # Fetch extra history so filtering still fills the visible limit.
+    fetch_n = max(limit * 5, limit + 40)
     try:
         out = subprocess.check_output(
             [
@@ -187,7 +211,7 @@ def board_git_log(board: Path, limit: int) -> list[tuple[str, str, str, str]]:
                 "-C",
                 str(board),
                 "log",
-                f"-n{limit}",
+                f"-n{fetch_n}",
                 "--pretty=format:%h|%cI|%an|%s",
             ],
             text=True,
@@ -201,6 +225,9 @@ def board_git_log(board: Path, limit: int) -> list[tuple[str, str, str, str]]:
         if len(parts) != 4:
             continue
         sha, when, author, subject = parts
+        subject = subject.strip()
+        if is_changelog_noise(subject):
+            continue
         # normalize date to UTC Z when possible
         when = when.strip()
         if when.endswith("+01:00") or re.search(r"[+-]\d{2}:\d{2}$", when):
@@ -212,7 +239,9 @@ def board_git_log(board: Path, limit: int) -> list[tuple[str, str, str, str]]:
         elif when.endswith("Z"):
             pass
         subject = subject.replace("|", "\\|")
-        rows.append((sha.strip(), when, author.strip(), subject.strip()))
+        rows.append((sha.strip(), when, author.strip(), subject))
+        if len(rows) >= limit:
+            break
     return rows
 
 
@@ -225,7 +254,8 @@ def render_changelog_block(
         "",
         f"_Last synced: {synced}_",
         "",
-        "Recent commits on this board repository.",
+        "Recent meaningful commits on this board repository "
+        "(excludes sync / housekeeping).",
         "",
     ]
     if not commits:

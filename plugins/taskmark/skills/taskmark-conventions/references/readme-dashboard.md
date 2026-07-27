@@ -48,7 +48,15 @@ Columns: ID | Type | Title | Status | Size | Points | Parent
 
 ### Changelog
 
-Regenerated from `git log` on the **board repo** (date, short SHA, author, subject). Product-repo commits are out of scope for the initial design.
+Regenerated from `git log` on the **board repo** (date, short SHA, author, subject).
+Housekeeping subjects are omitted so the table stays meaningful:
+
+- `sync taskmark board` / `update taskmark board` / `sync board`
+- `update readme dashboard`
+- commit-log trail messages (`log …`)
+- messages ending in `and sync board`
+
+Product-repo commits remain out of scope for the initial design.
 
 ## Contributors
 
