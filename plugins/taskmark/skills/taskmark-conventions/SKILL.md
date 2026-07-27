@@ -44,6 +44,6 @@ Board root: `taskmark/` inside a single product repo, or the root of a dedicated
 - Stories and tasks do not require a user-invented parent; prefer contextual attach, else reserved **General** epic
 - Do not hand-set `status` except via `blocked` / `cancelled` latches; run sync-status after changes
 - Work log + Commits on every item; Prompt & feedback on stories, tasks, and bugs
-- Track `size` + `points` + `actual_minutes` (billable sessions); `estimate_minutes` is optional/historical (not suggested by sizing)
+- Track `size` + `points` + `estimate_minutes` + `actual_minutes` (billable sessions); suggest Est from Current Speed intensity when samples exist ([velocity](references/velocity.md))
 - Idle: auto-close open sessions at next-day 12:00 UTC; session_cap_minutes default 480
 - Multi-root: sibling `<common>-taskmark` git repo **is** the board root (no nested `taskmark/`); never copy into product repos

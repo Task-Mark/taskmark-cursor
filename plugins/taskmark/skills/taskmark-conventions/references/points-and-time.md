@@ -14,4 +14,4 @@ See [effort-time](effort-time.md) for billable minutes, idle auto-cap (next-day 
 | L | 5 |
 | XL | 8 |
 
-Do not suggest `estimate_minutes` from size or velocity (removed — S-057). Use `0` on create.
+Suggest `estimate_minutes` from Current Speed intensity when samples exist ([velocity](velocity.md)); else `0` on create.

@@ -4,7 +4,7 @@ Taskmark shows **two** time columns:
 
 | Field | Meaning |
 |-------|---------|
-| `estimate_minutes` (**Est**) | Optional/historical planned minutes. Sizing does **not** suggest this (S-057); prefer `0` on create. |
+| `estimate_minutes` (**Est**) | Planned minutes. Suggest from Current Speed intensity when samples exist ([velocity](velocity.md)); else `0` or manual. |
 | `actual_ms` | Precise billable Work log duration in **milliseconds** (script-derived). |
 | `actual_minutes` (**Actual**) | `floor(actual_ms / 60000)` — time spent from sessions. |
 
@@ -31,7 +31,7 @@ Per session:
 
 ## Estimates (Est)
 
-Do **not** suggest `estimate_minutes` from size, points, or a velocity window (removed — S-057). On create set `estimate_minutes: 0` unless the user provides a manual value (`estimate_source: manual`).
+Suggest `estimate_minutes` from Current Speed intensity when the 90-day window has ≥3 trustworthy samples (`actual_minutes > 2`, `points > 0`): `round5(points × median min/pt)` with `estimate_basis: [speed:90d:Nmin/pt]`. Otherwise set `estimate_minutes: 0` unless the user provides a manual value (`estimate_source: manual`).
 
 ## Idle auto-close
 

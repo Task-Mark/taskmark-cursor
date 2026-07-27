@@ -25,7 +25,7 @@ Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/re
 5. Set frontmatter:
    - Under story: `parent` = story id, `epic` = ancestor epic id.
    - Under epic (no story): `parent` = epic id **and** `epic` = same epic id (never leave `parent: null` — rollups attach via parent/epic).
-6. **Size:** suggest t-shirt + points per [sizing](../taskmark-conventions/references/sizing.md). Set `estimate_minutes: 0` (do not suggest time). `actual_minutes: 0`, `session_cap_minutes: 480`.
+6. **Size:** suggest t-shirt + points per [sizing](../taskmark-conventions/references/sizing.md). Suggest `estimate_minutes` from Current Speed intensity when available (points × median min/pt over the 90-day window; `estimate_basis: [speed:90d:Nmin/pt]`); else `0`. `actual_minutes: 0`, `session_cap_minutes: 480`.
 7. Stamp `reporters` from `scripts/git-identity.py` (merge by email). Upsert README contributors when identity is new.
 8. Link from the parent’s Tasks (or epic body list if epic-direct); refresh INDEX; roll up story/epic. **Re-derive parent status** (story and/or epic): a `done` parent with a new open child becomes `in_progress` and clears `completed_at` (epic status includes epic-direct leaves — see status-derivation).
 9. Run `sync-taskmark-repos` only if board location / REPOS needs refresh.

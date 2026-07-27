@@ -20,6 +20,6 @@ Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/re
    - Else run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` and attach under **General**.
 2. Gather title, user story, AC, priority, tags.
 3. Allocate next `S-NNN`; create `story.md` from template under that epic’s `stories/`.
-4. Suggest initial `size` and `points` from similar done items (else size→points map). Set `estimate_minutes: 0` — do **not** suggest time estimates. Once tasks exist, **points = sum of task/bug points** via sync/`recompute-actuals`. Set `actual_minutes: 0`, `session_cap_minutes: 480`.
+4. Suggest initial `size` and `points` from similar done items (else size→points map). Suggest `estimate_minutes` from Current Speed intensity when available (see [velocity](../taskmark-conventions/references/velocity.md)); else `0`. Once tasks exist, **points = sum of task/bug points** via sync/`recompute-actuals`. Set `actual_minutes: 0`, `session_cap_minutes: 480`.
 5. Set `parent` / `epic` to the resolved epic id. Stamp `reporters` from `python3 <plugin>/scripts/git-identity.py` (merge into list; see [identity](../taskmark-conventions/references/identity.md)). Upsert README contributors when a new email appears (`upsert-readme-contributors.py`). Link from epic; refresh INDEX; roll up epic **points** (sum of stories + epic-direct tasks; epic has no size); run `sync-taskmark-repos` only if board location / REPOS needs refresh.
 6. Reply with id, path, size, points, and **assigned epic** (including General when used).

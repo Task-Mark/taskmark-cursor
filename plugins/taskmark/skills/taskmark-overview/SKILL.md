@@ -16,4 +16,4 @@ description: >-
    - Open work sessions
    - Blocked/cancelled callouts
 3. If INDEX looks stale, suggest `/sync-status`. Do not modify files unless asked to sync.
-4. Do not read or invent `VELOCITY.md` (removed — S-057). For delivery pace UI, see E-015 Current Speed when relevant.
+4. Optionally summarize `VELOCITY.md` Current Speed and ETA (`/velocity`). For delivery pace UI, see E-015 Current Speed (same rule).

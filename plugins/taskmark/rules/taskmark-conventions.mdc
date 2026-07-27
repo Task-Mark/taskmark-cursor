@@ -15,5 +15,5 @@ When creating or editing files under `taskmark/`:
 - **Never** set `effort_minutes` from calendar span. Effort = billable work-log sessions only (idle auto-cap: next-day 12:00 UTC; session_cap_minutes default 480). Commit-span recovery feeds effort only. `actual_minutes` is wall-clock `started_at`→`completed_at` written by the script.
 - Idle: auto-close open sessions at next-day 12:00 UTC when syncing / starting / completing work.
 - **Work log** and **Commits** on every item; **Prompt & feedback** on stories/tasks/bugs.
-- Refresh `INDEX.md` (Points / Est / Actual) via recompute / sync-status. Do not create or refresh `VELOCITY.md` (removed). Sizing suggests size + points only.
+- Refresh `INDEX.md` (Points / Est / Actual) and `VELOCITY.md` (Current Speed + ETA) via recompute / sync-status. Sizing suggests size + points; Est from 90-day median min/pt when samples exist.
 - Follow `taskmark-conventions` skill templates.

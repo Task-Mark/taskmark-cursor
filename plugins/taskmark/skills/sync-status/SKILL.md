@@ -29,8 +29,9 @@ Read [status-derivation](../taskmark-conventions/references/status-derivation.md
    - applies commit-span recovery into **effort** when work-log billable ≪ commit span
    - recovers missing `started_at` from first work-log session when done
    - writes `actual_minutes` / `actual_ms` from billable sessions
-   - rolls up story/epic size, points, estimate (historical), actual
-   - does **not** refresh velocity or suggest time estimates (removed — S-057)
+   - rolls up story/epic size, points, estimate, actual
+   - refreshes `VELOCITY.md` (Current Speed + ETA)
+   - with `--calibrate`, refreshes suggested open estimates from the 90-day median min/point
    - refreshes `INDEX.md`
 5. Report changes (status, effort, actual, idle closes, recoveries, cascades).
 

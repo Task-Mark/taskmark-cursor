@@ -1,9 +1,7 @@
-# Sizing, points (no time estimates)
+# Sizing, points, and suggested estimates
 
-Suggest **t-shirt size** and **story points** only. Do **not** suggest
-`estimate_minutes` from velocity, seeds, or similar (velocity/time-estimate
-mechanism removed — board S-057). Keep `estimate_minutes: 0` on create unless
-the user sets a manual value later.
+Suggest **t-shirt size**, **story points**, and (when speed samples exist)
+**estimate_minutes** from Current Speed intensity. See [velocity](velocity.md).
 
 Seed **points** map (also in `SIZING.md`):
 
@@ -25,15 +23,15 @@ Required for `create-task` and `create-story` (recommended for epics' children):
 2. Rank by similarity.
 3. **Size:** median t-shirt among top matches (order XS < S < M < L < XL).
 4. **Points:** median `points` among top matches; if missing, use size→points map above.
-5. Set `estimate_minutes: 0`, `estimate_source: suggested`, `estimate_basis: []` (time estimates not suggested).
+5. **Est:** if `VELOCITY.md` / recompute reports median min/point for the 90-day window, set `estimate_minutes = round5(points × median)`; `estimate_basis: [speed:90d:Nmin/pt]`; `estimate_source: suggested`. If insufficient samples, use `estimate_minutes: 0` and `estimate_basis: []`.
 6. Write `size`, `size_source`, `size_basis`, `points`, `points_source`, `actual_minutes: 0`, `session_cap_minutes: 480`.
-7. Manual size/points override → `*_source: manual`.
+7. Manual size/points/estimate override → `*_source: manual`.
 
 ## Rollups
 
 - Story **points**: **sum of child task/bug `points`** when children exist; else own points.
 - Story **size**: from sum of child t-shirt weights (see mapping below) when children exist.
-- Story **estimate_minutes**: sum of children when children exist (historical; often 0).
+- Story **estimate_minutes**: sum of children when children exist.
 - Story **actual_minutes**: max(sum of children, own work-log billable) when children exist.
 - Epic **points**: **sum of child story `points` plus epic-direct task/bug `points`**.
 - Epic **size**: **none** (`null`) — epics do not use t-shirt size; only points.
@@ -51,10 +49,13 @@ Mapping sum of child weights → shirt:
 
 ## Calibration
 
-`recompute-actuals.py --calibrate` no longer rewrites open/done time estimates or a
-velocity window. It still recomputes actuals and size/points rollups.
+`recompute-actuals.py --calibrate` refreshes non-manual open leaf estimates from the
+90-day median min/point, may recalibrate wildly off done estimates, updates
+`SIZING.md` seed medians when enough samples exist, and always refreshes
+`VELOCITY.md` / `INDEX.md`.
 
 ## Velocity
 
-Removed. Delivery pace UI is tracked under **E-015 Current Speed** (90-day weekly
-points average). Do not create or refresh `VELOCITY.md`.
+Board `VELOCITY.md` reports **Current Speed** (90-day weekly points average —
+same rule as E-015 UI) plus median min/point and ETA. Refresh via recompute /
+`taskmark-velocity`.

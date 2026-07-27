@@ -14,7 +14,7 @@ size_source: suggested   # suggested | manual
 size_basis: [T-014, T-022]
 points: 3           # 1 | 2 | 3 | 5 | 8 | 13
 points_source: suggested # suggested | manual
-estimate_minutes: 0      # Est: unused by sizing (keep 0 unless manual)
+estimate_minutes: 0      # Est: points × median min/pt (90d) when available; else 0
 actual_minutes: 0        # Actual: billable start-work→complete-work sessions
 estimate_source: suggested  # suggested | manual
 estimate_basis: []
@@ -43,7 +43,7 @@ completed_at: null
 | `owner` | Optional display string; prefer `reporters` / `resolvers` for attribution |
 | `reporters` / `resolvers` | Lists of `{name, email, initials}` from git config — see [identity](identity.md) |
 | `size` / `points` | Tasks/bugs use t-shirt + Fibonacci. Stories roll points from tasks. **Epics have no size** (`null`); epic points = sum of story points **plus epic-direct task/bug points**. |
-| `estimate_minutes` | **Est** — optional/historical; sizing does **not** suggest time (S-057). Prefer `0` on create. |
+| `estimate_minutes` | **Est** — suggested from Current Speed intensity (`points × median min/pt` over 90d) when ≥3 samples; else `0` or manual. |
 | `estimate_source` | `suggested` or `manual` |
 | `actual_minutes` | **Actual** — billable work-log sessions from start-work / complete-work |
 | `session_cap_minutes` | Cap per session for Actual (default 480). See [effort-time](effort-time.md) |

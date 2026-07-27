@@ -20,10 +20,10 @@ description: >-
    - `SIZING.md` — [sizing](../taskmark-conventions/references/sizing.md)
    - `REPOS.md` — [multi-repo](../taskmark-conventions/references/multi-repo.md)
    - `epics/` (optional `.gitkeep`)
-4. **Do not** create `VELOCITY.md` (velocity/time-estimate mechanism removed — S-057).
-5. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
-6. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
-7. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
+   - `VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) (seed template; refreshed by recompute)
+4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
+5. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
+6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
 
 ## Seed INDEX.md
 
@@ -34,21 +34,22 @@ Use headers with Size | Points | Est (min) | Actual (min) and `—` placeholder 
 ```markdown
 # T-shirt sizing and story points
 
-| Size | Points | Meaning |
-|------|--------|---------|
-| XS | 1 | Trivial |
-| S | 2 | Small |
-| M | 3 | Medium |
-| L | 5 | Large |
-| XL | 8 | Extra large (prefer split) |
+| Size | Points | Meaning | Seed estimate |
+|------|--------|---------|---------------|
+| XS | 1 | Trivial | 15 min |
+| S | 2 | Small | 30 min |
+| M | 3 | Medium | 50 min |
+| L | 5 | Large | 90 min |
+| XL | 8 | Extra large (prefer split) | 180 min |
 
 Weights for size rollups: XS=1, S=2, M=3, L=4, XL=5.
 
-Sizing suggests **size + points only**. Do not suggest `estimate_minutes` from size
-(velocity/time-estimate mechanism removed).
+Sizing suggests size + points; Est uses Current Speed median min/pt when available
+(see VELOCITY.md). Seed estimates are fallbacks only.
 
 ## Calibration log
 
-| Date | Item | Sized | Points | Note |
-|------|------|-------|--------|------|
+| Date | Item | Sized | Points | Est | Actual | Note |
+|------|------|-------|--------|-----|--------|------|
+| — | — | — | — | — | — | — |
 ```
