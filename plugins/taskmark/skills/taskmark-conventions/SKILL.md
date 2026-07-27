@@ -31,6 +31,8 @@ Board root: `taskmark/` inside a single product repo, or the root of a dedicated
 - [Work log](references/work-log.md)
 - [Prompt & feedback log](references/prompt-feedback-log.md)
 - [Commits log](references/commits-log.md)
+- [Velocity](references/velocity.md)
+- [README dashboard](references/readme-dashboard.md)
 - [Multi-repo boards](references/multi-repo.md)
 - [Status derivation](references/status-derivation.md)
 - [INDEX format](references/index-format.md)

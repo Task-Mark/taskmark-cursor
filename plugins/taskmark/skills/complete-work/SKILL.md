@@ -37,7 +37,7 @@ Resolve item; read [work-log](../taskmark-conventions/references/work-log.md), [
 10. **End cascade:** after leaf/story is done, if all siblings are done/cancelled and ≥1 done → set parent story/epic `status: done` and `completed_at` if unset. **Parents that become done must also have a Work log** (0-minute rollup note is OK when children hold the shared-batch split). Stamp resolver on each newly completed item.
 11. **Recompute (required):**  
     `python3 scripts/recompute-actuals.py <board-root> --calibrate`  
-    Redistributes any remaining identical parallel leaf sessions, writes `actual_minutes`, rolls up parents, refreshes INDEX.
+    Redistributes any remaining identical parallel leaf sessions, writes `actual_minutes`, rolls up parents, refreshes INDEX, VELOCITY, and board README dashboard sections.
 12. Confirm `completed_at` and that **epic/story Actual ≈ batch wall-clock** (not N × batch) when work was a shared batch.
 13. Refresh `REPOS.md` with `sync-taskmark-repos` if multi-repo.
 14. Reply with closed session, Actual minutes, status, and rollups.

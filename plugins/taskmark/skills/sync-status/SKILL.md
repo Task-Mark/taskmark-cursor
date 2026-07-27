@@ -31,6 +31,7 @@ Read [status-derivation](../taskmark-conventions/references/status-derivation.md
    - writes `actual_minutes` / `actual_ms` from billable sessions
    - rolls up story/epic size, points, estimate, actual
    - refreshes `VELOCITY.md` (Current Speed + ETA)
+   - refreshes board `README.md` managed sections (project status, open work, changelog)
    - with `--calibrate`, refreshes suggested open estimates from the 90-day median min/point
    - refreshes `INDEX.md`
 5. Report changes (status, effort, actual, idle closes, recoveries, cascades).

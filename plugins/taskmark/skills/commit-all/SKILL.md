@@ -48,7 +48,10 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
    Prefer the helper: `scripts/commit-all-repos.sh --message "…" [workspace…]` when committing many roots with one shared message; for per-repo messages, commit each root separately following the same one-liner rule.
 6. Never commit secrets (`.env`, credentials). Warn and skip those files if present.
 7. After commits succeed, run `log-commits` on the active Taskmark item(s) when known; refresh `REPOS.md` via `sync-taskmark-repos` if needed (board lives only in the canonical project).
-8. Reply with a table: Repo | SHA | Message | or “skipped”.
+8. Before the **board-repo** commit (while staging), run
+   `python3 <plugin>/scripts/refresh-readme-dashboard.py <board-root>`
+   so the changelog includes prior commits and open-work/metrics match board state; stage `README.md` with the board commit. If a board commit already landed without a README refresh, run the script and commit `update readme dashboard` when README is dirty.
+9. Reply with a table: Repo | SHA | Message | or “skipped”.
 
 ## Safety
 

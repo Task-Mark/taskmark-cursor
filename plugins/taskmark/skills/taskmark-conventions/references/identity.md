@@ -73,6 +73,8 @@ Product / board `README.md` files get a managed block:
 Upsert via `scripts/upsert-readme-contributors.py` when a new identity is stamped.
 Use `scripts/git-identity.py` to read or merge the current git user.
 
+Managed project-status / open-work / changelog sections: see [readme-dashboard](readme-dashboard.md).
+
 ## Activity authors
 
 - **Commits** table includes an **Author** column (git commit author).

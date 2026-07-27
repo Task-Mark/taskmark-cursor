@@ -1147,6 +1147,24 @@ def main() -> None:
     refresh_index_actuals(taskmark, by_id, args.dry_run)
     refresh_velocity(taskmark, leaves, now, args.dry_run)
 
+    try:
+        from importlib.util import module_from_spec, spec_from_file_location
+        import sys as _sys
+
+        dash_path = Path(__file__).resolve().parent / "refresh-readme-dashboard.py"
+        spec = spec_from_file_location("refresh_readme_dashboard", dash_path)
+        if spec and spec.loader:
+            dash = module_from_spec(spec)
+            _sys.modules[spec.name] = dash
+            spec.loader.exec_module(dash)
+            readme_changed = dash.refresh_readme(taskmark, dry_run=args.dry_run)
+            print(
+                f"readme dashboard: "
+                f"{'updated' if readme_changed and not args.dry_run else ('would update' if readme_changed else 'unchanged')}"
+            )
+    except Exception as exc:  # noqa: BLE001 — never fail recompute on README refresh
+        print(f"readme dashboard: skipped ({exc})")
+
     print(f"taskmark: {taskmark}")
     print(
         f"items: {len(items)}; shared-batch redistributed: {shared_batch}; "
