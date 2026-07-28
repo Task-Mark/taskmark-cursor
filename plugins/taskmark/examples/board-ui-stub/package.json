@@ -1,0 +1,11 @@
+{
+  "name": "example-taskmark",
+  "private": true,
+  "description": "Optional stub so `npm start` launches the local board UI. Markdown boards work without this file.",
+  "scripts": {
+    "start": "taskmark serve"
+  },
+  "devDependencies": {
+    "taskmark": "^0.1.0"
+  }
+}
