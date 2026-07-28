@@ -6,6 +6,6 @@
     "start": "taskmark serve"
   },
   "devDependencies": {
-    "taskmark": "^0.1.0"
+    "@taskmark/ui": "^0.1.0"
   }
 }

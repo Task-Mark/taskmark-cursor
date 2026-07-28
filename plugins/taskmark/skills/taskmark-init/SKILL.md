@@ -23,16 +23,16 @@ description: >-
    - `VELOCITY.md` — [velocity](../taskmark-conventions/references/velocity.md) (seed template; refreshed by recompute)
 4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
 5. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
-6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named). Tell the user they can open the board UI with `npx taskmark serve` (port **8275**) from the product root or board root — no frontend clone required.
-7. **Optional UI stub (opt-in only):** if the user wants `npm start`, copy [board-ui-stub `package.json`](../../examples/board-ui-stub/package.json) into the board root (or product root) and adjust the `name`. Default boards stay markdown-only without a `package.json`.
+6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named). Tell the user they can open the board UI with `npm i -D @taskmark/ui && npx taskmark serve` (port **8275**) from the product root or board root — no frontend clone required.
+7. **Optional UI stub (opt-in only):** if the user wants `npm start`, copy [board-ui-stub `package.json`](../../examples/board-ui-stub/package.json) into the board root (or product root) and adjust the `name` (depends on `@taskmark/ui`). Default boards stay markdown-only without a `package.json`.
 
 ## Seed README.md
 
 Include a short intro plus local UI launch (nested `taskmark/` and flat `*-taskmark` both work). Prefer the copy in `examples/sample-board/README.md` (repo) or:
 
 - Title + one paragraph on the board as product memory
-- Section **Local board UI** with `npx taskmark serve` → **http://localhost:8275**, note that no frontend clone is required
-- Optional stub: plugin `examples/board-ui-stub/package.json` for `npm start`; default stays markdown-only
+- Section **Local board UI**: `npm i -D @taskmark/ui` then `npx taskmark serve` → **http://localhost:8275**; no frontend clone required
+- Optional stub: plugin `examples/board-ui-stub/package.json` (`@taskmark/ui`) for `npm start`; default stays markdown-only
 
 ## Seed INDEX.md
 
