@@ -4,14 +4,14 @@
     "name": "menda0"
   },
   "metadata": {
-    "description": "Taskmark — hierarchical epic, story, and task markdown planning for Cursor",
+    "description": "Taskmark — Product memory for agent work",
     "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "taskmark",
       "source": "./plugins/taskmark",
-      "description": "Hierarchical epic, story, and task markdown planning with sizing, work logs, commits, and multi-repo sync"
+      "description": "Local markdown boards that keep epics, stories, and tasks in sync with Cursor — so planning survives the chat."
     }
   ]
 }
