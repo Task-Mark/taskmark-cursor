@@ -2,5 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "node",
   "installCommand": "npm install",
-  "buildCommand": null
+  "buildCommand": null,
+  "functions": {
+    "server.js": {
+      "includeFiles": "{node_modules/@taskmark/ui/**,epics/**,*.md}"
+    }
+  }
 }

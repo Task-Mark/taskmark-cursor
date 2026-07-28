@@ -73,15 +73,21 @@ def merge_package_json(board: Path, stub: Path, package_name: str | None, force:
     scripts.setdefault("dev", "taskmark serve")
 
     deps = pkg.setdefault("dependencies", {})
-    # Prefer dependencies (Vercel install); migrate from old stub layout.
-    dev = pkg.get("devDependencies") or {}
-    if "@taskmark/ui" in dev and "@taskmark/ui" not in deps:
-        deps["@taskmark/ui"] = dev.pop("@taskmark/ui")
+    # Always production dep — Vercel omits devDependencies on install.
+    # Migrate any legacy --save-dev / -D install into dependencies.
+    dev = dict(pkg.get("devDependencies") or {})
+    if "@taskmark/ui" in dev:
+        ver = deps.get("@taskmark/ui") or dev["@taskmark/ui"]
+        del dev["@taskmark/ui"]
+        deps["@taskmark/ui"] = ver
         if not dev:
             pkg.pop("devDependencies", None)
         else:
             pkg["devDependencies"] = dev
-    deps.setdefault("@taskmark/ui", stub_pkg.get("dependencies", {}).get("@taskmark/ui", "^0.1.0"))
+    deps.setdefault(
+        "@taskmark/ui",
+        stub_pkg.get("dependencies", {}).get("@taskmark/ui", "^0.1.0"),
+    )
 
     pkg_path.write_text(json.dumps(pkg, indent=2) + "\n", encoding="utf-8")
     return action
@@ -140,7 +146,7 @@ def main() -> int:
     )
     print(
         "Vercel Node stub ready — Framework Preset: Node (server.js). "
-        "Next: npm install @taskmark/ui && npx taskmark serve",
+        "Next: npm install @taskmark/ui --save && npx taskmark serve",
         file=sys.stderr,
     )
     return 0

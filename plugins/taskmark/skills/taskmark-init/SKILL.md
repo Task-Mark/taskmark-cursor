@@ -38,6 +38,8 @@ description: >-
       ```bash
       npm install @taskmark/ui --save
       ```
+      Use **`--save`** (production `dependencies`), never `--save-dev` / `-D` — Vercel omits
+      `devDependencies` and the board `server.js` entry would fail at runtime.
       If the registry returns **404 / not found** and a local package with `"name": "@taskmark/ui"` exists in the workspace (commonly sibling `taskmark-frontend`):
       ```bash
       npm install <absolute-or-relative-path-to-@taskmark/ui> --save
