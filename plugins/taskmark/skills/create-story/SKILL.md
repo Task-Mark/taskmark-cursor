@@ -10,7 +10,7 @@ description: >-
 
 ## Prerequisites
 
-Board exists (else `taskmark-init`). Read [templates](../taskmark-conventions/references/templates.md), [sizing](../taskmark-conventions/references/sizing.md), [folder-layout](../taskmark-conventions/references/folder-layout.md) (General epic).
+Board exists (else run **full** `taskmark-init`, including `ensure-board-ui.py` / Vercel Node stubs). Read [templates](../taskmark-conventions/references/templates.md), [sizing](../taskmark-conventions/references/sizing.md), [folder-layout](../taskmark-conventions/references/folder-layout.md) (General epic).
 
 ## Steps
 

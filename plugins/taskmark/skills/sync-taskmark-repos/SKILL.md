@@ -34,7 +34,12 @@ description: >-
    - Write `REPOS.md` at the board repo root listing the board + product roots.
    - Do **not** copy the board into product repos.
 5. **`--migrate`:** promote richest existing board into the dedicated project (flat), then delete leftover `taskmark/` directories from product repos.
-6. Report mode, canonical path, and common name.
+6. **Vercel / board UI stubs:** if the canonical board has `INDEX.md` but is missing `server.js` or `vercel.json`, run:
+   ```bash
+   python3 <plugin>/scripts/ensure-board-ui.py <canonical-board-root>
+   ```
+   (Do not overwrite customized files unless the user asks for `--force`.) Prefer full `taskmark-init` when the board itself is missing.
+7. Report mode, canonical path, and common name.
 
 ## Ambiguous name
 

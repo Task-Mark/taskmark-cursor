@@ -9,7 +9,7 @@ description: >-
 
 ## Prerequisites
 
-`taskmark/` exists (else `taskmark-init`). Read templates + sizing.
+`taskmark/` exists (else run **full** `taskmark-init`, including `ensure-board-ui.py` / Vercel Node stubs). Read templates + sizing.
 
 ## Steps
 

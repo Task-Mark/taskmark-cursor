@@ -12,6 +12,10 @@ In multi-git workspaces, the sibling `<common>-taskmark` **repo root is the boar
 npx taskmark serve
 ```
 
-Opens **http://localhost:8275** bound to this board. Or `npm start`.
+Opens **http://localhost:8275** bound to this board. Or `npm run serve` / `npm start`.
+
+## Deploy on Vercel (Node)
+
+Import this board repo → Framework Preset **Node** (root `server.js`) → `npm install`, no build command.
 
 Use the Taskmark Cursor plugin skills (`taskmark-init`, `create-epic`, `create-story`, `create-task`, `start-work`, `complete-work`, `log-commits`, `sync-taskmark-repos`, `sync-status`) to create and update items.

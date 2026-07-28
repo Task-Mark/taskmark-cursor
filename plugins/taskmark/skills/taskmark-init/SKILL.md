@@ -1,8 +1,9 @@
 ---
 name: taskmark-init
 description: >-
-  Initialize a Taskmark board (INDEX, SIZING, REPOS, epics) and install
-  @taskmark/ui so `npx taskmark serve` works. Single-git: under
+  Initialize a Taskmark board (INDEX, SIZING, REPOS, epics), install
+  @taskmark/ui, and scaffold Vercel Node stubs (server.js + vercel.json) so
+  `npx taskmark serve` and Vercel Framework Preset: Node work. Single-git: under
   <project>/taskmark/. Multi-git: at sibling <common>-taskmark repo root
   (flat). Use when setting up Taskmark or when create skills find no board.
 ---
@@ -15,9 +16,8 @@ description: >-
    - **One product git root:** target = that root’s `taskmark/`.
    - **Multiple product git roots:** ensure sibling `<common>-taskmark` (ask user if name ambiguous; `git init` if new), target = **that repo’s root** (board files at root — no nested `taskmark/`).
 2. If target already has `INDEX.md`:
-   - Do **not** recreate board files.
-   - Still run **Install board UI** (step 7) if `package.json` is missing `@taskmark/ui` / `node_modules/@taskmark/ui` is absent, or the user asked to init/install the UI.
-   - Otherwise tell the user it is initialized and stop (unless they ask to repair missing files).
+   - Do **not** recreate board markdown (`INDEX.md`, epics, etc.).
+   - **Still always run** step 7 (Install board UI + **Vercel init**) so missing `server.js` / `vercel.json` / `@taskmark/ui` are repaired — unless the user explicitly asked to skip UI install.
 3. Create under the target (first-time only):
    - `README.md`
    - `INDEX.md` — [index-format](../taskmark-conventions/references/index-format.md)
@@ -28,28 +28,30 @@ description: >-
 4. **Seed General:** run `python3 <plugin>/scripts/ensure-general-epic.py <board-root>` so the reserved **General** epic (with epic-level `items/`) exists (see [folder-layout](../taskmark-conventions/references/folder-layout.md)).
 5. Run `sync-taskmark-repos` (add `--migrate` when cleaning old per-repo copies or flattening nested boards).
 6. Confirm paths; point to `/new-epic` (or `/new-story` / `/new-task`, which soft-attach to General when no parent is named).
-7. **Install board UI (required):** under the board root (flat `*-taskmark` root, or nested `…/taskmark/`):
-   1. Ensure `.gitignore` includes `node_modules/` (create `.gitignore` if missing).
-   2. If `package.json` is missing, copy [board-ui-stub `package.json`](../../examples/board-ui-stub/package.json) and set `"name"` to a sensible board/package name (e.g. `taskmark-taskmark` or `<project>-taskmark`).
-   3. If `package.json` exists but has no `@taskmark/ui` dependency, add `"devDependencies": { "@taskmark/ui": "^0.1.0" }` and `"scripts": { "start": "taskmark serve" }` (merge; do not wipe other fields).
-   4. Run from the board root:
+7. **Install board UI + Vercel init (required):** under the board root (flat `*-taskmark` root, or nested `…/taskmark/`):
+   1. Run the stub helper (copies/merges `package.json`, `server.js`, `vercel.json`, ensures `.gitignore` has `node_modules/`):
       ```bash
-      npm install @taskmark/ui --save-dev
+      python3 <plugin>/scripts/ensure-board-ui.py <board-root> --name <sensible-package-name>
       ```
-      If the registry returns **404 / not found** (package not published yet) and a local package with `"name": "@taskmark/ui"` exists in the workspace (commonly sibling `taskmark-frontend`), install from that path instead:
+      Example names: `taskmark-taskmark`, `<project>-taskmark`. This **is** Taskmark’s Vercel init (Framework Preset: **Node** via root `server.js`) — do **not** run `vercel init` (that downloads unrelated Vercel examples).
+   2. Install the UI from the board root:
       ```bash
-      npm install <absolute-or-relative-path-to-@taskmark/ui> --save-dev
+      npm install @taskmark/ui --save
+      ```
+      If the registry returns **404 / not found** and a local package with `"name": "@taskmark/ui"` exists in the workspace (commonly sibling `taskmark-frontend`):
+      ```bash
+      npm install <absolute-or-relative-path-to-@taskmark/ui> --save
       ```
       Tell the user which source was used.
-   5. Confirm `npx taskmark serve` is available; tell the user to open **http://localhost:8275** (default port).
+   3. Confirm `npx taskmark serve` works → **http://localhost:8275**. Confirm `server.js` + `vercel.json` exist for Vercel (import board repo → Framework Preset **Node**).
 
 ## Seed README.md
 
 Include a short intro plus local UI launch (nested `taskmark/` and flat `*-taskmark` both work). Prefer the copy in `examples/sample-board/README.md` (repo) or:
 
 - Title + one paragraph on the board as product memory
-- Section **Local board UI**: after init, `npx taskmark serve` → **http://localhost:8275** (`npm i -D @taskmark/ui` is done by init)
-- Note `npm start` works when the stub `package.json` is present
+- Section **Local board UI**: after init, `npx taskmark serve` → **http://localhost:8275** (`npm i @taskmark/ui` is done by init)
+- Note `npm start` / `npm run serve` work when the stub `package.json` is present; Vercel uses Framework Preset **Node** + `server.js` (scaffolded by `ensure-board-ui.py`)
 
 ## Seed INDEX.md
 

@@ -1,11 +1,17 @@
 {
   "name": "example-taskmark",
   "private": true,
-  "description": "Board stub so `npm start` / `npx taskmark serve` launch the local UI. Created by taskmark-init.",
-  "scripts": {
-    "start": "taskmark serve"
+  "type": "module",
+  "description": "Board stub so `npm start` / `npx taskmark serve` launch the UI. Deploy on Vercel as Framework Preset: Node (uses server.js). Created by taskmark-init.",
+  "engines": {
+    "node": ">=18"
   },
-  "devDependencies": {
+  "scripts": {
+    "start": "taskmark serve --no-open",
+    "serve": "taskmark serve",
+    "dev": "taskmark serve"
+  },
+  "dependencies": {
     "@taskmark/ui": "^0.1.0"
   }
 }
