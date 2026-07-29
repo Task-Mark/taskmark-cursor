@@ -14,8 +14,8 @@ npx taskmark serve
 
 Opens **http://localhost:8275** bound to this board. Or `npm run serve` / `npm start`.
 
-## Deploy on Vercel (Node)
+## Deploy on Vercel (static)
 
-Import this board repo → Framework Preset **Node** (root `server.js`) → `npm install`, no build command.
+Import this board repo → `npm install` → `npm run build` writes static HTML to `out/` (`vercel.json` sets `outputDirectory`).
 
 Use the Taskmark Cursor plugin skills (`taskmark-init`, `create-epic`, `create-story`, `create-task`, `start-work`, `complete-work`, `log-commits`, `sync-taskmark-repos`, `sync-status`) to create and update items.

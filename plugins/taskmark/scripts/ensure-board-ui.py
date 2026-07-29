@@ -28,16 +28,20 @@ def stub_dir() -> Path:
 
 def ensure_gitignore(board: Path) -> bool:
     gi = board / ".gitignore"
-    line = "node_modules/"
+    lines = ["node_modules/", "out/", ".taskmark-ui-build/"]
+    changed = False
     if gi.exists():
         text = gi.read_text(encoding="utf-8")
-        if "node_modules" in text:
-            return False
-        if text and not text.endswith("\n"):
-            text += "\n"
-        gi.write_text(text + line + "\n", encoding="utf-8")
-        return True
-    gi.write_text(line + "\n", encoding="utf-8")
+        for line in lines:
+            if line.rstrip("/") not in text and line not in text:
+                if text and not text.endswith("\n"):
+                    text += "\n"
+                text += line + "\n"
+                changed = True
+        if changed:
+            gi.write_text(text, encoding="utf-8")
+        return changed
+    gi.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return True
 
 
@@ -64,13 +68,19 @@ def merge_package_json(board: Path, stub: Path, package_name: str | None, force:
     if "description" not in pkg or created:
         pkg["description"] = stub_pkg.get(
             "description",
-            "Taskmark board — npm start / taskmark serve; Vercel Node via server.js.",
+            "Taskmark board — npm start / taskmark serve; Vercel static via npm run build.",
         )
 
     scripts = pkg.setdefault("scripts", {})
     scripts.setdefault("start", "taskmark serve --no-open")
     scripts.setdefault("serve", "taskmark serve")
     scripts.setdefault("dev", "taskmark serve")
+    scripts.setdefault("preview", "taskmark preview")
+    scripts["build"] = stub_pkg.get("scripts", {}).get(
+        "build", "taskmark build --board . --out out"
+    )
+    if stub_pkg.get("scripts", {}).get("preview"):
+        scripts["preview"] = stub_pkg["scripts"]["preview"]
 
     deps = pkg.setdefault("dependencies", {})
     # Always production dep — Vercel omits devDependencies on install.
@@ -130,6 +140,12 @@ def main() -> int:
     pkg_action = merge_package_json(board, stub, args.name, args.force)
     server_action = copy_if_needed(board, stub, "server.js", args.force)
     vercel_action = copy_if_needed(board, stub, "vercel.json", args.force)
+    # Always refresh vercel.json to static hosting when force, or when still Node-era.
+    if vercel_action == "skipped":
+        existing = (board / "vercel.json").read_text(encoding="utf-8")
+        if '"framework": "node"' in existing or "server.js" in existing:
+            shutil.copy2(stub / "vercel.json", board / "vercel.json")
+            vercel_action = "migrated-static"
 
     print(
         json.dumps(
@@ -145,7 +161,7 @@ def main() -> int:
         )
     )
     print(
-        "Vercel Node stub ready — Framework Preset: Node (server.js). "
+        "Vercel static stub ready — npm run build → out/. "
         "Next: npm install @taskmark/ui --save && npx taskmark serve",
         file=sys.stderr,
     )
