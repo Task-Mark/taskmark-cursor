@@ -74,7 +74,7 @@ def merge_package_json(board: Path, stub: Path, package_name: str | None, force:
     scripts = pkg.setdefault("scripts", {})
     scripts.setdefault("start", "taskmark serve --no-open")
     scripts.setdefault("serve", "taskmark serve")
-    scripts.setdefault("dev", "taskmark serve")
+    scripts["dev"] = stub_pkg.get("scripts", {}).get("dev", "taskmark dev")
     scripts.setdefault("preview", "taskmark preview")
     scripts["build"] = stub_pkg.get("scripts", {}).get(
         "build", "taskmark build --board . --out out"

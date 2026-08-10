@@ -9,11 +9,11 @@
   "scripts": {
     "start": "taskmark serve --no-open",
     "serve": "taskmark serve",
-    "dev": "taskmark serve",
+    "dev": "taskmark dev",
     "build": "taskmark build --board . --out out",
     "preview": "taskmark preview"
   },
   "dependencies": {
-    "@taskmark/ui": "^0.2.4"
+    "@taskmark/ui": "^0.2.5"
   }
 }
