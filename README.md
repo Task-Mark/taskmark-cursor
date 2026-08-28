@@ -39,6 +39,9 @@ from item frontmatter and descendant leaves at read time.
 XS=1, S=3, M=5, L=8, XL=13, XXL=21. XXL means the work is not refined or
 sprint-ready and should be split before execution.
 
+There is no estimate or owner property. Actual is derived from closed Work log
+intervals on task/bug leaves and summed for parent views.
+
 ## Install
 
 Add this repository root as a local Cursor plugin marketplace. For local plugin

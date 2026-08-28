@@ -11,6 +11,8 @@ When creating or editing Taskmark markdown:
 - Accept legacy IDs like `T-297` and new IDs like `T-MM-a8f31c2d`.
 - New IDs come from `scripts/allocate-id.py`; never use a shared counter.
 - Static sizes only: XS=1, S=3, M=5, L=8, XL=13, XXL=21.
+- There is no estimate or owner property. Actual is derived only from closed
+  leaf Work log intervals; parent Actual sums descendant leaves.
 - Create writes new item files only. Relationships come from `parent` and
   `epic`; never rewrite parent child lists or rollups.
 - Execution writes only successfully executed leaf files, moves them directly

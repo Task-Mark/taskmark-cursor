@@ -20,6 +20,9 @@ New IDs retain the type and creator identity, for example
 Sizing is static: XS=1, S=3, M=5, L=8, XL=13, XXL=21. XXL is not sprint-ready
 and should be split.
 
+Taskmark has no estimate or owner property. Actual is the sum of closed Work
+log intervals stored on task/bug leaves; parent Actual is derived from leaves.
+
 Boards contain `epics/` and UI stubs. `REPOS.md` is generated locally and
 gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
 or a board `README.md`.

@@ -57,6 +57,10 @@ Use this map only. Do not calibrate from velocity or write time estimates.
 Parent size, points, status, people, logs, and lifecycle dates are read-time
 views derived from descendants.
 
+There is no estimate or owner property. Actual is not frontmatter: the UI
+sums valid closed Started → Ended intervals from leaf Work log rows. Parent
+Actual is the sum of descendant leaf Actual values.
+
 ## Write boundaries
 
 - Create writes only files for newly created items.

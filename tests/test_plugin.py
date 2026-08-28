@@ -98,6 +98,8 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("Create a new leaf only when", do_skill)
         self.assertIn("Prompt & feedback", memory)
         self.assertIn("done leaf", conventions)
+        self.assertIn("no estimate or owner property", conventions)
+        self.assertIn("closed Started → Ended intervals", conventions)
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             repo = Path(tmp) / "product"
             board = repo / "taskmark"
