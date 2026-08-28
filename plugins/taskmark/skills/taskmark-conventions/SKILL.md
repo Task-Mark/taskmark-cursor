@@ -64,5 +64,9 @@ views derived from descendants.
 - Epic and story files are immutable while adding or executing descendants.
 - Prompt/feedback, commits, work notes, implementers, status, and lifecycle
   dates live on leaf files. Parent views aggregate descendant leaves.
+- Every agent session that changes product work appends Prompt & feedback on a
+  matching leaf: prefer an open task/bug that fits, else a done leaf whose
+  scope still covers the change, else create a new task/bug. Never write those
+  rows on `epic.md` or `story.md`.
 - `/tsmk-do` never commits or pushes and never uses `in_progress`.
 - `/tsmk-commit` is the only user command that commits.

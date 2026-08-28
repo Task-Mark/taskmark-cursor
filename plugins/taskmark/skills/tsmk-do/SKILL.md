@@ -31,6 +31,11 @@ filenames using both legacy IDs (`T-297`) and collision-resistant IDs
 
 Read parent context, but treat parent fields and sections as immutable.
 
+When the request is follow-up on work already `done`, append Prompt &
+feedback (and a Work log row if you spent time) on that existing leaf
+instead of inventing a duplicate task. Create a new leaf only when no
+open or done task/bug still covers the request.
+
 ## Implement
 
 1. Read the target acceptance criteria and relevant product code.
@@ -43,8 +48,11 @@ Read parent context, but treat parent fields and sections as immutable.
    - set `updated` and `completed_at` to current UTC ISO-8601;
    - set `started_at` to the execution start if it is null;
    - add the current git identity to `resolvers`;
-   - append concise prompt/feedback and Work log rows when those sections
-     exist. Work-log time belongs only to that leaf.
+   - append concise Prompt & feedback (`prompt` for the user request,
+     `feedback` for later notes) and Work log rows when those sections
+     exist. Work-log time belongs only to that leaf. Every session that
+     did product work must leave at least one prompt row on the chosen
+     leaf.
 5. Do not mark blocked, skipped, or incomplete leaves done. Report their
    blockers.
 

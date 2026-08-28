@@ -9,7 +9,9 @@ Taskmark exposes exactly four user commands:
 - `/tsmk-create` creates one item or a hierarchy from prose using
   collision-resistant IDs.
 - `/tsmk-do` implements a target, never commits or pushes, and finishes only
-  executed leaf files.
+  executed leaf files. Agent sessions log Prompt & feedback on a matching
+  leaf (including a done task that still fits) or create a new task when
+  nothing matches.
 - `/tsmk-commit` commits dirty linked repositories.
 
 New IDs retain the type and creator identity, for example

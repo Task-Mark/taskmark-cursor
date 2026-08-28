@@ -84,7 +84,20 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertRegex("T-297", accepted)
             self.assertRegex(next(iter(values)), accepted)
 
-    def test_init_helpers_create_only_storage_and_local_repos(self) -> None:
+    def test_agent_sessions_log_prompt_on_matching_leaf(self) -> None:
+        do_skill = (PLUGIN / "skills" / "tsmk-do" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        memory = (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(
+            encoding="utf-8"
+        )
+        conventions = (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Prompt & feedback", do_skill)
+        self.assertIn("Create a new leaf only when", do_skill)
+        self.assertIn("Prompt & feedback", memory)
+        self.assertIn("done leaf", conventions)
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             repo = Path(tmp) / "product"
             board = repo / "taskmark"

@@ -13,7 +13,8 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tsmk-commit` | Commit dirty linked repositories |
 
 These are the only user-facing commands. `/tsmk-do` never commits or pushes and
-does not use an `in_progress` stage.
+does not use an `in_progress` stage. Agent sessions log Prompt & feedback on a
+matching leaf, including a done task that still fits.
 
 ## Board layout
 

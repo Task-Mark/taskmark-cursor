@@ -15,6 +15,9 @@ When creating or editing Taskmark markdown:
   `epic`; never rewrite parent child lists or rollups.
 - Execution writes only successfully executed leaf files, moves them directly
   from backlog to done, and never commits or pushes.
+- Every product-work session appends Prompt & feedback on a matching leaf
+  (open, or done if the work still belongs there). Create a new leaf only
+  when nothing fits. Never log on epic or story parents.
 - Parent rollups, logs, status, people, and dates are read-time derived.
 - Never generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board `README.md`, a
   changelog, or Last synced metadata.
