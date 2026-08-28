@@ -15,7 +15,7 @@ class PluginSurfaceTests(unittest.TestCase):
     def test_exactly_four_user_commands(self) -> None:
         commands = {path.stem for path in (PLUGIN / "commands").glob("*.md")}
         self.assertEqual(
-            commands, {"tsmk-init", "tsmk-create", "tsmk-commit", "tsmk-do"}
+            commands, {"tkmd-init", "tkmd-create", "tkmd-commit", "tkmd-do"}
         )
 
     def test_only_required_scripts_remain(self) -> None:
@@ -44,8 +44,8 @@ class PluginSurfaceTests(unittest.TestCase):
                 "sync-taskmark-repos",
                 "taskmark-conventions",
                 "taskmark-init",
-                "tsmk-create",
-                "tsmk-do",
+                "tkmd-create",
+                "tkmd-do",
             },
         )
         self.assertFalse(
@@ -85,7 +85,7 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertRegex(next(iter(values)), accepted)
 
     def test_agent_sessions_log_prompt_on_matching_leaf(self) -> None:
-        do_skill = (PLUGIN / "skills" / "tsmk-do" / "SKILL.md").read_text(
+        do_skill = (PLUGIN / "skills" / "tkmd-do" / "SKILL.md").read_text(
             encoding="utf-8"
         )
         memory = (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(
@@ -100,6 +100,8 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("done leaf", conventions)
         self.assertIn("no estimate or owner property", conventions)
         self.assertIn("closed Started → Ended intervals", conventions)
+
+    def test_init_helpers_create_only_storage_and_local_repos(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             repo = Path(tmp) / "product"
             board = repo / "taskmark"

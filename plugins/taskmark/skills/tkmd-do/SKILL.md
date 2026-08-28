@@ -1,11 +1,11 @@
 ---
-name: tsmk-do
+name: tkmd-do
 description: >-
   Implement a Taskmark target without committing or pushing. Changes only
   executed leaf markdown and marks completed leaves done before stopping.
 ---
 
-# tsmk-do
+# tkmd-do
 
 Read `taskmark-conventions` first.
 

@@ -72,5 +72,5 @@ Actual is the sum of descendant leaf Actual values.
   matching leaf: prefer an open task/bug that fits, else a done leaf whose
   scope still covers the change, else create a new task/bug. Never write those
   rows on `epic.md` or `story.md`.
-- `/tsmk-do` never commits or pushes and never uses `in_progress`.
-- `/tsmk-commit` is the only user command that commits.
+- `/tkmd-do` never commits or pushes and never uses `in_progress`.
+- `/tkmd-commit` is the only user command that commits.

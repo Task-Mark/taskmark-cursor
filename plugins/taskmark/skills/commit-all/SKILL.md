@@ -8,7 +8,7 @@ description: >-
 
 # commit-all
 
-This is the implementation behind `/tsmk-commit`. Commit every git project
+This is the implementation behind `/tkmd-commit`. Commit every git project
 that has changes, using local `REPOS.md` when available or discovered git roots.
 
 ## Message style (required)

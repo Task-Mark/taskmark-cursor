@@ -7,12 +7,12 @@ tasks, and bugs remain useful across chats without generated board files.
 
 | Command | Purpose |
 |---------|---------|
-| `/tsmk-init` | Create board storage and UI stubs |
-| `/tsmk-create` | Create one item or a hierarchy from prose |
-| `/tsmk-do` | Implement a target and finish executed leaves without committing |
-| `/tsmk-commit` | Commit dirty linked repositories |
+| `/tkmd-init` | Create board storage and UI stubs |
+| `/tkmd-create` | Create one item or a hierarchy from prose |
+| `/tkmd-do` | Implement a target and finish executed leaves without committing |
+| `/tkmd-commit` | Commit dirty linked repositories |
 
-These are the only user-facing commands. `/tsmk-do` never commits or pushes and
+These are the only user-facing commands. `/tkmd-do` never commits or pushes and
 does not use an `in_progress` stage. Agent sessions log Prompt & feedback on a
 matching leaf, including a done task that still fits.
 

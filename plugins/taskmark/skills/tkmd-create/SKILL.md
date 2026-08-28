@@ -1,11 +1,11 @@
 ---
-name: tsmk-create
+name: tkmd-create
 description: >-
   Create one Taskmark epic, story, task, or bug, or a complete hierarchy from
   prose. Uses collision-resistant IDs and writes new item files only.
 ---
 
-# tsmk-create
+# tkmd-create
 
 Read `taskmark-conventions` first.
 
