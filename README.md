@@ -1,105 +1,55 @@
-# Taskmark
+# Taskmark for Cursor
 
-Cursor plugin for hierarchical product planning as markdown: **epics → stories → tasks/bugs** under `taskmark/` in your project(s).
+Taskmark keeps product work as conflict-resistant markdown: epics, stories,
+tasks, and bugs remain useful across chats without generated board files.
 
-This repository is a **plugin marketplace** layout:
+## Commands
 
-```text
-.cursor-plugin/marketplace.json   # required for “Add local folder”
-plugins/taskmark/                 # the plugin itself
-  .cursor-plugin/plugin.json
-  skills/ rules/ commands/ hooks/ scripts/ assets/
-examples/sample-board/            # docs fixture (also under the plugin)
-```
+| Command | Purpose |
+|---------|---------|
+| `/tsmk-init` | Create board storage and UI stubs |
+| `/tsmk-create` | Create one item or a hierarchy from prose |
+| `/tsmk-do` | Implement a target and finish executed leaves without committing |
+| `/tsmk-commit` | Commit dirty linked repositories |
 
-## Features
-
-- Convention-enforced board files (frontmatter, IDs, folders)
-- **T-shirt sizing** + **Fibonacci story points** with calibrated suggestions
-- **Estimate vs actual minutes** from work-log sessions (never calendar span)
-- **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
-- **VELOCITY.md** — team median minutes/point and delivery ETA
-- Work log, commits log, prompt/feedback logs
-- Multi-repo board copies + commit-all
-- Derived status; project-memory rule; stop hook for open/idle sessions
-
-## Install
-
-### A. Add local folder (Customize → Plugins)
-
-1. Open **Customize → Plugins**.
-2. Remove any broken **taskmark** entry first.
-3. **Add local** → select this repo root: `…/taskmark-cursor` (folder with `.cursor-plugin/marketplace.json`).
-4. Enable **taskmark**, then **Developer: Reload Window**.
-
-After layout changes, **commit** before re-adding (Cursor packages from git). Clear stale caches if needed:
-
-```bash
-rm -rf ~/.cursor/plugins/cache/taskmark-marketplace
-rm -rf ~/.cursor/plugins/marketplaces/_/users/menda0/*
-```
-
-### B. Local development (copy)
-
-Cursor rejects external symlinks. Copy the plugin package:
-
-```bash
-plugins/taskmark/scripts/rsync-plugin-local.sh
-# or:
-rsync -a --delete /absolute/path/to/taskmark-cursor/plugins/taskmark/ ~/.cursor/plugins/local/taskmark/
-```
-
-After editing the plugin in this repo, the agent must run **`sync-plugin-local`** (`/sync-plugin-local`) so the local install stays current. Reload the window if new skills do not appear.
-
-### C. Vendor / D. Marketplace
-
-See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish the public git repo.
-
-## Quick start
-
-1. Install the plugin.
-2. Run **taskmark-init** in a product repo.
-3. Multi-git workspaces: **`/sync-repos`**.
-4. Commands:
-
-| Command | Skill | Purpose |
-|---------|-------|---------|
-| `/new-epic` | `create-epic` | New epic |
-| `/new-story` | `create-story` | New story |
-| `/new-task` | `create-task` | New task or bug |
-| `/start-work` | `start-work` | Open session (idle-closes stale first) |
-| `/complete-work` | `complete-work` | Close session + actual minutes |
-| `/sync-status` | `sync-status` | Status, actuals, INDEX, VELOCITY |
-| `/velocity` | `taskmark-velocity` | Team speed / ETA |
-| `/sync-plugin-local` | `sync-plugin-local` | Rsync plugin → `~/.cursor/plugins/local` |
-| `/board-status` | `taskmark-overview` | Board summary |
-| `/log-commits` | `log-commits` | Record commits |
-| `/sync-repos` | `sync-taskmark-repos` | Copy board to all git roots |
-| `/commit-all` | `commit-all` | Commit every dirty repo |
+These are the only user-facing commands. `/tsmk-do` never commits or pushes and
+does not use an `in_progress` stage.
 
 ## Board layout
 
+One product repository uses `<product>/taskmark/`. Multi-repository workspaces
+use a sibling `<common>-taskmark` repository whose root is the board.
+
 ```text
-taskmark/
-├── README.md
-├── INDEX.md
-├── SIZING.md
-├── VELOCITY.md
-├── REPOS.md
-└── epics/…
+epics/
+.gitignore
+package.json
+server.js
+vercel.json
+REPOS.md        # generated locally and gitignored
 ```
 
-Effort rules: billable work-log minutes only; idle deadline = next UTC day at 12:00; `session_cap_minutes` default 480.
+Boards do not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or `README.md`.
+Parent hierarchy, points, status, logs, contributors, and dates are derived
+from item frontmatter and descendant leaves at read time.
+
+## Static sizes
+
+XS=1, S=3, M=5, L=8, XL=13, XXL=21. XXL means the work is not refined or
+sprint-ready and should be split before execution.
+
+## Install
+
+Add this repository root as a local Cursor plugin marketplace. For local plugin
+development, copy the package with:
+
+```bash
+plugins/taskmark/scripts/rsync-plugin-local.sh
+```
+
+The board UI is installed as `@taskmark/ui`; `npm run build` emits static files
+under `out/`.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-
-<!-- taskmark:contributors:begin -->
-## Contributors
-
-People who created or resolved work items on this board (from local git config).
-
-- Marco Mendão <marco.mendao@betacode.tech>
-
-<!-- taskmark:contributors:end -->
+MIT

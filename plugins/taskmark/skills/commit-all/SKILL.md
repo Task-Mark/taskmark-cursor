@@ -8,7 +8,8 @@ description: >-
 
 # commit-all
 
-Commit **every** git project that has changes (from `taskmark/REPOS.md` or discovered `.git` roots).
+This is the implementation behind `/tsmk-commit`. Commit every git project
+that has changes, using local `REPOS.md` when available or discovered git roots.
 
 ## Message style (required)
 
@@ -29,7 +30,7 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
 ## Steps
 
 1. Resolve git roots: `taskmark/REPOS.md` if present, else discover under workspace folders.
-2. Optionally run `sync-taskmark-repos` first if `REPOS.md` or board location may be stale.
+2. Optionally run `sync-taskmark-repos` first if local `REPOS.md` may be stale.
 3. For each root, run `git status --porcelain`. Skip clean repos (report “skipped — clean”).
 4. **Generate message** for that repo:
    - If the user gave one message for all repos, use it everywhere.
@@ -47,11 +48,12 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
 
    Prefer the helper: `scripts/commit-all-repos.sh --message "…" [workspace…]` when committing many roots with one shared message; for per-repo messages, commit each root separately following the same one-liner rule.
 6. Never commit secrets (`.env`, credentials). Warn and skip those files if present.
-7. After commits succeed, run `log-commits` on the active Taskmark item(s) when known; refresh `REPOS.md` via `sync-taskmark-repos` if needed (board lives only in the canonical project).
-8. Before the **board-repo** commit (while staging), run
-   `python3 <plugin>/scripts/refresh-readme-dashboard.py <board-root>`
-   so the changelog includes prior commits and open-work/metrics match board state; stage `README.md` with the board commit. If a board commit already landed without a README refresh, run the script and commit `update readme dashboard` when README is dirty.
-9. Reply with a table: Repo | SHA | Message | or “skipped”.
+7. Do not generate or refresh board markdown before committing. `REPOS.md` is
+   gitignored and must not be staged.
+8. When the active executed leaf is known, append the resulting commit row to
+   that leaf only in a follow-up commit if the user wants board commit tracking.
+   Never write commit rows to epic/story parents.
+9. Reply with Repo | SHA | Message, or “skipped”.
 
 ## Safety
 

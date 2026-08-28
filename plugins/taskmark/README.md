@@ -1,96 +1,28 @@
 # Taskmark
 
-Cursor plugin for hierarchical product planning as markdown: **epics → stories → tasks/bugs** under `taskmark/` in your project(s). Hierarchy is preferred but optional — general tasks and user stories live under a reserved **General** epic.
+Marketplace package for conflict-resistant markdown product memory in Cursor.
 
-This repository is a **plugin marketplace** layout:
+Taskmark exposes exactly four user commands:
 
-```text
-.cursor-plugin/marketplace.json   # required for “Add local folder”
-plugins/taskmark/                 # the plugin itself
-  .cursor-plugin/plugin.json
-  skills/ rules/ commands/ hooks/ scripts/ assets/
-examples/sample-board/            # docs fixture (also under the plugin)
-```
+- `/tsmk-init` initializes `epics/`, local repository discovery, and board UI
+  stubs.
+- `/tsmk-create` creates one item or a hierarchy from prose using
+  collision-resistant IDs.
+- `/tsmk-do` implements a target, never commits or pushes, and finishes only
+  executed leaf files.
+- `/tsmk-commit` commits dirty linked repositories.
 
-## Features
+New IDs retain the type and creator identity, for example
+`T-MM-a8f31c2d`. Legacy IDs such as `T-297` remain supported.
 
-- Convention-enforced board files (frontmatter, IDs, folders)
-- **Optional parents** — create stories/tasks without naming an epic/story; soft-attach from context or fall back to **General**. Tasks/bugs may live under an epic with no story.
-- **T-shirt sizing** + **Fibonacci story points** (size + points only — no time estimates from sizing)
-- **Effort minutes** from work-log sessions (never calendar span for effort)
-- **Actual minutes** as billable work-log session time
-- **Idle auto-cap** — abandoned sessions end at next-day 12:00 UTC; session cap default 480 min
-- Start/end cascade for task → story → epic timestamps
-- Work log, commits log, prompt/feedback logs
-- Single- or multi-git board location (`<common>-taskmark` sibling) + commit-all
-- Derived status; project-memory rule; stop hook for open/idle sessions
+Sizing is static: XS=1, S=3, M=5, L=8, XL=13, XXL=21. XXL is not sprint-ready
+and should be split.
 
-## Install
+Boards contain `epics/` and UI stubs. `REPOS.md` is generated locally and
+gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
+or a board `README.md`.
 
-### A. Add local folder (Customize → Plugins)
+Parent relationships and rollups are queried at read time. Creating descendants
+does not rewrite parent files; executing work changes only implemented leaves.
 
-1. Open **Customize → Plugins**.
-2. Remove any broken **taskmark** entry first.
-3. **Add local** → select this repo root: `…/taskmark-cursor` (folder with `.cursor-plugin/marketplace.json`).
-4. Enable **taskmark**, then **Developer: Reload Window**.
-
-After layout changes, **commit** before re-adding (Cursor packages from git). Clear stale caches if needed:
-
-```bash
-rm -rf ~/.cursor/plugins/cache/taskmark-marketplace
-rm -rf ~/.cursor/plugins/marketplaces/_/users/menda0/*
-```
-
-### B. Local development (copy)
-
-Cursor rejects external symlinks. Copy the plugin package:
-
-```bash
-plugins/taskmark/scripts/rsync-plugin-local.sh
-# or:
-rsync -a --delete /absolute/path/to/taskmark-cursor/plugins/taskmark/ ~/.cursor/plugins/local/taskmark/
-```
-
-After editing the plugin in this repo, the agent must run **`sync-plugin-local`** (`/sync-plugin-local`) so the local install stays current. Reload the window if new skills do not appear.
-
-### C. Vendor / D. Marketplace
-
-See prior docs: copy skills/rules/hooks into a project `.cursor/`, or publish the public git repo.
-
-## Quick start
-
-1. Install the plugin.
-2. Run **taskmark-init** in a product repo.
-3. Multi-git workspaces: **`/sync-repos`**.
-4. Commands:
-
-| Command | Skill | Purpose |
-|---------|-------|---------|
-| `/new-epic` | `create-epic` | New epic |
-| `/new-story` | `create-story` | New story (epic optional → General) |
-| `/new-task` | `create-task` | New task or bug (story optional → epic `items/`) |
-| `/start-work` | `start-work` | Open session (idle-closes stale first) |
-| `/complete-work` | `complete-work` | Close session + actual minutes |
-| `/sync-status` | `sync-status` | Status, actuals, INDEX |
-| `/sync-plugin-local` | `sync-plugin-local` | Rsync plugin → `~/.cursor/plugins/local` |
-| `/board-status` | `taskmark-overview` | Board summary |
-| `/log-commits` | `log-commits` | Record commits |
-| `/sync-repos` | `sync-taskmark-repos` | Ensure board location + REPOS.md |
-| `/commit-all` | `commit-all` | Commit every dirty repo |
-
-## Board layout
-
-```text
-taskmark/
-├── README.md
-├── INDEX.md
-├── SIZING.md
-├── REPOS.md
-└── epics/…
-```
-
-Effort rules: billable work-log minutes only; idle deadline = next UTC day at 12:00; `session_cap_minutes` default 480.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+For plugin development, run `scripts/rsync-plugin-local.sh` after changes.

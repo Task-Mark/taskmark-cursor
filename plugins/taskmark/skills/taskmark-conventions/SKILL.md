@@ -1,51 +1,68 @@
 ---
 name: taskmark-conventions
 description: >-
-  Canonical Taskmark board conventions for hierarchical epic, story, task, and
-  bug markdown under taskmark/. Covers folder layout, frontmatter, templates,
-  t-shirt sizing, story points, actual minutes, idle time caps, work logs,
-  prompt/feedback, commits, multi-repo copies, status derivation, and INDEX.
-  Use when creating or editing Taskmark files, sizing, multi-root workspaces,
-  or before create-*, start-work, complete-work, sync-status, log-commits,
-  sync-taskmark-repos, commit-all, or sync-plugin-local.
+  Canonical conflict-resistant Taskmark markdown conventions. Use before
+  initializing, creating, implementing, or committing Taskmark work.
 ---
 
 # Taskmark conventions
 
-Board root: `taskmark/` inside a single product repo, or the root of a dedicated `<common>-taskmark` git repo in multi-git workspaces (see [folder-layout](references/folder-layout.md), [multi-repo](references/multi-repo.md)).
+## Board location
 
-## Before writing any board file
+- One product git root: `<product>/taskmark/`.
+- Multiple product git roots: sibling `<common>-taskmark` repository root.
+- A board contains `epics/` plus UI stubs. It does not contain `INDEX.md`,
+  `SIZING.md`, `VELOCITY.md`, or a board `README.md`.
+- `REPOS.md` is local-generated and must be listed in the board `.gitignore`.
 
-1. Read the relevant reference below.
-2. Follow ID, folder, frontmatter, and section rules exactly.
-3. Never invent a parallel todo system outside `taskmark/`.
+## IDs and paths
 
-## References
+New IDs use `<type>-<identity>-<random>`, for example `T-MM-a8f31c2d`.
+Type is `E`, `S`, `T`, or `B`; identity is 2–12 uppercase letters/digits from
+the git user; random is at least 8 lowercase hexadecimal characters. Generate
+with `scripts/allocate-id.py` and retry if any existing path or frontmatter
+already contains the candidate.
 
-- [Folder layout](references/folder-layout.md)
-- [Frontmatter](references/frontmatter.md)
-- [Templates](references/templates.md)
-- [Sizing](references/sizing.md)
-- [Points and time](references/points-and-time.md)
-- [Effort and idle time](references/effort-time.md)
-- [Work log](references/work-log.md)
-- [Prompt & feedback log](references/prompt-feedback-log.md)
-- [Commits log](references/commits-log.md)
-- [Velocity](references/velocity.md)
-- [README dashboard](references/readme-dashboard.md)
-- [Multi-repo boards](references/multi-repo.md)
-- [Status derivation](references/status-derivation.md)
-- [INDEX format](references/index-format.md)
-- [Contributor identity](references/identity.md)
+Existing zero-padded IDs such as `E-022` and `T-297` remain valid. Readers must
+accept both:
 
-## Quick rules
+```regex
+^[ESBT]-(?:[0-9]{3}|[A-Z0-9]{2,12}-[a-z0-9]{8,})$
+```
 
-- IDs: `E-NNN`, `S-NNN`, `T-NNN`, `B-NNN` (zero-padded, unique board-wide)
-- Folder slug: `{id}-{kebab-title}`
-- Tasks and bugs live under a story’s `items/` **or** an epic’s `items/` (no story required)
-- Stories and tasks do not require a user-invented parent; prefer contextual attach, else reserved **General** epic
-- Do not hand-set `status` except via `blocked` / `cancelled` latches; run sync-status after changes
-- Work log + Commits on every item; Prompt & feedback on stories, tasks, and bugs
-- Track `size` + `points` + `estimate_minutes` + `actual_minutes` (billable sessions); suggest Est from Current Speed intensity when samples exist ([velocity](references/velocity.md))
-- Idle: auto-close open sessions at next-day 12:00 UTC; session_cap_minutes default 480
-- Multi-root: sibling `<common>-taskmark` git repo **is** the board root (no nested `taskmark/`); never copy into product repos
+Paths:
+
+```text
+epics/<epic-id>-<slug>/epic.md
+epics/<epic-id>-<slug>/stories/<story-id>-<slug>/story.md
+epics/<epic-id>-<slug>/stories/<story-id>-<slug>/items/<task-or-bug-id>-<slug>.md
+epics/<epic-id>-<slug>/items/<task-or-bug-id>-<slug>.md
+```
+
+Relationships come from `parent` and `epic` frontmatter. Never add child lists
+or rollups to parent markdown.
+
+## Static sizing
+
+| Size | Points | Meaning |
+|------|--------|---------|
+| XS | 1 | Trivial, isolated change |
+| S | 3 | Small, understood change |
+| M | 5 | Moderate change with a few moving parts |
+| L | 8 | Large change spanning multiple parts |
+| XL | 13 | Very large; splitting is strongly preferred |
+| XXL | 21 | Not refined or sprint-ready; split before execution |
+
+Use this map only. Do not calibrate from velocity or write time estimates.
+Parent size, points, status, people, logs, and lifecycle dates are read-time
+views derived from descendants.
+
+## Write boundaries
+
+- Create writes only files for newly created items.
+- Execution writes only the task/bug leaf files actually implemented.
+- Epic and story files are immutable while adding or executing descendants.
+- Prompt/feedback, commits, work notes, implementers, status, and lifecycle
+  dates live on leaf files. Parent views aggregate descendant leaves.
+- `/tsmk-do` never commits or pushes and never uses `in_progress`.
+- `/tsmk-commit` is the only user command that commits.

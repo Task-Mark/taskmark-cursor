@@ -11,7 +11,7 @@
     {
       "name": "taskmark",
       "source": "./plugins/taskmark",
-      "description": "Local markdown boards that keep epics, stories, and tasks in sync with Cursor — so planning survives the chat."
+      "description": "Conflict-resistant markdown planning with four focused Cursor commands."
     }
   ]
 }

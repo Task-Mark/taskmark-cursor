@@ -1,19 +1,21 @@
 ---
-description: Enforce Taskmark markdown conventions when editing board files under taskmark/
+description: Enforce conflict-resistant Taskmark leaf markdown conventions
 globs: taskmark/**/*.md
 alwaysApply: false
 ---
 
 # Taskmark file conventions
 
-When creating or editing files under `taskmark/`:
+When creating or editing Taskmark markdown:
 
-- Keep required YAML frontmatter including `size` (null on epics), `points`, `estimate_minutes`, `actual_minutes`, `session_cap_minutes`, sources/basis fields, and standard id/status fields. `parent`/`epic` are preferred when known; tasks/bugs may parent an epic directly (`epics/…/items/`) or a story. Otherwise attach under the reserved **General** epic. Epic points = sum of child stories **and** epic-direct tasks; story points = sum of tasks when children exist.
-- Do **not** hand-set `status` except via `blocked` / `cancelled`; after edits run sync-status.
-- **Never** hand-set `effort_minutes` or `actual_minutes`. Run `scripts/recompute-actuals.py` (from sync-status / complete-work).
-- **Never** invent ≤2 minute closed Work log sessions for delivered work. Close real open sessions with **now** UTC.
-- **Never** set `effort_minutes` from calendar span. Effort = billable work-log sessions only (idle auto-cap: next-day 12:00 UTC; session_cap_minutes default 480). Commit-span recovery feeds effort only. `actual_minutes` is wall-clock `started_at`→`completed_at` written by the script.
-- Idle: auto-close open sessions at next-day 12:00 UTC when syncing / starting / completing work.
-- **Work log** and **Commits** on every item; **Prompt & feedback** on stories/tasks/bugs.
-- Refresh `INDEX.md` (Points / Est / Actual) and `VELOCITY.md` (Current Speed + ETA) via recompute / sync-status. Sizing suggests size + points; Est from 90-day median min/pt when samples exist.
-- Follow `taskmark-conventions` skill templates.
+- Accept legacy IDs like `T-297` and new IDs like `T-MM-a8f31c2d`.
+- New IDs come from `scripts/allocate-id.py`; never use a shared counter.
+- Static sizes only: XS=1, S=3, M=5, L=8, XL=13, XXL=21.
+- Create writes new item files only. Relationships come from `parent` and
+  `epic`; never rewrite parent child lists or rollups.
+- Execution writes only successfully executed leaf files, moves them directly
+  from backlog to done, and never commits or pushes.
+- Parent rollups, logs, status, people, and dates are read-time derived.
+- Never generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board `README.md`, a
+  changelog, or Last synced metadata.
+- Follow the `taskmark-conventions` skill.

@@ -28,7 +28,7 @@ def stub_dir() -> Path:
 
 def ensure_gitignore(board: Path) -> bool:
     gi = board / ".gitignore"
-    lines = ["node_modules/", "out/", ".taskmark-ui-build/"]
+    lines = ["REPOS.md", "node_modules/", "out/", ".taskmark-ui-build/"]
     changed = False
     if gi.exists():
         text = gi.read_text(encoding="utf-8")
@@ -117,7 +117,7 @@ def copy_if_needed(board: Path, stub: Path, name: str, force: bool) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("board_root", type=Path, help="Board root (INDEX.md / epics)")
+    ap.add_argument("board_root", type=Path, help="Board root containing epics/")
     ap.add_argument("--name", default=None, help="package.json name override")
     ap.add_argument(
         "--force",
@@ -151,7 +151,7 @@ def main() -> int:
         json.dumps(
             {
                 "board": str(board),
-                "gitignore_node_modules": gi,
+                "gitignore_updated": gi,
                 "package_json": pkg_action,
                 "server_js": server_action,
                 "vercel_json": vercel_action,
