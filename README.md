@@ -8,7 +8,7 @@ tasks, and bugs remain useful across chats without generated board files.
 | Command | Purpose |
 |---------|---------|
 | `/tkmd-init` | Create board storage and UI stubs |
-| `/tkmd-create` | Create one item or a hierarchy from prose |
+| `/tkmd-plan` | Search the board and plan the smallest useful hierarchy from prose |
 | `/tkmd-do` | Implement a target and finish executed leaves without committing |
 | `/tkmd-commit` | Commit dirty linked repositories |
 

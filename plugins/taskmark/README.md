@@ -6,8 +6,8 @@ Taskmark exposes exactly four user commands:
 
 - `/tkmd-init` initializes `epics/`, local repository discovery, and board UI
   stubs.
-- `/tkmd-create` creates one item or a hierarchy from prose using
-  collision-resistant IDs.
+- `/tkmd-plan` searches the canonical board and creates the smallest useful
+  hierarchy from prose using collision-resistant IDs.
 - `/tkmd-do` implements a target, never commits or pushes, and finishes only
   executed leaf files. Agent sessions log Prompt & feedback on a matching
   leaf (including a done task that still fits) or create a new task when

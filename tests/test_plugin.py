@@ -15,7 +15,7 @@ class PluginSurfaceTests(unittest.TestCase):
     def test_exactly_four_user_commands(self) -> None:
         commands = {path.stem for path in (PLUGIN / "commands").glob("*.md")}
         self.assertEqual(
-            commands, {"tkmd-init", "tkmd-create", "tkmd-commit", "tkmd-do"}
+            commands, {"tkmd-init", "tkmd-plan", "tkmd-commit", "tkmd-do"}
         )
 
     def test_only_required_scripts_remain(self) -> None:
@@ -44,7 +44,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "sync-taskmark-repos",
                 "taskmark-conventions",
                 "taskmark-init",
-                "tkmd-create",
+                "tkmd-plan",
                 "tkmd-do",
             },
         )
@@ -57,6 +57,35 @@ class PluginSurfaceTests(unittest.TestCase):
                 for path in (PLUGIN / "examples" / "sample-board").rglob("*")
             )
         )
+
+    def test_plan_searches_fits_and_decomposes_hierarchy(self) -> None:
+        plan_skill = (PLUGIN / "skills" / "tkmd-plan" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        plan_command = (PLUGIN / "commands" / "tkmd-plan.md").read_text(
+            encoding="utf-8"
+        )
+        normalized_plan_skill = " ".join(plan_skill.split())
+
+        for instruction in (
+            "search all open and done epics, stories, tasks, and bugs",
+            "exact or overlapping item",
+            "smallest useful hierarchy",
+            "initiative/outcome → epic",
+            "user-visible capability → story",
+            "executable unit → task",
+            "defect/regression → bug",
+            "independently executable task/bug leaves",
+            "Use static sizing as a decomposition driver",
+            "Strongly split XL",
+            "never leave it unrefined",
+            "parent: <story-id>",
+            "parent: <epic-id>",
+            "Never edit an existing `epic.md`, `story.md`, or leaf",
+            "Every newly planned task/bug leaf must include a `prompt` row",
+        ):
+            self.assertIn(instruction, normalized_plan_skill)
+        self.assertIn("Use the `tkmd-plan` skill", plan_command)
 
     def test_allocator_is_collision_resistant_and_legacy_compatible(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
