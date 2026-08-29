@@ -15,7 +15,8 @@ Read `taskmark-conventions` first.
 - Never set an item to `in_progress`; there is no start stage.
 - Never edit parent markdown to reflect descendant work.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
-  `README.md`, or `REPOS.md`.
+  `README.md`, `CHANGELOG.md`, or `REPOS.md`.
+- Never run `/tkmd-changelog` or `/tkmd-version`.
 
 ## Resolve the target
 

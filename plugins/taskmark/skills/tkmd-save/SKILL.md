@@ -17,7 +17,7 @@ That remains `/tkmd-do` or `/tkmd-plan-do`.
 - Never set an item to `in_progress`.
 - Never edit an existing `epic.md`, `story.md`, or leaf.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
-  `README.md`, or `REPOS.md`.
+  `README.md`, `CHANGELOG.md`, or `REPOS.md`.
 - Creating those new parent files in the same save is allowed; modifying
   pre-existing parent files is not.
 

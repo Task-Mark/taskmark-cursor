@@ -13,6 +13,8 @@ description: >-
 - Multiple product git roots: sibling `<common>-taskmark` repository root.
 - A board contains `epics/` plus UI stubs. It does not contain `INDEX.md`,
   `SIZING.md`, `VELOCITY.md`, or a board `README.md`.
+- `CHANGELOG.md` at the board root is allowed. Only `/tkmd-changelog` and
+  `/tkmd-version` write it. Do not generate changelog sections in a README.
 - `REPOS.md` is local-generated and must be listed in the board `.gitignore`.
 
 ## IDs and paths
@@ -91,6 +93,25 @@ Actual is the sum of descendant leaf Actual values.
   implements, commits, or pushes.
 - `/tkmd-plan-do` runs `/tkmd-plan` then `/tkmd-do` only on newly created
   items; it never commits or pushes and never uses `in_progress`.
-- `/tkmd-do` never commits or pushes and never uses `in_progress`.
+- `/tkmd-do` never commits or pushes, never uses `in_progress`, and never
+  writes `CHANGELOG.md`.
 - `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
+- `/tkmd-changelog` rebuilds `## Não publicado` in board-root `CHANGELOG.md`
+  from recent done leaves. It never edits item markdown, the README, commits,
+  or pushes.
+- `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets the
+  board `package.json` version, and never tags, publishes, commits, or pushes.
 - `/tkmd-commit` is the only user command that commits.
+
+## Changelog wording
+
+Board `CHANGELOG.md` uses Portuguese Keep a Changelog headings: `Não publicado`
+and `## x.y.z - YYYY-MM-DD`. Category headings are `Adicionado`, `Alterado`,
+`Descontinuado`, `Removido`, `Corrigido`, and `Segurança`.
+
+Each Unreleased bullet is one user-visible outcome in past tense, taken from
+the user story, acceptance criteria, or title. Visible text must not include
+work-item codes (`T-` / `B-` / `S-` / `E-`). Related leaves from the same story
+may be merged when that reads better.
+
+Example: `Foi adicionado um botão para filtrar as tarefas já realizadas.`

@@ -19,7 +19,8 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    (and `feedback` when the user replies) row on the chosen leaf — never on
    `epic.md` or `story.md`.
 3. Use only `/tkmd-init`, `/tkmd-plan`, `/tkmd-save`, `/tkmd-plan-do`,
-   `/tkmd-do`, `/tkmd-shelf`, and `/tkmd-commit`.
+   `/tkmd-do`, `/tkmd-shelf`, `/tkmd-changelog`, `/tkmd-version`, and
+   `/tkmd-commit`.
 4. Creation writes new item files only. Never edit existing parent markdown to
    add links, rollups, logs, people, status, or dates.
 5. `/tkmd-do` implements the target, never commits or pushes, never uses an
@@ -29,7 +30,10 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    It writes only eligible task/bug leaves as `status: shelved`; parent markdown
    remains unchanged.
 7. `/tkmd-commit` is the only user command that commits.
-8. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
+8. `/tkmd-changelog` and `/tkmd-version` write only board-root `CHANGELOG.md`
+   (and `/tkmd-version` the board `package.json` version). They never commit
+   or write a README changelog.
+9. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
    are read-time views over descendant leaves.
-9. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a board
-   `README.md`. Never write a Last synced field or changelog.
+10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a board
+    `README.md`. Never write a Last synced field or a README changelog.

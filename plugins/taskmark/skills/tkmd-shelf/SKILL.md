@@ -17,7 +17,7 @@ Read `taskmark-conventions` first.
 - Never set `cancelled: true`; shelving uses the distinct terminal
   `status: shelved`.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
-  `README.md`, or `REPOS.md`.
+  `README.md`, `CHANGELOG.md`, or `REPOS.md`.
 
 ## Resolve the target
 

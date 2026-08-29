@@ -17,7 +17,7 @@ plan-only path. Do not skip the search/dedupe step.
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.
 - Never set an item to `in_progress`; there is no start stage.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
-  `README.md`, or `REPOS.md`.
+  `README.md`, `CHANGELOG.md`, or `REPOS.md`.
 - Planning writes new item files only. The do phase may change only executed
   leaf markdown among existing board files.
 

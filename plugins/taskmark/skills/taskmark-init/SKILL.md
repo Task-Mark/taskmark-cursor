@@ -41,6 +41,6 @@ Read `taskmark-conventions` first.
 
 6. Verify `npm run build` writes `out/`.
 
-Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a board `README.md`.
-Do not seed a General epic. Existing boards remain compatible and are not
-destructively migrated by init.
+Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a board `README.md`, or
+`CHANGELOG.md`. Do not seed a General epic. Existing boards remain compatible
+and are not destructively migrated by init.

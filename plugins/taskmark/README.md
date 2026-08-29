@@ -20,6 +20,11 @@ Taskmark exposes these user commands:
   nothing matches.
 - `/tkmd-shelf` discards never-implemented work as `status: shelved`, never
   commits or pushes, and changes only eligible task/bug leaf files.
+- `/tkmd-changelog` rebuilds the Unreleased (`Não publicado`) section of
+  board-root `CHANGELOG.md` from recent done work in plain language. It never
+  writes the README, commits, or pushes.
+- `/tkmd-version` promotes Unreleased into a dated `x.y.z` section and sets
+  the board `package.json` version. It never tags, publishes, or commits.
 - `/tkmd-commit` commits dirty linked repositories. It is the only command
   that commits.
 
@@ -34,7 +39,8 @@ log intervals stored on task/bug leaves; parent Actual is derived from leaves.
 
 Boards contain `epics/` and UI stubs. `REPOS.md` is generated locally and
 gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
-or a board `README.md`.
+or a board `README.md`. Release notes live in `CHANGELOG.md`, written only by
+`/tkmd-changelog` and `/tkmd-version`.
 
 Parent relationships and rollups are queried at read time. Creating descendants
 does not rewrite parent files; executing work changes only implemented leaves.
