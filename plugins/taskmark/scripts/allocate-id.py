@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import secrets
@@ -11,6 +12,21 @@ import subprocess
 from pathlib import Path
 
 VALID_PREFIXES = {"E", "S", "T", "B"}
+
+
+def _load_identity_token():
+    spec = importlib.util.spec_from_file_location(
+        "taskmark_git_identity",
+        Path(__file__).resolve().parent / "git-identity.py",
+    )
+    if spec is None or spec.loader is None:
+        raise RuntimeError("could not load git-identity.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.identity_token
+
+
+identity_token = _load_identity_token()
 
 
 def git_name(cwd: Path) -> str:
@@ -23,15 +39,6 @@ def git_name(cwd: Path) -> str:
         ).strip()
     except (OSError, subprocess.CalledProcessError):
         return ""
-
-
-def identity_token(name: str) -> str:
-    parts = re.findall(r"[A-Za-z0-9]+", name)
-    if not parts:
-        return "ANON"
-    token = parts[0][:2] if len(parts) == 1 else parts[0][0] + parts[-1][0]
-    token = re.sub(r"[^A-Za-z0-9]", "", token).upper()
-    return token[:12] or "ANON"
 
 
 def existing_ids(board: Path) -> set[str]:

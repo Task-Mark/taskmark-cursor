@@ -14,12 +14,12 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    - `REPOS.md` is local-generated and gitignored.
 2. Before product work, search for a matching item. Prefer an open task/bug
    that fits; if the work is follow-up on something already shipped, append
-   Prompt & feedback on that done leaf. Use `/tkmd-plan` only when nothing
-   fits. Every session that does product work writes a `prompt` (and
-   `feedback` when the user replies) row on the chosen leaf — never on
+   Prompt & feedback on that done leaf. Use `/tkmd-plan` or `/tkmd-save` only
+   when nothing fits. Every session that does product work writes a `prompt`
+   (and `feedback` when the user replies) row on the chosen leaf — never on
    `epic.md` or `story.md`.
-3. Use only `/tkmd-init`, `/tkmd-plan`, `/tkmd-do`, `/tkmd-shelf`, and
-   `/tkmd-commit`.
+3. Use only `/tkmd-init`, `/tkmd-plan`, `/tkmd-save`, `/tkmd-plan-do`,
+   `/tkmd-do`, `/tkmd-shelf`, and `/tkmd-commit`.
 4. Creation writes new item files only. Never edit existing parent markdown to
    add links, rollups, logs, people, status, or dates.
 5. `/tkmd-do` implements the target, never commits or pushes, never uses an

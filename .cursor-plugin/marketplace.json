@@ -11,7 +11,7 @@
     {
       "name": "taskmark",
       "source": "./plugins/taskmark",
-      "description": "Conflict-resistant markdown planning with focused Cursor commands."
+      "description": "Conflict-resistant markdown planning with /tkmd-init, /tkmd-plan, /tkmd-save, /tkmd-plan-do, /tkmd-do, /tkmd-shelf, and /tkmd-commit."
     }
   ]
 }

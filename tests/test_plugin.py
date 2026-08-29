@@ -12,11 +12,19 @@ FORBIDDEN_BOARD_FILES = {"INDEX.md", "SIZING.md", "VELOCITY.md", "README.md"}
 
 
 class PluginSurfaceTests(unittest.TestCase):
-    def test_exactly_five_user_commands(self) -> None:
+    def test_user_commands_include_plan_do_and_save(self) -> None:
         commands = {path.stem for path in (PLUGIN / "commands").glob("*.md")}
         self.assertEqual(
             commands,
-            {"tkmd-init", "tkmd-plan", "tkmd-commit", "tkmd-do", "tkmd-shelf"},
+            {
+                "tkmd-init",
+                "tkmd-plan",
+                "tkmd-save",
+                "tkmd-plan-do",
+                "tkmd-commit",
+                "tkmd-do",
+                "tkmd-shelf",
+            },
         )
 
     def test_only_required_scripts_remain(self) -> None:
@@ -46,6 +54,8 @@ class PluginSurfaceTests(unittest.TestCase):
                 "taskmark-conventions",
                 "taskmark-init",
                 "tkmd-plan",
+                "tkmd-plan-do",
+                "tkmd-save",
                 "tkmd-do",
                 "tkmd-shelf",
             },
@@ -89,6 +99,58 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertIn(instruction, normalized_plan_skill)
         self.assertIn("Use the `tkmd-plan` skill", plan_command)
 
+    def test_plan_do_composes_plan_then_do_on_new_items_only(self) -> None:
+        skill = (PLUGIN / "skills" / "tkmd-plan-do" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        command = (PLUGIN / "commands" / "tkmd-plan-do.md").read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(skill.split())
+        normalized_command = " ".join(command.split())
+
+        for instruction in (
+            "Follow the `tkmd-plan` skill in full",
+            "create nothing",
+            "Do not start implementation",
+            "highest new parent",
+            "each newly created leaf",
+            "Never run `git commit`",
+            "Never set an item to `in_progress`",
+        ):
+            self.assertIn(instruction, normalized)
+        self.assertIn("Use the `tkmd-plan-do` skill", normalized_command)
+        self.assertIn("never commits or pushes", normalized_command)
+
+    def test_save_reads_cursor_plans_and_carries_visuals(self) -> None:
+        skill = (PLUGIN / "skills" / "tkmd-save" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        command = (PLUGIN / "commands" / "tkmd-save.md").read_text(
+            encoding="utf-8"
+        )
+        memory = (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(skill.split())
+        normalized_command = " ".join(command.split())
+
+        for instruction in (
+            "explicit plan path",
+            "~/.cursor/plans/",
+            ".cursor/plans/",
+            "exact or overlapping item already covers the plan",
+            "initiative/outcome → epic",
+            "Mermaid fences",
+            "Absence of visuals is not an error",
+            "Never run `git commit`",
+            "Never set an item to `in_progress`",
+        ):
+            self.assertIn(instruction, normalized)
+        self.assertIn("Use the `tkmd-save` skill", normalized_command)
+        self.assertIn("/tkmd-save", memory)
+        self.assertIn("/tkmd-plan-do", memory)
+
     def test_allocator_is_collision_resistant_and_legacy_compatible(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             board = Path(tmp)
@@ -114,6 +176,44 @@ class PluginSurfaceTests(unittest.TestCase):
             )
             self.assertRegex("T-297", accepted)
             self.assertRegex(next(iter(values)), accepted)
+
+    def test_identity_token_keeps_diacritics_inside_words(self) -> None:
+        import importlib.util
+        import unicodedata
+
+        spec = importlib.util.spec_from_file_location(
+            "git_identity", PLUGIN / "scripts" / "git-identity.py"
+        )
+        git_identity = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(git_identity)
+        alloc_spec = importlib.util.spec_from_file_location(
+            "allocate_id", PLUGIN / "scripts" / "allocate-id.py"
+        )
+        allocate_id = importlib.util.module_from_spec(alloc_spec)
+        assert alloc_spec.loader is not None
+        alloc_spec.loader.exec_module(allocate_id)
+
+        nfc = "Marco Mendão"
+        nfd = unicodedata.normalize("NFD", nfc)
+        for spelling in (nfc, nfd):
+            self.assertEqual(git_identity.identity_token(spelling), "MM")
+            self.assertEqual(
+                git_identity.identity_token(spelling),
+                git_identity.derive_initials(spelling),
+            )
+            self.assertEqual(
+                allocate_id.identity_token(spelling),
+                git_identity.derive_initials(spelling),
+            )
+        self.assertNotEqual(git_identity.identity_token(nfc), "MO")
+        self.assertEqual(git_identity.identity_token("Jane Doe"), "JD")
+        self.assertEqual(git_identity.identity_token("Alice"), "AL")
+        self.assertRegex(git_identity.identity_token(nfc), r"^[A-Z0-9]{2,12}$")
+        self.assertRegex(
+            "B-MO-f9467ca2",
+            re.compile(r"^[ESBT]-(?:[0-9]{3}|[A-Z0-9]{2,12}-[a-z0-9]{8,})$"),
+        )
 
     def test_agent_sessions_log_prompt_on_matching_leaf(self) -> None:
         do_skill = (PLUGIN / "skills" / "tkmd-do" / "SKILL.md").read_text(

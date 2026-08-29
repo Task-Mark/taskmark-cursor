@@ -87,6 +87,10 @@ Actual is the sum of descendant leaf Actual values.
   matching leaf: prefer an open task/bug that fits, else a done leaf whose
   scope still covers the change, else create a new task/bug. Never write those
   rows on `epic.md` or `story.md`.
+- `/tkmd-save` creates new item files from a Cursor Plan mode plan and never
+  implements, commits, or pushes.
+- `/tkmd-plan-do` runs `/tkmd-plan` then `/tkmd-do` only on newly created
+  items; it never commits or pushes and never uses `in_progress`.
 - `/tkmd-do` never commits or pushes and never uses `in_progress`.
 - `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
 - `/tkmd-commit` is the only user command that commits.

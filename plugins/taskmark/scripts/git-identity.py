@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -26,14 +27,31 @@ def git_config(key: str, cwd: Path | None = None) -> str:
         return ""
 
 
-def derive_initials(name: str) -> str:
+def _ascii_alnum(text: str) -> str:
+    """Letters/digits only, diacritics folded (Mendão → Mendao)."""
+    folded = unicodedata.normalize("NFKD", text or "")
+    return "".join(ch for ch in folded if ch.isalnum() and ord(ch) < 128)
+
+
+def identity_token(name: str) -> str:
+    """2–12 ASCII identity used in new Taskmark IDs (same split as initials)."""
     parts = [p for p in re.split(r"[\s\-_.]+", (name or "").strip()) if p]
     if not parts:
-        return "?"
+        return "ANON"
     if len(parts) == 1:
-        token = parts[0]
-        return (token[:2] if len(token) >= 2 else token[:1]).upper()
-    return (parts[0][0] + parts[-1][0]).upper()
+        letters = _ascii_alnum(parts[0]).upper()
+        token = letters[:2] if len(letters) >= 2 else letters[:1]
+    else:
+        first = _ascii_alnum(parts[0])
+        last = _ascii_alnum(parts[-1])
+        token = ((first[:1] if first else "") + (last[:1] if last else "")).upper()
+    token = re.sub(r"[^A-Za-z0-9]", "", token)
+    return (token[:12] or "ANON")
+
+
+def derive_initials(name: str) -> str:
+    token = identity_token(name)
+    return "?" if token == "ANON" else token
 
 
 def read_git_identity(cwd: Path | None = None) -> dict[str, str] | None:
