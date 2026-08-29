@@ -1,0 +1,7 @@
+node_modules
+out
+.taskmark-ui-build
+.vercel
+REPOS.md
+.git
+**/.git

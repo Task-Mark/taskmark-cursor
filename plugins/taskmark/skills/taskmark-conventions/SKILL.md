@@ -12,7 +12,13 @@ description: >-
 - One product git root: `<product>/taskmark/`.
 - Multiple product git roots: sibling `<common>-taskmark` repository root.
 - A board contains `epics/` plus UI stubs. It does not contain `INDEX.md`,
-  `SIZING.md`, `VELOCITY.md`, or a board `README.md`.
+  `SIZING.md`, `VELOCITY.md`, or a generated dashboard `README.md`.
+- `/tkmd-init` writes a **static project README** (purpose, product
+  repositories, run, build, deploy). Single-git: product-root `README.md`,
+  not nested `taskmark/README.md`. Multi-git: `README.md` at the dedicated
+  sibling `*-taskmark` board root. That file is static docs, not a generated
+  dashboard. Init does not clobber a richer hand-written README; it creates
+  or repairs when the file is missing or still a generated dashboard.
 - `CHANGELOG.md` at the board root is allowed. Only `/tkmd-changelog` and
   `/tkmd-version` write it. Do not generate changelog sections in a README.
 - `REPOS.md` is local-generated and must be listed in the board `.gitignore`.

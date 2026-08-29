@@ -5,8 +5,9 @@ Idempotent. Used by taskmark-init and any skill that bootstraps a board.
 
 Copies / merges from examples/board-ui-stub/:
   - package.json  (name, @taskmark/ui dep, start/serve scripts, type:module)
-  - server.js     (Vercel Framework Preset: Node entry)
-  - vercel.json   (framework: node)
+  - server.js     (legacy Vercel Node entry; optional)
+  - vercel.json   (static out/ hosting)
+  - Dockerfile, compose.yaml, .dockerignore  (serve out/ on port 8275)
 
 Usage:
   python3 ensure-board-ui.py <board-root> [--name <package-name>] [--force]
@@ -209,6 +210,11 @@ def main() -> int:
             shutil.copy2(stub / "vercel.json", board / "vercel.json")
             vercel_action = "migrated-static"
 
+    docker_files = {
+        name: copy_if_needed(board, stub, name, args.force)
+        for name in ("Dockerfile", "compose.yaml", ".dockerignore")
+    }
+
     print(
         json.dumps(
             {
@@ -217,6 +223,9 @@ def main() -> int:
                 "package_json": pkg_action,
                 "server_js": server_action,
                 "vercel_json": vercel_action,
+                "dockerfile": docker_files.get("Dockerfile"),
+                "compose_yaml": docker_files.get("compose.yaml"),
+                "dockerignore": docker_files.get(".dockerignore"),
                 "stub": str(stub),
             },
             indent=2,

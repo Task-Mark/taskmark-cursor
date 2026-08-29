@@ -34,12 +34,17 @@ epics/
 .gitignore
 package.json
 CHANGELOG.md    # written by /tkmd-changelog and /tkmd-version
+README.md       # static project docs from /tkmd-init
 server.js
 vercel.json
+Dockerfile
+compose.yaml
 REPOS.md        # generated locally and gitignored
 ```
 
-Boards do not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or `README.md`.
+`/tkmd-init` writes a static project README at the product root (single-git)
+or the dedicated `*-taskmark` board root (multi-git). Boards do not generate
+`INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a dashboard README.
 Parent hierarchy, points, status, logs, contributors, and dates are derived
 from item frontmatter and descendant leaves at read time.
 

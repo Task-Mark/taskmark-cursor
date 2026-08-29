@@ -24,8 +24,9 @@ When creating or editing Taskmark markdown:
   (open, or done if the work still belongs there). Create a new leaf only
   when nothing fits. Never log on epic or story parents.
 - Parent rollups, logs, status, people, and dates are read-time derived.
-- Never generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a board `README.md`,
-  a README changelog, or Last synced metadata.
+- Never generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a generated board
+  dashboard README, a README changelog, or Last synced metadata. `/tkmd-init`
+  may write the static project README (not a dashboard).
 - Board `CHANGELOG.md` is written only by `/tkmd-changelog` and
   `/tkmd-version`. Those commands do not commit.
 - Follow the `taskmark-conventions` skill, including the board writing language.

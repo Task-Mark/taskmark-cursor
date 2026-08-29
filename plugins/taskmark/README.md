@@ -5,8 +5,9 @@ Marketplace package for conflict-resistant markdown product memory in Cursor.
 Taskmark exposes these user commands:
 
 - `/tkmd-init` initializes `epics/`, local repository discovery, and board UI
-  stubs, and records a writing language (any language; default is the language
-  the user usually uses with the Cursor agent).
+  stubs, records a writing language (any language; default is the language
+  the user usually uses with the Cursor agent), and writes or repairs a
+  static project README (not a generated dashboard).
 - `/tkmd-plan` searches the canonical board and creates the smallest useful
   hierarchy from prose using collision-resistant IDs.
 - `/tkmd-save` turns a Cursor Plan mode plan into epic, story, task, and bug
@@ -45,7 +46,9 @@ log intervals stored on task/bug leaves; parent Actual is derived from leaves.
 
 Boards contain `epics/` and UI stubs. `REPOS.md` is generated locally and
 gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
-or a board `README.md`. Release notes live in `CHANGELOG.md`, written only by
+or a dashboard README. `/tkmd-init` writes a static project README at the
+product root (single-git) or the dedicated `*-taskmark` board root
+(multi-git). Release notes live in `CHANGELOG.md`, written only by
 `/tkmd-changelog` and `/tkmd-version`.
 
 Parent relationships and rollups are queried at read time. Creating descendants

@@ -35,8 +35,10 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    or write a README changelog.
 9. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
    are read-time views over descendant leaves.
-10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a board
-    `README.md`. Never write a Last synced field or a README changelog.
+10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a
+    generated board dashboard README. `/tkmd-init` may create or repair the
+    static project README (product-root, or `*-taskmark` board root). Never
+    write a Last synced field or a README changelog.
 11. Agent-written board markdown uses the board writing language stored as
     `taskmark.writingLanguage` in board `package.json` (any language chosen at
     init; default is the usual Cursor-agent language). Chat language does not

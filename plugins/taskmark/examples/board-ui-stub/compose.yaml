@@ -1,0 +1,9 @@
+services:
+  board:
+    build: .
+    ports:
+      - "8275:8275"
+    environment:
+      HOSTNAME: "0.0.0.0"
+      PORT: "8275"
+      TASKMARK_BOARD: /board

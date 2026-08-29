@@ -26,11 +26,12 @@ Read `taskmark-conventions` first.
    python3 <plugin>/scripts/ensure-board-ui.py <board-root> --name <board-package-name> --writing-language "<language>"
    ```
 
-   This creates/merges `package.json`, `vercel.json`, optional `server.js`, and
-   `.gitignore`. Add `--replace-writing-language` only when the user explicitly
-   changes a language that is already stored. Omitting `--writing-language` on a
-   repair leaves an existing `taskmark.writingLanguage` untouched. Other
-   `package.json` keys must not be clobbered. The ignore file must include:
+   This creates/merges `package.json`, `vercel.json`, optional `server.js`,
+   Docker stubs (`Dockerfile`, `compose.yaml`, `.dockerignore`), and `.gitignore`.
+   Add `--replace-writing-language` only when the user explicitly changes a
+   language that is already stored. Omitting `--writing-language` on a repair
+   leaves an existing `taskmark.writingLanguage` untouched. Other `package.json`
+   keys must not be clobbered. The ignore file must include:
 
    ```gitignore
    REPOS.md
@@ -48,7 +49,29 @@ Read `taskmark-conventions` first.
    ```
 
 7. Verify `npm run build` writes `out/`.
+8. Write or repair the **static project README** from
+   `examples/static-project-readme.md`, in the board writing language.
 
-Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a board `README.md`, or
-`CHANGELOG.md`. Do not seed a General epic. Existing boards remain compatible
-and are not destructively migrated by init.
+   Location (static project docs, never a generated dashboard):
+
+   - Single-git: product-root `README.md` (not nested `taskmark/README.md`).
+   - Multi-git: `README.md` at the dedicated sibling `*-taskmark` board root
+     (this repo is the board product). Do not write a Last synced / Current
+     speed / open-work dashboard there.
+
+   Fill in: Taskmark’s purpose; the workspace’s product repositories by **name
+   and role** (not gitignored local absolute paths); local run (`npm install`,
+   `npx taskmark serve` / `dev`, port 8275); production `npm run build` / `out/`;
+   Vercel via the board `vercel.json` static `out/` flow; Docker
+   (`docker compose up --build` on the board stubs); standalone
+   `npx @taskmark/ui` (workspace/picker vs bound board). Do not tell users to
+   `npx taskmark` unless `@taskmark/ui` is installed locally.
+
+   Do **not** overwrite a richer hand-written README. Create or replace only
+   when the file is missing, thinner than this template, or still a generated
+   dashboard (Last synced, Current speed, open-work list, README changelog).
+   Docker stubs must exist on the board if the README documents Docker.
+
+Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a generated board
+dashboard README, or `CHANGELOG.md`. Do not seed a General epic. Existing
+boards remain compatible and are not destructively migrated by init.
