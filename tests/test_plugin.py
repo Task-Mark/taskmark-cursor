@@ -101,6 +101,19 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("no estimate or owner property", conventions)
         self.assertIn("closed Started → Ended intervals", conventions)
 
+    def test_do_parent_target_requires_every_open_descendant(self) -> None:
+        do_skill = (PLUGIN / "skills" / "tkmd-do" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        do_command = (PLUGIN / "commands" / "tkmd-do.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("Every open, non-cancelled descendant is", do_skill)
+        self.assertIn("requires zero open, non-cancelled task/bug leaves", do_skill)
+        self.assertIn("every open, non-cancelled descendant leaf", do_command)
+        self.assertIn("Do not stop successfully until all descendants are done", do_command)
+
     def test_init_helpers_create_only_storage_and_local_repos(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             repo = Path(tmp) / "product"

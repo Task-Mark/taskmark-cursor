@@ -24,8 +24,10 @@ filenames using both legacy IDs (`T-297`) and collision-resistant IDs
 (`T-MM-a8f31c2d`).
 
 - Task/bug target: execute that leaf.
-- Story/epic target: derive descendant task/bug leaves by `parent`/`epic`
-  frontmatter and execute only open leaves needed by the request.
+- Story/epic target: derive every descendant task/bug leaf by `parent`/`epic`
+  frontmatter before implementation. Every open, non-cancelled descendant is
+  mandatory scope: implement and complete all of them, even when the user's
+  prompt mentions only the parent ID.
 - A target story/epic with no child items is itself a structural leaf and may
   be executed and completed in its own file.
 
@@ -55,6 +57,15 @@ open or done task/bug still covers the request.
      leaf.
 5. Do not mark blocked, skipped, or incomplete leaves done. Report their
    blockers.
+6. For a story/epic target, re-scan all descendants before stopping. Success
+   requires zero open, non-cancelled task/bug leaves. Do not voluntarily stop
+   after a subset, and do not describe the parent target as complete while any
+   mandatory descendant remains open. A definitive blocker may leave a leaf
+   open, but the command must then report the whole parent target incomplete.
+
+Story and epic status are read-time rollups. Completing all descendant leaves
+makes those parents done; never write status or lifecycle fields to parent
+markdown.
 
 Before stopping, inspect the board markdown diff. Among existing board
 markdown, only successfully executed leaf files may differ. New product files
