@@ -10,6 +10,7 @@ Copies / merges from examples/board-ui-stub/:
 
 Usage:
   python3 ensure-board-ui.py <board-root> [--name <package-name>] [--force]
+    [--writing-language <lang>] [--replace-writing-language]
 """
 
 from __future__ import annotations
@@ -45,7 +46,45 @@ def ensure_gitignore(board: Path) -> bool:
     return True
 
 
-def merge_package_json(board: Path, stub: Path, package_name: str | None, force: bool) -> str:
+def apply_writing_language(
+    pkg: dict,
+    writing_language: str | None,
+    replace: bool,
+) -> None:
+    """Merge taskmark.writingLanguage without clobbering other package.json keys.
+
+    An existing value is kept unless --replace-writing-language is set.
+    A missing value is filled only when --writing-language is passed.
+    """
+    lang = (writing_language or "").strip()
+    tm = pkg.get("taskmark")
+    if not isinstance(tm, dict):
+        tm = {}
+    existing = tm.get("writingLanguage")
+    if isinstance(existing, str):
+        existing = existing.strip() or None
+    else:
+        existing = None
+    if existing and not replace:
+        if tm:
+            pkg["taskmark"] = tm
+        return
+    if not lang:
+        if tm:
+            pkg["taskmark"] = tm
+        return
+    tm["writingLanguage"] = lang
+    pkg["taskmark"] = tm
+
+
+def merge_package_json(
+    board: Path,
+    stub: Path,
+    package_name: str | None,
+    force: bool,
+    writing_language: str | None = None,
+    replace_writing_language: bool = False,
+) -> str:
     stub_pkg = json.loads((stub / "package.json").read_text(encoding="utf-8"))
     pkg_path = board / "package.json"
     created = False
@@ -100,7 +139,11 @@ def merge_package_json(board: Path, stub: Path, package_name: str | None, force:
         stub_pkg.get("dependencies", {}).get("@taskmark/ui", "^0.1.0"),
     )
 
-    pkg_path.write_text(json.dumps(pkg, indent=2) + "\n", encoding="utf-8")
+    apply_writing_language(pkg, writing_language, replace_writing_language)
+
+    pkg_path.write_text(
+        json.dumps(pkg, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     return action
 
 
@@ -125,6 +168,17 @@ def main() -> int:
         action="store_true",
         help="Overwrite existing server.js / vercel.json / package.json from stub",
     )
+    ap.add_argument(
+        "--writing-language",
+        default=None,
+        help="Board writing language (any language). Fills a missing field; "
+        "does not overwrite an existing value unless --replace-writing-language.",
+    )
+    ap.add_argument(
+        "--replace-writing-language",
+        action="store_true",
+        help="Overwrite taskmark.writingLanguage (user explicitly changed it)",
+    )
     args = ap.parse_args()
     board = args.board_root.resolve()
     if not board.is_dir():
@@ -138,7 +192,14 @@ def main() -> int:
 
     board.mkdir(parents=True, exist_ok=True)
     gi = ensure_gitignore(board)
-    pkg_action = merge_package_json(board, stub, args.name, args.force)
+    pkg_action = merge_package_json(
+        board,
+        stub,
+        args.name,
+        args.force,
+        args.writing_language,
+        args.replace_writing_language,
+    )
     server_action = copy_if_needed(board, stub, "server.js", args.force)
     vercel_action = copy_if_needed(board, stub, "vercel.json", args.force)
     # Always refresh vercel.json to static hosting when force, or when still Node-era.

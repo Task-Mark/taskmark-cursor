@@ -28,4 +28,4 @@ When creating or editing Taskmark markdown:
   a README changelog, or Last synced metadata.
 - Board `CHANGELOG.md` is written only by `/tkmd-changelog` and
   `/tkmd-version`. Those commands do not commit.
-- Follow the `taskmark-conventions` skill.
+- Follow the `taskmark-conventions` skill, including the board writing language.

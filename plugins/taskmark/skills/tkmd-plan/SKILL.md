@@ -15,6 +15,12 @@ Use the existing canonical board. For one product repository it is
 `<repo>/taskmark`; for multiple repositories it is the dedicated sibling
 `<common>-taskmark` root. If missing, run the `taskmark-init` skill.
 
+Read `taskmark.writingLanguage` from the board `package.json`. If missing, use
+the language the user usually uses with the Cursor agent. Write titles,
+descriptions, goals, user stories, acceptance criteria, and Prompt & feedback
+summaries in that language even when chat is in another language. Do not
+translate existing committed markdown.
+
 Before planning anything new, search all open and done epics, stories, tasks,
 and bugs. Compare the request with titles, descriptions, goals, user stories,
 acceptance/fix criteria, and parent context.

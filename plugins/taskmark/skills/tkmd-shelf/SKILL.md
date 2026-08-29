@@ -9,6 +9,8 @@ description: >-
 
 Read `taskmark-conventions` first.
 
+Prompt rows and any new leaf prose use the board writing language.
+
 ## Non-negotiable safety
 
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.

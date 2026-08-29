@@ -9,6 +9,12 @@ description: >-
 
 Read `taskmark-conventions` first.
 
+Write new and updated leaf markdown in the board writing language
+(`taskmark.writingLanguage`, or the Cursor-agent usual language if missing).
+Chat language does not change the written language. Do not translate existing
+committed markdown unless the current leaf explicitly requires rewriting that
+file.
+
 ## Non-negotiable safety
 
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.

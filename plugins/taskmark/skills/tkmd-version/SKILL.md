@@ -23,13 +23,14 @@ Read `taskmark-conventions` first.
 
 Same board root as `/tkmd-changelog`: `<product>/taskmark/` or sibling
 `<common>-taskmark`. Canonical SemVer lives only on that board’s
-`package.json` `version` field.
+`package.json` `version` field. Read `taskmark.writingLanguage` the same way
+as `/tkmd-changelog` and keep Unreleased headings in that language.
 
 ## Collect notes
 
-If `## Não publicado` is missing or has no bullets, run the same collection and
-Unreleased rewrite as `tkmd-changelog`. If there is still nothing new, stop
-and report that; do not bump the version.
+If Unreleased is missing or has no bullets, run the same collection and
+Unreleased rewrite as `tkmd-changelog` (in the board writing language). If
+there is still nothing new, stop and report that; do not bump the version.
 
 ## Choose the version
 
@@ -51,10 +52,10 @@ field is missing). Bump that value; do not write versions onto other packages.
 1. Set board `package.json` `version` to the chosen SemVer.
 2. Move the Unreleased bullets under a new heading
    `## {version} - YYYY-MM-DD` using today’s UTC date.
-3. Place that section **immediately after** `## Não publicado`, newest release
-   first (above older `## x.y.z` sections).
-4. Leave `## Não publicado` in place with no bullets and no empty `###`
-   categories.
+3. Place that section **immediately after** Unreleased, newest release first
+   (above older `## x.y.z` sections).
+4. Leave Unreleased in place with no bullets and no empty `###` categories.
+   Unreleased and category headings stay in the board writing language.
 
 Do not edit released sections other than inserting the new one.
 

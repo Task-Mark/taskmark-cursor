@@ -37,3 +37,8 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    are read-time views over descendant leaves.
 10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a board
     `README.md`. Never write a Last synced field or a README changelog.
+11. Agent-written board markdown uses the board writing language stored as
+    `taskmark.writingLanguage` in board `package.json` (any language chosen at
+    init; default is the usual Cursor-agent language). Chat language does not
+    change that. If the field is missing, use the init default. Do not
+    translate existing files unless the current task explicitly rewrites them.

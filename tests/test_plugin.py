@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import tempfile
@@ -24,6 +25,8 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-commit",
                 "tkmd-do",
                 "tkmd-shelf",
+                "tkmd-changelog",
+                "tkmd-version",
             },
         )
 
@@ -58,6 +61,8 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-save",
                 "tkmd-do",
                 "tkmd-shelf",
+                "tkmd-changelog",
+                "tkmd-version",
             },
         )
         self.assertFalse(
@@ -95,6 +100,7 @@ class PluginSurfaceTests(unittest.TestCase):
             "parent: <epic-id>",
             "Never edit an existing `epic.md`, `story.md`, or leaf",
             "Every newly planned task/bug leaf must include a `prompt` row",
+            "taskmark.writingLanguage",
         ):
             self.assertIn(instruction, normalized_plan_skill)
         self.assertIn("Use the `tkmd-plan` skill", plan_command)
@@ -231,6 +237,35 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("done leaf", conventions)
         self.assertIn("no estimate or owner property", conventions)
         self.assertIn("closed Started → Ended intervals", conventions)
+        self.assertIn("taskmark.writingLanguage", conventions)
+        self.assertNotIn("Portuguese-only", conventions)
+        self.assertIn("board writing language", memory)
+        self.assertIn("board writing language", do_skill)
+
+    def test_changelog_skills_follow_board_language_not_hardcoded_portuguese(self) -> None:
+        changelog = (PLUGIN / "skills" / "tkmd-changelog" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        version = (PLUGIN / "skills" / "tkmd-version" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        conventions = (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        plugin_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
+        init_skill = (PLUGIN / "skills" / "taskmark-init" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        init_command = (PLUGIN / "commands" / "tkmd-init.md").read_text(encoding="utf-8")
+        self.assertIn("writingLanguage", changelog)
+        self.assertIn("board writing language", changelog)
+        self.assertNotIn("Portuguese Keep a Changelog", changelog)
+        self.assertIn("board writing language", version)
+        self.assertIn("Keep a Changelog structure in the **board writing", conventions)
+        self.assertIn("independent", plugin_readme)
+        self.assertIn("writing language", init_skill)
+        self.assertIn("writing language", init_command)
+        self.assertIn("--writing-language", init_skill)
 
     def test_do_parent_target_requires_every_open_descendant(self) -> None:
         do_skill = (PLUGIN / "skills" / "tkmd-do" / "SKILL.md").read_text(
@@ -258,6 +293,51 @@ class PluginSurfaceTests(unittest.TestCase):
             "Do not stop successfully until all required descendants are done",
             normalized_do_command,
         )
+
+    def test_ensure_board_ui_merges_writing_language_without_clobber(self) -> None:
+        script = PLUGIN / "scripts" / "ensure-board-ui.py"
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            board = Path(tmp) / "board"
+            board.mkdir()
+            extra = {"name": "keep-me", "customKey": "stay", "version": "9.9.9"}
+            (board / "package.json").write_text(
+                json.dumps(extra, indent=2) + "\n", encoding="utf-8"
+            )
+            subprocess.run(
+                ["python3", str(script), str(board), "--writing-language", "English"],
+                check=True,
+                capture_output=True,
+            )
+            pkg = json.loads((board / "package.json").read_text(encoding="utf-8"))
+            self.assertEqual(pkg["customKey"], "stay")
+            self.assertEqual(pkg["version"], "9.9.9")
+            self.assertEqual(pkg["taskmark"]["writingLanguage"], "English")
+
+            subprocess.run(
+                ["python3", str(script), str(board), "--writing-language", "Português"],
+                check=True,
+                capture_output=True,
+            )
+            pkg = json.loads((board / "package.json").read_text(encoding="utf-8"))
+            self.assertEqual(pkg["taskmark"]["writingLanguage"], "English")
+            self.assertEqual(pkg["customKey"], "stay")
+
+            subprocess.run(
+                [
+                    "python3",
+                    str(script),
+                    str(board),
+                    "--writing-language",
+                    "Português",
+                    "--replace-writing-language",
+                ],
+                check=True,
+                capture_output=True,
+            )
+            pkg = json.loads((board / "package.json").read_text(encoding="utf-8"))
+            self.assertEqual(pkg["taskmark"]["writingLanguage"], "Português")
+            self.assertEqual(pkg["customKey"], "stay")
+            self.assertFalse(FORBIDDEN_BOARD_FILES.intersection(p.name for p in board.iterdir()))
 
     def test_shelf_command_and_skill_define_terminal_leaf_writes(self) -> None:
         shelf_skill = (PLUGIN / "skills" / "tkmd-shelf" / "SKILL.md").read_text(

@@ -10,7 +10,8 @@ description: >-
 Read `taskmark-conventions` first.
 
 This command composes `tkmd-plan` then `tkmd-do`. Keep `/tkmd-plan` as the
-plan-only path. Do not skip the search/dedupe step.
+plan-only path. Do not skip the search/dedupe step. New item markdown uses the
+board writing language.
 
 ## Non-negotiable safety
 

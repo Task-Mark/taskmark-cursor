@@ -17,6 +17,23 @@ description: >-
   `/tkmd-version` write it. Do not generate changelog sections in a README.
 - `REPOS.md` is local-generated and must be listed in the board `.gitignore`.
 
+## Board writing language
+
+- Stored on the board in committed `package.json` as `taskmark.writingLanguage`.
+  Any language is allowed (a name or tag such as `English` or `pt`).
+- `/tkmd-init` asks the user to pick a language. If they do not pick one, use
+  the language they usually use with the Cursor agent. Re-running init keeps a
+  stored value unless they explicitly choose a different language.
+- Read that field at the start of every `/tkmd-*` session that writes markdown.
+  If it is missing, follow the same init default. Do not invent a second
+  ad-hoc locale.
+- Write work-item markdown (titles, descriptions, goals, user stories,
+  acceptance/fix criteria, Prompt & feedback summaries, work-log summaries),
+  changelog prose, the static project README, and other agent-authored board
+  markdown in that stored language even when the chat is in another language.
+- Do not translate existing committed markdown unless the current task
+  explicitly rewrites that file.
+
 ## IDs and paths
 
 New IDs use `<type>-<identity>-<random>`, for example `T-MM-a8f31c2d`.
@@ -96,22 +113,27 @@ Actual is the sum of descendant leaf Actual values.
 - `/tkmd-do` never commits or pushes, never uses `in_progress`, and never
   writes `CHANGELOG.md`.
 - `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
-- `/tkmd-changelog` rebuilds `## Não publicado` in board-root `CHANGELOG.md`
-  from recent done leaves. It never edits item markdown, the README, commits,
-  or pushes.
+- `/tkmd-changelog` rebuilds Unreleased in board-root `CHANGELOG.md` from
+  recent done leaves, in the board writing language. It never edits item
+  markdown, the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets the
   board `package.json` version, and never tags, publishes, commits, or pushes.
 - `/tkmd-commit` is the only user command that commits.
 
 ## Changelog wording
 
-Board `CHANGELOG.md` uses Portuguese Keep a Changelog headings: `Não publicado`
-and `## x.y.z - YYYY-MM-DD`. Category headings are `Adicionado`, `Alterado`,
-`Descontinuado`, `Removido`, `Corrigido`, and `Segurança`.
+Board `CHANGELOG.md` uses Keep a Changelog structure in the **board writing
+language** (see `taskmark.writingLanguage`), not a hardcoded locale.
+
+- Unreleased heading and category headings (`Added`, `Changed`, `Deprecated`,
+  `Removed`, `Fixed`, `Security`, or the equivalent in the stored language).
+- Dated releases stay `## x.y.z - YYYY-MM-DD`.
+- Preserve existing dated sections when rebuilding Unreleased.
 
 Each Unreleased bullet is one user-visible outcome in past tense, taken from
 the user story, acceptance criteria, or title. Visible text must not include
 work-item codes (`T-` / `B-` / `S-` / `E-`). Related leaves from the same story
 may be merged when that reads better.
 
-Example: `Foi adicionado um botão para filtrar as tarefas já realizadas.`
+Example (English board): `A button to filter completed tasks was added.`
+Translate headings and bullets when the stored language is not English.

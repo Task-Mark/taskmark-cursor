@@ -8,8 +8,8 @@ description: >-
 # tkmd-save
 
 Read `taskmark-conventions` first, then apply the same search, fit, sizing, ID,
-and write-boundary rules as `tkmd-plan`. This command never implements work.
-That remains `/tkmd-do` or `/tkmd-plan-do`.
+write-boundary, and board-writing-language rules as `tkmd-plan`. This command
+never implements work. That remains `/tkmd-do` or `/tkmd-plan-do`.
 
 ## Non-negotiable safety
 
@@ -69,9 +69,10 @@ Strongly split XL unless it is one indivisible executable unit. Items created
 with children use `size: null` and `points: null`.
 
 Allocate IDs with `scripts/allocate-id.py`. Write only each new item's own
-markdown. Every newly planned task/bug leaf must include a `prompt` row
-summarizing that the work came from this Cursor plan. Never write Prompt &
-feedback on an epic or story file.
+markdown, in the board writing language. Every newly planned task/bug leaf
+must include a `prompt` row summarizing that the work came from this Cursor
+plan (summary in the board language). Never write Prompt & feedback on an
+epic or story file.
 
 ## Carry plan diagrams and visuals
 

@@ -2,7 +2,7 @@
 name: tkmd-changelog
 description: >-
   Rebuild the Unreleased section of the board CHANGELOG.md from recent done
-  task/bug leaves in Portuguese Keep a Changelog style, without work-item IDs.
+  task/bug leaves in the board writing language, without work-item IDs.
 ---
 
 # tkmd-changelog
@@ -29,6 +29,11 @@ board is missing, run the `taskmark-init` skill first, then continue.
 Write **only** that board-root `CHANGELOG.md`. Create the file if it does not
 exist. Never put changelog sections in a README.
 
+Read `taskmark.writingLanguage` from the board `package.json`. If it is
+missing, use the language the user usually uses with the Cursor agent (the
+init default). Write intro, Unreleased, category headings, and new bullets in
+that language. Chat language does not apply.
+
 ## Collect done leaves
 
 1. Parse existing `CHANGELOG.md` for the newest released heading matching
@@ -40,42 +45,46 @@ exist. Never put changelog sections in a README.
    read them only as parent context for wording.
 4. Prefer `status: done` task and bug files under `epics/`.
 
-## Wording (Portuguese Keep a Changelog)
+## Wording (Keep a Changelog in the board language)
 
-Rebuild `## Não publicado` idempotently from the collected leaves. Preserve
-every already-released `## x.y.z - YYYY-MM-DD` section unchanged.
+Rebuild the Unreleased section idempotently from the collected leaves. Preserve
+every already-released `## x.y.z - YYYY-MM-DD` section unchanged (do not
+retranslate those sections here).
 
-- One user-visible outcome per bullet, in **past tense**.
+- One user-visible outcome per bullet, in **past tense**, in the board
+  writing language.
 - Phrase from the user story, acceptance criteria, or title — not commit
   messages or implementation shorthand.
 - **Never** include work-item codes (`T-` / `B-` / `S-` / `E-`, legacy or
   collision-resistant) in visible changelog text.
 - Merging related leaves from the **same story** into one bullet is allowed
   when it reads better.
-- Example: `Foi adicionado um botão para filtrar as tarefas já realizadas.`
+- Example (English board): `A button to filter completed tasks was added.`
 
-Use these headings only:
+Translate Keep a Changelog headings into the stored language. English
+equivalents:
 
 ```text
 # Changelog
-## Não publicado
-### Adicionado
-### Alterado
-### Descontinuado
-### Removido
-### Corrigido
-### Segurança
+## Unreleased
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
 ## x.y.z - YYYY-MM-DD
 ```
 
-Omit empty `###` categories. If nothing qualifies, keep `## Não publicado`
-with no category subsections (or a single note that there is nothing new) and
-do not invent bullets.
+Omit empty `###` categories. If nothing qualifies, keep Unreleased with no
+category subsections (or a single note that there is nothing new) and do not
+invent bullets.
 
-When creating the file, use a short Portuguese Keep a Changelog intro, then
-`## Não publicado`, then any existing released sections (none on first create).
+When creating the file, use a short Keep a Changelog intro in the board
+language, then Unreleased, then any existing released sections (none on first
+create).
 
 ## After writing
 
-Report the board path, cutoff used, how many leaves were considered, and that
-nothing was committed.
+Report the board path, writing language, cutoff used, how many leaves were
+considered, and that nothing was committed.

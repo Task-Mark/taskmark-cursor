@@ -15,14 +15,22 @@ Read `taskmark-conventions` first.
    - Multiple roots: board = sibling `<common>-taskmark` repository root. Ask
      for the common name when it cannot be derived safely.
 2. Create the board directory and `epics/`. An empty `.gitkeep` is allowed.
-3. Run:
+3. Choose the board writing language. Ask the user; any language is allowed.
+   Default if they do not pick one: the language they usually use with the
+   Cursor agent. If `package.json` already has `taskmark.writingLanguage`, keep
+   it unless they explicitly name a different language. Write agent-authored
+   board markdown in that language even when chat is in another one.
+4. Run:
 
    ```bash
-   python3 <plugin>/scripts/ensure-board-ui.py <board-root> --name <board-package-name>
+   python3 <plugin>/scripts/ensure-board-ui.py <board-root> --name <board-package-name> --writing-language "<language>"
    ```
 
    This creates/merges `package.json`, `vercel.json`, optional `server.js`, and
-   `.gitignore`. The ignore file must include:
+   `.gitignore`. Add `--replace-writing-language` only when the user explicitly
+   changes a language that is already stored. Omitting `--writing-language` on a
+   repair leaves an existing `taskmark.writingLanguage` untouched. Other
+   `package.json` keys must not be clobbered. The ignore file must include:
 
    ```gitignore
    REPOS.md
@@ -31,15 +39,15 @@ Read `taskmark-conventions` first.
    .taskmark-ui-build/
    ```
 
-4. Run `scripts/sync-taskmark-repos.sh` to generate the local-only
+5. Run `scripts/sync-taskmark-repos.sh` to generate the local-only
    `REPOS.md`. It contains local paths and no `Last synced` field.
-5. Install `@taskmark/ui` as a production dependency:
+6. Install `@taskmark/ui` as a production dependency:
 
    ```bash
    npm install @taskmark/ui --save
    ```
 
-6. Verify `npm run build` writes `out/`.
+7. Verify `npm run build` writes `out/`.
 
 Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a board `README.md`, or
 `CHANGELOG.md`. Do not seed a General epic. Existing boards remain compatible

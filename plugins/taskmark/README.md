@@ -5,7 +5,8 @@ Marketplace package for conflict-resistant markdown product memory in Cursor.
 Taskmark exposes these user commands:
 
 - `/tkmd-init` initializes `epics/`, local repository discovery, and board UI
-  stubs.
+  stubs, and records a writing language (any language; default is the language
+  the user usually uses with the Cursor agent).
 - `/tkmd-plan` searches the canonical board and creates the smallest useful
   hierarchy from prose using collision-resistant IDs.
 - `/tkmd-save` turns a Cursor Plan mode plan into epic, story, task, and bug
@@ -20,13 +21,18 @@ Taskmark exposes these user commands:
   nothing matches.
 - `/tkmd-shelf` discards never-implemented work as `status: shelved`, never
   commits or pushes, and changes only eligible task/bug leaf files.
-- `/tkmd-changelog` rebuilds the Unreleased (`Não publicado`) section of
-  board-root `CHANGELOG.md` from recent done work in plain language. It never
+- `/tkmd-changelog` rebuilds the Unreleased section of board-root
+  `CHANGELOG.md` from recent done work in the board writing language. It never
   writes the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into a dated `x.y.z` section and sets
   the board `package.json` version. It never tags, publishes, or commits.
 - `/tkmd-commit` commits dirty linked repositories. It is the only command
   that commits.
+
+Chat language and board writing language are independent. Work items,
+changelog, README, and other agent-written board markdown always use the
+language stored as `taskmark.writingLanguage` on the board, even when the
+conversation is in another language.
 
 New IDs retain the type and creator identity, for example
 `T-MM-a8f31c2d`. Legacy IDs such as `T-297` remain supported.
