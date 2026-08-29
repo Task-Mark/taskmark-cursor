@@ -61,6 +61,21 @@ There is no estimate or owner property. Actual is not frontmatter: the UI
 sums valid closed Started → Ended intervals from leaf Work log rows. Parent
 Actual is the sum of descendant leaf Actual values.
 
+## Status
+
+- `backlog`, `blocked`, and `in_progress` are incomplete.
+- `done`, `shelved`, and `cancelled` are terminal.
+- `done` means implemented; `shelved` means deliberately discarded without
+  implementation; `cancelled` remains a separate legacy/latch outcome.
+- `/tkmd-shelf` sets only eligible task/bug leaves to `status: shelved` with
+  `completed_at` set. It does not check acceptance criteria, set
+  `cancelled: true`, or edit parent markdown.
+- Parent status is derived from descendants: a terminal mix containing at least
+  one done leaf rolls up to `done`; without done, any shelved leaf rolls up to
+  `shelved`; all cancelled leaves roll up to `cancelled`.
+- Hide-completed and completeness sorting treat all three terminal statuses as
+  complete.
+
 ## Write boundaries
 
 - Create writes only files for newly created items.
@@ -73,4 +88,5 @@ Actual is the sum of descendant leaf Actual values.
   scope still covers the change, else create a new task/bug. Never write those
   rows on `epic.md` or `story.md`.
 - `/tkmd-do` never commits or pushes and never uses `in_progress`.
+- `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
 - `/tkmd-commit` is the only user command that commits.

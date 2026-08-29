@@ -11,7 +11,7 @@
     {
       "name": "taskmark",
       "source": "./plugins/taskmark",
-      "description": "Conflict-resistant markdown planning with four focused Cursor commands."
+      "description": "Conflict-resistant markdown planning with focused Cursor commands."
     }
   ]
 }

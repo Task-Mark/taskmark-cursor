@@ -2,7 +2,7 @@
   "name": "taskmark",
   "displayName": "Taskmark",
   "version": "0.1.0",
-  "description": "Conflict-resistant epic, story, task, and bug planning in markdown with four focused Cursor commands.",
+  "description": "Conflict-resistant epic, story, task, and bug planning in markdown with focused Cursor commands.",
   "author": {
     "name": "menda0"
   },

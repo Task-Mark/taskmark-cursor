@@ -2,7 +2,7 @@
 
 Marketplace package for conflict-resistant markdown product memory in Cursor.
 
-Taskmark exposes exactly four user commands:
+Taskmark exposes five user commands:
 
 - `/tkmd-init` initializes `epics/`, local repository discovery, and board UI
   stubs.
@@ -12,6 +12,8 @@ Taskmark exposes exactly four user commands:
   executed leaf files. Agent sessions log Prompt & feedback on a matching
   leaf (including a done task that still fits) or create a new task when
   nothing matches.
+- `/tkmd-shelf` discards never-implemented work as `status: shelved`, never
+  commits or pushes, and changes only eligible task/bug leaf files.
 - `/tkmd-commit` commits dirty linked repositories.
 
 New IDs retain the type and creator identity, for example

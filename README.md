@@ -10,11 +10,13 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-init` | Create board storage and UI stubs |
 | `/tkmd-plan` | Search the board and plan the smallest useful hierarchy from prose |
 | `/tkmd-do` | Implement a target and finish executed leaves without committing |
+| `/tkmd-shelf` | Discard never-implemented work as shelved without committing |
 | `/tkmd-commit` | Commit dirty linked repositories |
 
-These are the only user-facing commands. `/tkmd-do` never commits or pushes and
-does not use an `in_progress` stage. Agent sessions log Prompt & feedback on a
-matching leaf, including a done task that still fits.
+These are the only user-facing commands. `/tkmd-do` and `/tkmd-shelf` never
+commit or push. Do does not use an `in_progress` stage; shelf keeps discarded
+work distinct from done. Agent sessions log Prompt & feedback on a matching
+leaf, including a done task that still fits.
 
 ## Board layout
 

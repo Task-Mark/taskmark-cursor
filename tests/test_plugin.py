@@ -12,10 +12,11 @@ FORBIDDEN_BOARD_FILES = {"INDEX.md", "SIZING.md", "VELOCITY.md", "README.md"}
 
 
 class PluginSurfaceTests(unittest.TestCase):
-    def test_exactly_four_user_commands(self) -> None:
+    def test_exactly_five_user_commands(self) -> None:
         commands = {path.stem for path in (PLUGIN / "commands").glob("*.md")}
         self.assertEqual(
-            commands, {"tkmd-init", "tkmd-plan", "tkmd-commit", "tkmd-do"}
+            commands,
+            {"tkmd-init", "tkmd-plan", "tkmd-commit", "tkmd-do", "tkmd-shelf"},
         )
 
     def test_only_required_scripts_remain(self) -> None:
@@ -46,6 +47,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "taskmark-init",
                 "tkmd-plan",
                 "tkmd-do",
+                "tkmd-shelf",
             },
         )
         self.assertFalse(
@@ -137,11 +139,48 @@ class PluginSurfaceTests(unittest.TestCase):
         do_command = (PLUGIN / "commands" / "tkmd-do.md").read_text(
             encoding="utf-8"
         )
+        normalized_do_skill = " ".join(do_skill.split())
+        normalized_do_command = " ".join(do_command.split())
 
-        self.assertIn("Every open, non-cancelled descendant is", do_skill)
-        self.assertIn("requires zero open, non-cancelled task/bug leaves", do_skill)
-        self.assertIn("every open, non-cancelled descendant leaf", do_command)
-        self.assertIn("Do not stop successfully until all descendants are done", do_command)
+        self.assertIn(
+            "Every open, non-cancelled, non-shelved descendant is",
+            normalized_do_skill,
+        )
+        self.assertIn(
+            "requires zero open, non-cancelled, non-shelved task/bug leaves",
+            normalized_do_skill,
+        )
+        self.assertIn(
+            "every open, non-cancelled, non-shelved descendant leaf",
+            normalized_do_command,
+        )
+        self.assertIn(
+            "Do not stop successfully until all required descendants are done",
+            normalized_do_command,
+        )
+
+    def test_shelf_command_and_skill_define_terminal_leaf_writes(self) -> None:
+        shelf_skill = (PLUGIN / "skills" / "tkmd-shelf" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        shelf_command = (PLUGIN / "commands" / "tkmd-shelf.md").read_text(
+            encoding="utf-8"
+        )
+        normalized_skill = " ".join(shelf_skill.split())
+        normalized_command = " ".join(shelf_command.split())
+
+        for instruction in (
+            "status: shelved",
+            "Never run `git commit`",
+            "Never edit epic or story markdown",
+            "Never set `cancelled: true`",
+            "open, non-cancelled, non-shelved",
+            "Set `updated` and `completed_at`",
+            "Preserve `cancelled: false`",
+        ):
+            self.assertIn(instruction, normalized_skill)
+        self.assertIn("Use the `tkmd-shelf` skill", normalized_command)
+        self.assertIn("never commits or pushes", normalized_command)
 
     def test_init_helpers_create_only_storage_and_local_repos(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
