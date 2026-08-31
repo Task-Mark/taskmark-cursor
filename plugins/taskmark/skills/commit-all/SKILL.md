@@ -48,8 +48,8 @@ Prefer lowercase, imperative or noun phrase, under ~72 characters.
 
    Prefer the helper: `scripts/commit-all-repos.sh --message "…" [workspace…]` when committing many roots with one shared message; for per-repo messages, commit each root separately following the same one-liner rule.
 6. Never commit secrets (`.env`, credentials). Warn and skip those files if present.
-7. Do not generate or refresh board markdown before committing. `REPOS.md` is
-   gitignored and must not be staged.
+7. Do not generate or refresh board markdown before committing. `REPOS.md` and
+   the board `.reports/` directory are gitignored and must not be staged.
 8. When the active executed leaf is known, append the resulting commit row to
    that leaf only in a follow-up commit if the user wants board commit tracking.
    Never write commit rows to epic/story parents.

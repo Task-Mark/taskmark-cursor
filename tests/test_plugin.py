@@ -27,6 +27,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-shelf",
                 "tkmd-changelog",
                 "tkmd-version",
+                "tkmd-reportme",
             },
         )
 
@@ -63,6 +64,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-shelf",
                 "tkmd-changelog",
                 "tkmd-version",
+                "tkmd-reportme",
             },
         )
         self.assertFalse(
@@ -362,6 +364,39 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("Use the `tkmd-shelf` skill", normalized_command)
         self.assertIn("never commits or pushes", normalized_command)
 
+    def test_reportme_reports_own_done_work_since_last_report(self) -> None:
+        skill = (PLUGIN / "skills" / "tkmd-reportme" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        command = (PLUGIN / "commands" / "tkmd-reportme.md").read_text(
+            encoding="utf-8"
+        )
+        memory = (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(
+            encoding="utf-8"
+        )
+        conventions = (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        normalized_skill = " ".join(skill.split())
+        normalized_command = " ".join(command.split())
+
+        for instruction in (
+            ".reports/report-YYYYMMDD.md",
+            "Never run `git commit`",
+            "Never edit epic, story, or leaf markdown",
+            "current git identity",
+            "`resolvers` contain the current git identity",
+            "Ignore a file dated today",
+            "no earlier report exists",
+            "taskmark.writingLanguage",
+            "Never** include work-item codes",
+        ):
+            self.assertIn(instruction, normalized_skill)
+        self.assertIn("Use the `tkmd-reportme` skill", normalized_command)
+        self.assertIn("never commits or pushes", normalized_command)
+        self.assertIn("/tkmd-reportme", memory)
+        self.assertIn(".reports/", conventions)
+
     def test_init_helpers_create_only_storage_and_local_repos(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             repo = Path(tmp) / "product"
@@ -394,6 +429,17 @@ class PluginSurfaceTests(unittest.TestCase):
                 capture_output=True,
             )
             self.assertEqual(ignored.returncode, 0)
+            report_ignored = subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(repo),
+                    "check-ignore",
+                    "taskmark/.reports/report-20260101.md",
+                ],
+                capture_output=True,
+            )
+            self.assertEqual(report_ignored.returncode, 0)
             self.assertFalse(FORBIDDEN_BOARD_FILES.intersection(p.name for p in board.iterdir()))
 
 

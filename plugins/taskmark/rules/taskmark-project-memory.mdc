@@ -19,8 +19,8 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    (and `feedback` when the user replies) row on the chosen leaf — never on
    `epic.md` or `story.md`.
 3. Use only `/tkmd-init`, `/tkmd-plan`, `/tkmd-save`, `/tkmd-plan-do`,
-   `/tkmd-do`, `/tkmd-shelf`, `/tkmd-changelog`, `/tkmd-version`, and
-   `/tkmd-commit`.
+   `/tkmd-do`, `/tkmd-shelf`, `/tkmd-changelog`, `/tkmd-version`,
+   `/tkmd-reportme`, and `/tkmd-commit`.
 4. Creation writes new item files only. Never edit existing parent markdown to
    add links, rollups, logs, people, status, or dates.
 5. `/tkmd-do` implements the target, never commits or pushes, never uses an
@@ -34,6 +34,9 @@ If a Taskmark board exists in the workspace, treat it as the source of truth for
    writes that changelog plus the chosen SemVer on the board `package.json`,
    every linked product-root `package.json`, and the Cursor plugin
    `plugin.json`. They never commit or write a README changelog.
+   `/tkmd-reportme` writes only `.reports/report-YYYYMMDD.md` on the board,
+   reporting the current git identity's done leaves since the previous report.
+   That directory is local-generated and gitignored.
 9. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
    are read-time views over descendant leaves.
 10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a

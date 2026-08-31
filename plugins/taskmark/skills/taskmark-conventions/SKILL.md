@@ -22,6 +22,8 @@ description: >-
 - `CHANGELOG.md` at the board root is allowed. Only `/tkmd-changelog` and
   `/tkmd-version` write it. Do not generate changelog sections in a README.
 - `REPOS.md` is local-generated and must be listed in the board `.gitignore`.
+- `.reports/` holds personal `/tkmd-reportme` output. It is local-generated and
+  must be listed in the board `.gitignore`.
 
 ## Board writing language
 
@@ -126,6 +128,10 @@ Actual is the sum of descendant leaf Actual values.
   SemVer on the board `package.json`, every linked product-root `package.json`,
   and the Cursor plugin `plugin.json`, and never tags, publishes, commits, or
   pushes.
+- `/tkmd-reportme` writes only `.reports/report-YYYYMMDD.md` on the board,
+  covering the current git identity's done leaves since the previous report in
+  the board writing language. It never implements, edits item markdown, writes
+  `CHANGELOG.md` or the README, commits, or pushes.
 - `/tkmd-commit` is the only user command that commits.
 
 ## Changelog wording

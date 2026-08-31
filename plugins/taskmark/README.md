@@ -29,6 +29,9 @@ Taskmark exposes these user commands:
   that SemVer on the board `package.json`, every linked product-root
   `package.json`, and the Cursor plugin `plugin.json`. It never tags,
   publishes, or commits.
+- `/tkmd-reportme` reports what the current git identity finished since the
+  previous report as human-readable bullets in `.reports/report-YYYYMMDD.md`.
+  Those files are gitignored and personal; the command never commits or pushes.
 - `/tkmd-commit` commits dirty linked repositories. It is the only command
   that commits.
 
@@ -46,8 +49,8 @@ and should be split.
 Taskmark has no estimate or owner property. Actual is the sum of closed Work
 log intervals stored on task/bug leaves; parent Actual is derived from leaves.
 
-Boards contain `epics/` and UI stubs. `REPOS.md` is generated locally and
-gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
+Boards contain `epics/` and UI stubs. `REPOS.md` and `.reports/` are generated
+locally and gitignored. Taskmark does not generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`,
 or a dashboard README. `/tkmd-init` writes a static project README at the
 product root (single-git) or the dedicated `*-taskmark` board root
 (multi-git). Release notes live in `CHANGELOG.md`, written only by
