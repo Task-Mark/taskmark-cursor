@@ -122,8 +122,10 @@ Actual is the sum of descendant leaf Actual values.
 - `/tkmd-changelog` rebuilds Unreleased in board-root `CHANGELOG.md` from
   recent done leaves, in the board writing language. It never edits item
   markdown, the README, commits, or pushes.
-- `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets the
-  board `package.json` version, and never tags, publishes, commits, or pushes.
+- `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets that
+  SemVer on the board `package.json`, every linked product-root `package.json`,
+  and the Cursor plugin `plugin.json`, and never tags, publishes, commits, or
+  pushes.
 - `/tkmd-commit` is the only user command that commits.
 
 ## Changelog wording

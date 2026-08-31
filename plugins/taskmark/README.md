@@ -26,7 +26,9 @@ Taskmark exposes these user commands:
   `CHANGELOG.md` from recent done work in the board writing language. It never
   writes the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into a dated `x.y.z` section and sets
-  the board `package.json` version. It never tags, publishes, or commits.
+  that SemVer on the board `package.json`, every linked product-root
+  `package.json`, and the Cursor plugin `plugin.json`. It never tags,
+  publishes, or commits.
 - `/tkmd-commit` commits dirty linked repositories. It is the only command
   that commits.
 
