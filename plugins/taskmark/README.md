@@ -8,6 +8,9 @@ Taskmark exposes these user commands:
   stubs, records a writing language (any language; default is the language
   the user usually uses with the Cursor agent), and writes or repairs a
   static project README (not a generated dashboard).
+- `/tkmd-verify` migrates an existing board to the current layout: repairs
+  scaffold like init, deletes leftover generated files, and strips legacy
+  item markdown. It never commits or pushes.
 - `/tkmd-plan` searches the canonical board and creates the smallest useful
   hierarchy from prose using collision-resistant IDs.
 - `/tkmd-save` turns a Cursor Plan mode plan into epic, story, task, and bug

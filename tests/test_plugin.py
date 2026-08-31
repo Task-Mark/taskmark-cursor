@@ -19,6 +19,7 @@ class PluginSurfaceTests(unittest.TestCase):
             commands,
             {
                 "tkmd-init",
+                "tkmd-verify",
                 "tkmd-plan",
                 "tkmd-save",
                 "tkmd-save-do",
@@ -43,6 +44,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "git-identity.py",
                 "rsync-plugin-local.sh",
                 "sync-taskmark-repos.sh",
+                "verify-board.py",
             },
         )
 
@@ -58,6 +60,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "sync-taskmark-repos",
                 "taskmark-conventions",
                 "taskmark-init",
+                "tkmd-verify",
                 "tkmd-plan",
                 "tkmd-plan-do",
                 "tkmd-save",
@@ -468,6 +471,137 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertEqual(report_ignored.returncode, 0)
             self.assertFalse(FORBIDDEN_BOARD_FILES.intersection(p.name for p in board.iterdir()))
 
+    def test_verify_skill_forbids_commit_and_generated_files(self) -> None:
+        skill = (PLUGIN / "skills" / "tkmd-verify" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        command = (PLUGIN / "commands" / "tkmd-verify.md").read_text(
+            encoding="utf-8"
+        )
+        memory = (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(
+            encoding="utf-8"
+        )
+        conventions = (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(skill.split())
+        for instruction in (
+            "Never run `git commit`",
+            "Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or `CHANGELOG.md`",
+            "ensure-board-ui.py",
+            "verify-board.py",
+            "--dry-run",
+        ):
+            self.assertIn(instruction, normalized)
+        self.assertIn("Use the `tkmd-verify` skill", command)
+        self.assertIn("/tkmd-verify", memory)
+        self.assertIn("/tkmd-verify", conventions)
+
+    def test_verify_board_strips_legacy_files_and_keeps_leaf_work_log(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            product = Path(tmp) / "product"
+            board = product / "taskmark"
+            epic_dir = board / "epics" / "E-001-legacy"
+            items = epic_dir / "items"
+            items.mkdir(parents=True)
+            (product / "README.md").write_text(
+                "# Product\n\nStatic project docs.\n", encoding="utf-8"
+            )
+            (board / "INDEX.md").write_text("# index\n", encoding="utf-8")
+            (board / "SIZING.md").write_text("# sizing\n", encoding="utf-8")
+            (board / "VELOCITY.md").write_text("# velocity\n", encoding="utf-8")
+            (board / "NEXT_IDS.md").write_text("T-001\n", encoding="utf-8")
+            (board / "CHANGELOG.md").write_text("# Changelog\n", encoding="utf-8")
+            (board / "README.md").write_text(
+                "# Dashboard\n\nLast synced: yesterday\nCurrent speed: 0\n",
+                encoding="utf-8",
+            )
+            (epic_dir / "epic.md").write_text(
+                "---\n"
+                "id: E-001\n"
+                "type: epic\n"
+                "title: Legacy\n"
+                "status: in_progress\n"
+                "owner: Ada\n"
+                "estimate_minutes: 30\n"
+                "actual_ms: 0\n"
+                "size_source: rolled_up\n"
+                "---\n\n"
+                "# E-001: Legacy\n\n"
+                "## Goal\n\nKeep this.\n\n"
+                "## Stories\n\n- S-001 child list\n",
+                encoding="utf-8",
+            )
+            (items / "T-001-leaf.md").write_text(
+                "---\n"
+                "id: T-001\n"
+                "type: task\n"
+                "title: Leaf\n"
+                "status: backlog\n"
+                "owner: Ada\n"
+                "estimate_minutes: 12\n"
+                "---\n\n"
+                "# T-001: Leaf\n\n"
+                "## Work log\n\n"
+                "| Actor | Started (UTC) | Ended (UTC) | Summary |\n"
+                "|-------|---------------|-------------|---------|\n"
+                "| Ada | 2026-01-01T00:00:00Z | 2026-01-01T00:10:00Z | Did work. |\n",
+                encoding="utf-8",
+            )
+            extra = product / "vendor" / "taskmark"
+            extra.mkdir(parents=True)
+            (extra / "INDEX.md").write_text("# leftover\n", encoding="utf-8")
+
+            dry = subprocess.run(
+                [
+                    "python3",
+                    str(PLUGIN / "scripts" / "verify-board.py"),
+                    str(board),
+                    "--dry-run",
+                    "--workspace",
+                    str(product),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertTrue((board / "INDEX.md").exists())
+            self.assertIn("owner: Ada", (epic_dir / "epic.md").read_text(encoding="utf-8"))
+            self.assertIn("dry_run", dry.stdout)
+
+            subprocess.run(
+                [
+                    "python3",
+                    str(PLUGIN / "scripts" / "verify-board.py"),
+                    str(board),
+                    "--workspace",
+                    str(product),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertFalse((board / "INDEX.md").exists())
+            self.assertFalse((board / "SIZING.md").exists())
+            self.assertFalse((board / "VELOCITY.md").exists())
+            self.assertFalse((board / "NEXT_IDS.md").exists())
+            self.assertFalse((board / "README.md").exists())
+            self.assertTrue((board / "CHANGELOG.md").exists())
+            self.assertTrue((board / "epics").is_dir())
+            self.assertFalse(extra.exists())
+            epic = (epic_dir / "epic.md").read_text(encoding="utf-8")
+            self.assertNotIn("owner:", epic)
+            self.assertNotIn("estimate_minutes:", epic)
+            self.assertNotIn("## Stories", epic)
+            self.assertIn("status: in_progress", epic)
+            self.assertIn("id: E-001", epic)
+            self.assertIn("## Goal", epic)
+            leaf = (items / "T-001-leaf.md").read_text(encoding="utf-8")
+            self.assertNotIn("owner:", leaf)
+            self.assertIn("## Work log", leaf)
+            self.assertIn("Did work.", leaf)
+
 
 if __name__ == "__main__":
     unittest.main()
+

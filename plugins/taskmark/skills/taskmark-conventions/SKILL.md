@@ -122,6 +122,10 @@ Actual is the sum of descendant leaf Actual values.
   items; it never commits or pushes and never uses `in_progress`.
 - `/tkmd-do` never commits or pushes, never uses `in_progress`, and never
   writes `CHANGELOG.md`.
+- `/tkmd-verify` migrates an existing board (scaffold repair, delete leftover
+  generated files, strip retired frontmatter and parent-only sections). It
+  never commits or pushes and never creates `INDEX.md`, `SIZING.md`,
+  `VELOCITY.md`, or `CHANGELOG.md`.
 - `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
 - `/tkmd-changelog` rebuilds Unreleased in board-root `CHANGELOG.md` from
   recent done leaves, in the board writing language. It never edits item

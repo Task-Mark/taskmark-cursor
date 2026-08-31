@@ -8,6 +8,7 @@ tasks, and bugs remain useful across chats without generated board files.
 | Command | Purpose |
 |---------|---------|
 | `/tkmd-init` | Create board storage and UI stubs |
+| `/tkmd-verify` | Migrate an existing board to the current layout |
 | `/tkmd-plan` | Search the board and plan the smallest useful hierarchy from prose |
 | `/tkmd-save` | Turn a Cursor Plan mode plan into board items, keeping diagrams/visuals |
 | `/tkmd-save-do` | Save like `/tkmd-save`, then implement only the newly created items |
@@ -19,7 +20,7 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-reportme` | Report my done work since the last report into `.reports/` |
 | `/tkmd-commit` | Commit dirty linked repositories (the only commit command) |
 
-`/tkmd-plan-do`, `/tkmd-save-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-shelf`, `/tkmd-changelog`,
+`/tkmd-plan-do`, `/tkmd-save-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-verify`, `/tkmd-shelf`, `/tkmd-changelog`,
 `/tkmd-version`, and `/tkmd-reportme` never commit or push. Do, plan-do, and save-do do not use an
 `in_progress` stage; shelf keeps discarded work distinct from done. Changelog
 and version write `CHANGELOG.md` (and `/tkmd-version` the same SemVer on every
