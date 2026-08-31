@@ -9,7 +9,7 @@ description: >-
 
 Read `taskmark-conventions` first, then apply the same search, fit, sizing, ID,
 write-boundary, and board-writing-language rules as `tkmd-plan`. This command
-never implements work. That remains `/tkmd-do` or `/tkmd-plan-do`.
+never implements work. That remains `/tkmd-do` or `/tkmd-save-do`.
 
 ## Non-negotiable safety
 

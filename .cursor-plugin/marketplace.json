@@ -11,7 +11,7 @@
     {
       "name": "taskmark",
       "source": "./plugins/taskmark",
-      "description": "Conflict-resistant markdown planning with /tkmd-init, /tkmd-plan, /tkmd-save, /tkmd-plan-do, /tkmd-do, /tkmd-shelf, /tkmd-changelog, /tkmd-version, /tkmd-reportme, and /tkmd-commit."
+      "description": "Conflict-resistant markdown planning with /tkmd-init, /tkmd-plan, /tkmd-save, /tkmd-save-do, /tkmd-plan-do, /tkmd-do, /tkmd-shelf, /tkmd-changelog, /tkmd-version, /tkmd-reportme, and /tkmd-commit."
     }
   ]
 }

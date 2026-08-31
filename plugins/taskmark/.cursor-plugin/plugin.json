@@ -2,7 +2,7 @@
   "name": "taskmark",
   "displayName": "Taskmark",
   "version": "0.4.0",
-  "description": "Conflict-resistant epic, story, task, and bug planning in markdown with /tkmd-init, /tkmd-plan, /tkmd-save, /tkmd-plan-do, /tkmd-do, /tkmd-shelf, /tkmd-changelog, /tkmd-version, /tkmd-reportme, and /tkmd-commit.",
+  "description": "Conflict-resistant epic, story, task, and bug planning in markdown with /tkmd-init, /tkmd-plan, /tkmd-save, /tkmd-save-do, /tkmd-plan-do, /tkmd-do, /tkmd-shelf, /tkmd-changelog, /tkmd-version, /tkmd-reportme, and /tkmd-commit.",
   "author": {
     "name": "menda0"
   },

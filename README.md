@@ -10,6 +10,7 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-init` | Create board storage and UI stubs |
 | `/tkmd-plan` | Search the board and plan the smallest useful hierarchy from prose |
 | `/tkmd-save` | Turn a Cursor Plan mode plan into board items, keeping diagrams/visuals |
+| `/tkmd-save-do` | Save like `/tkmd-save`, then implement only the newly created items |
 | `/tkmd-plan-do` | Plan like `/tkmd-plan`, then implement only the newly created items |
 | `/tkmd-do` | Implement a target and finish executed leaves without committing |
 | `/tkmd-shelf` | Discard never-implemented work as shelved without committing |
@@ -18,8 +19,8 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-reportme` | Report my done work since the last report into `.reports/` |
 | `/tkmd-commit` | Commit dirty linked repositories (the only commit command) |
 
-`/tkmd-plan-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-shelf`, `/tkmd-changelog`,
-`/tkmd-version`, and `/tkmd-reportme` never commit or push. Do and plan-do do not use an
+`/tkmd-plan-do`, `/tkmd-save-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-shelf`, `/tkmd-changelog`,
+`/tkmd-version`, and `/tkmd-reportme` never commit or push. Do, plan-do, and save-do do not use an
 `in_progress` stage; shelf keeps discarded work distinct from done. Changelog
 and version write `CHANGELOG.md` (and `/tkmd-version` the same SemVer on every
 linked product), never a README changelog. Agent sessions log Prompt & feedback on a matching leaf,

@@ -13,6 +13,9 @@ Taskmark exposes these user commands:
 - `/tkmd-save` turns a Cursor Plan mode plan into epic, story, task, and bug
   files and carries plan diagrams and visuals onto those items. It never
   implements, commits, or pushes.
+- `/tkmd-save-do` runs the same save as `/tkmd-save`, then implements only the
+  newly created items like `/tkmd-do`. If save creates nothing, it reports the
+  match and skips implementation.
 - `/tkmd-plan-do` runs the same planning as `/tkmd-plan`, then implements only
   the newly created items like `/tkmd-do`. If planning creates nothing, it
   reports the match and skips implementation.

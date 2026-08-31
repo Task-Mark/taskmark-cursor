@@ -116,6 +116,8 @@ Actual is the sum of descendant leaf Actual values.
   rows on `epic.md` or `story.md`.
 - `/tkmd-save` creates new item files from a Cursor Plan mode plan and never
   implements, commits, or pushes.
+- `/tkmd-save-do` runs `/tkmd-save` then `/tkmd-do` only on newly created
+  items; it never commits or pushes and never uses `in_progress`.
 - `/tkmd-plan-do` runs `/tkmd-plan` then `/tkmd-do` only on newly created
   items; it never commits or pushes and never uses `in_progress`.
 - `/tkmd-do` never commits or pushes, never uses `in_progress`, and never

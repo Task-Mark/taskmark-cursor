@@ -21,6 +21,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-init",
                 "tkmd-plan",
                 "tkmd-save",
+                "tkmd-save-do",
                 "tkmd-plan-do",
                 "tkmd-commit",
                 "tkmd-do",
@@ -60,6 +61,7 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-plan",
                 "tkmd-plan-do",
                 "tkmd-save",
+                "tkmd-save-do",
                 "tkmd-do",
                 "tkmd-shelf",
                 "tkmd-changelog",
@@ -157,7 +159,31 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertIn(instruction, normalized)
         self.assertIn("Use the `tkmd-save` skill", normalized_command)
         self.assertIn("/tkmd-save", memory)
+        self.assertIn("/tkmd-save-do", memory)
         self.assertIn("/tkmd-plan-do", memory)
+
+    def test_save_do_composes_save_then_do_on_new_items_only(self) -> None:
+        skill = (PLUGIN / "skills" / "tkmd-save-do" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        command = (PLUGIN / "commands" / "tkmd-save-do.md").read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(skill.split())
+        normalized_command = " ".join(command.split())
+
+        for instruction in (
+            "Follow the `tkmd-save` skill in full",
+            "create nothing",
+            "Do not start implementation",
+            "highest new parent",
+            "each newly created leaf",
+            "Never run `git commit`",
+            "Never set an item to `in_progress`",
+        ):
+            self.assertIn(instruction, normalized)
+        self.assertIn("Use the `tkmd-save-do` skill", normalized_command)
+        self.assertIn("never commits or pushes", normalized_command)
 
     def test_allocator_is_collision_resistant_and_legacy_compatible(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
