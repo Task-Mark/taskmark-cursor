@@ -1,6 +1,7 @@
 node_modules
 out
 .taskmark-ui-build
+.taskmark-ui-dev
 .vercel
 REPOS.md
 .reports

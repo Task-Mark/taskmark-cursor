@@ -30,7 +30,14 @@ def stub_dir() -> Path:
 
 def ensure_gitignore(board: Path) -> bool:
     gi = board / ".gitignore"
-    lines = ["REPOS.md", ".reports/", "node_modules/", "out/", ".taskmark-ui-build/"]
+    lines = [
+        "REPOS.md",
+        ".reports/",
+        "node_modules/",
+        "out/",
+        ".taskmark-ui-build/",
+        ".taskmark-ui-dev/",
+    ]
     changed = False
     if gi.exists():
         text = gi.read_text(encoding="utf-8")

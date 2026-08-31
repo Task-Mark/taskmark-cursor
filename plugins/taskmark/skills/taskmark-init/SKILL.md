@@ -38,6 +38,7 @@ Read `taskmark-conventions` first.
    node_modules/
    out/
    .taskmark-ui-build/
+   .taskmark-ui-dev/
    ```
 
 5. Run `scripts/sync-taskmark-repos.sh` to generate the local-only
