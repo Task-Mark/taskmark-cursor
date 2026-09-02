@@ -31,8 +31,10 @@ Same board root as `/tkmd-changelog`: `<product>/taskmark/` or sibling
 ## Collect notes
 
 If Unreleased is missing or has no bullets, run the same collection and
-Unreleased rewrite as `tkmd-changelog` (in the board writing language). If
-there is still nothing new, stop and report that; do not bump the version.
+Unreleased rewrite as `tkmd-changelog` (in the board writing language),
+including post-cutoff Prompt & feedback and Work log follow-ups on already
+done leaves. If there is still nothing new, stop and report that; do not
+bump the version.
 
 ## Choose the version
 

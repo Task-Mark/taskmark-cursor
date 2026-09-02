@@ -15,7 +15,7 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-plan-do` | Plan like `/tkmd-plan`, then implement only the newly created items |
 | `/tkmd-do` | Implement a target and finish executed leaves without committing |
 | `/tkmd-shelf` | Discard never-implemented work as shelved without committing |
-| `/tkmd-changelog` | Rebuild CHANGELOG Unreleased from recent done work |
+| `/tkmd-changelog` | Rebuild CHANGELOG Unreleased from recent done work and post-release follow-ups |
 | `/tkmd-version` | Promote Unreleased and set that SemVer on every linked product |
 | `/tkmd-reportme` | Report my done work since the last report into `.reports/` |
 | `/tkmd-commit` | Commit dirty linked repositories (the only commit command) |

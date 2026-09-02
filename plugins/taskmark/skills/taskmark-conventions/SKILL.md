@@ -128,8 +128,9 @@ Actual is the sum of descendant leaf Actual values.
   `VELOCITY.md`, or `CHANGELOG.md`.
 - `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
 - `/tkmd-changelog` rebuilds Unreleased in board-root `CHANGELOG.md` from
-  recent done leaves, in the board writing language. It never edits item
-  markdown, the README, commits, or pushes.
+  done leaves completed after the last release and from post-cutoff Prompt
+  & feedback or Work log rows on already-done leaves, in the board writing
+  language. It never edits item markdown, the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets that
   SemVer on the board `package.json`, every linked product-root `package.json`,
   and the Cursor plugin `plugin.json`, and never tags, publishes, commits, or
@@ -150,10 +151,15 @@ language** (see `taskmark.writingLanguage`), not a hardcoded locale.
 - Dated releases stay `## x.y.z - YYYY-MM-DD`.
 - Preserve existing dated sections when rebuilding Unreleased.
 
-Each Unreleased bullet is one user-visible outcome in past tense, taken from
-the user story, acceptance criteria, or title. Visible text must not include
-work-item codes (`T-` / `B-` / `S-` / `E-`). Related leaves from the same story
-may be merged when that reads better.
+Each Unreleased bullet is one user-visible outcome in past tense. Newly
+completed leaves (completed after the last dated release) are phrased from
+the user story, acceptance criteria, or title. Follow-up work on a leaf
+already completed on or before that cutoff is phrased from post-cutoff Work
+log summaries first, then Prompt & feedback rows — not from the original
+title. Do not repeat an outcome that already appears in a released section.
+Visible text must not include work-item codes (`T-` / `B-` / `S-` / `E-`).
+Related leaves or follow-ups from the same story may be merged when that
+reads better.
 
 Example (English board): `A button to filter completed tasks was added.`
 Translate headings and bullets when the stored language is not English.

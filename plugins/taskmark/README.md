@@ -29,8 +29,9 @@ Taskmark exposes these user commands:
 - `/tkmd-shelf` discards never-implemented work as `status: shelved`, never
   commits or pushes, and changes only eligible task/bug leaf files.
 - `/tkmd-changelog` rebuilds the Unreleased section of board-root
-  `CHANGELOG.md` from recent done work in the board writing language. It never
-  writes the README, commits, or pushes.
+  `CHANGELOG.md` from recent done work and from post-release follow-ups
+  logged as Prompt & feedback or Work log on already-done leaves, in the
+  board writing language. It never writes the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into a dated `x.y.z` section and sets
   that SemVer on the board `package.json`, every linked product-root
   `package.json`, and the Cursor plugin `plugin.json`. It never tags,
