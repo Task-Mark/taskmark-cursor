@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Board stub so `npm start` / `npx taskmark serve` launch the UI, `npm run build` emits static HTML, and `npm run preview` serves `out/`. Created by taskmark-init.",
   "engines": {
-    "node": "22.x"
+    "node": "22.x || 24.x"
   },
   "scripts": {
     "start": "taskmark serve --no-open",

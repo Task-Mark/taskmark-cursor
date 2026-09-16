@@ -112,7 +112,7 @@ def merge_package_json(
     pkg["private"] = True
     pkg["type"] = "module"
     pkg.setdefault("version", stub_pkg.get("version", "0.1.0"))
-    pkg.setdefault("engines", stub_pkg.get("engines", {"node": "22.x"}))
+    pkg.setdefault("engines", stub_pkg.get("engines", {"node": "22.x || 24.x"}))
     if "description" not in pkg or created:
         pkg["description"] = stub_pkg.get(
             "description",
