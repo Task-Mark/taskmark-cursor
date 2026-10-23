@@ -1,5 +1,5 @@
 # Serve the static board UI (npm run build → out/) on port 8275.
-FROM node:22-alpine
+FROM node:22.23.4-alpine
 WORKDIR /board
 
 COPY package.json package-lock.json* ./
