@@ -15,6 +15,6 @@
     "preview": "taskmark preview"
   },
   "dependencies": {
-    "@taskmark/ui": "^0.2.5"
+    "@taskmark/ui": "^2.0.1"
   }
 }

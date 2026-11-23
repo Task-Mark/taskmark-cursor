@@ -25,11 +25,14 @@ board writing language.
 ## Save first
 
 Follow the `tkmd-save` skill in full: locate the Cursor Plan mode plan, search
-all open and done epics, stories, tasks, and bugs, fit existing hierarchy,
-allocate IDs, write new files only, and carry plan diagrams and visuals onto
-those new items.
+all open and done epics, stories, tasks, and bugs and every request brief,
+place the work in an existing request or a new `requests/<slug>/brief.md` (or
+under legacy `epics/` on a board that has no `requests/`), fit existing
+hierarchy, allocate IDs, write new files only, and carry plan diagrams and
+visuals onto those new items.
 
-Record every markdown path created in this save step.
+Record every markdown path created in this save step, including a new
+request brief.
 
 ## Skip implementation when save creates nothing
 
@@ -42,6 +45,8 @@ Report the matching ID and path. Do not start implementation. Suggest
 If save created new item files, run the `tkmd-do` skill only on that new
 work:
 
+- A new request brief is context, not an implementation target. Implement the
+  new epics, stories, and leaves under it.
 - When a new epic or story was created, implement the highest new parent so
   every open, non-cancelled, non-shelved descendant leaf of that parent is
   mandatory scope.
@@ -52,8 +57,8 @@ work:
 During the do phase, follow `tkmd-do` in full: no commit, no push, no
 `in_progress`, work on a branch named after the new item id (the highest new
 parent id when several leaves were created), and no edits to any board file,
-including the items just created. The Taskmark App marks them done after the
-work is merged.
+including the items just created and a new request brief. The Taskmark App
+marks them done after the work is merged.
 
 Return the saved hierarchy, implemented leaves, checks, blockers, and
 uncommitted changes.

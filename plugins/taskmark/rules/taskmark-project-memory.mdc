@@ -27,14 +27,22 @@ If a Taskmark board exists in the workspace, treat it as the read-only reference
    - Multiple git products: dedicated sibling `<common>-taskmark` repository
      root. Never copy the board into product repos.
    - `REPOS.md` is local-generated and gitignored.
-2. Before product work, search for a matching item and use it as the spec,
-   whether it is open or already done. Use `/tkmd-plan`, `/tkmd-save`,
+   - `npx taskmark init` sets the board up and migrates legacy boards.
+   - Layout: a 2.0 request board keeps `requests/<slug>/brief.md`,
+     `requests/<slug>/epics/...`, `requests/<slug>/log/`, and `meetings/`; a
+     legacy board keeps `epics/`. Request logs, meetings, and task stages are
+     written by the App and people, never by agents.
+2. Before product work, search for a matching item (and, on a request board,
+   its request brief) and use it as the spec, whether it is open or already
+   done. Use `/tkmd-plan`, `/tkmd-save`,
    `/tkmd-save-do`, or `/tkmd-plan-do` only when nothing fits.
 3. Use only `/tkmd-init`, `/tkmd-verify`, `/tkmd-plan`, `/tkmd-save`,
    `/tkmd-save-do`, `/tkmd-plan-do`, `/tkmd-do`, `/tkmd-changelog`,
    `/tkmd-version`, `/tkmd-reportme`, and `/tkmd-commit`.
-4. Creation writes new item files only. Never edit existing parent markdown to
-   add links, rollups, logs, people, status, or dates.
+4. Creation writes new item files only: under an existing request or a new
+   request brief on a request board, under `epics/` on a legacy board. Never
+   edit existing parent markdown or an existing brief to add links, rollups,
+   logs, people, status, or dates.
 5. `/tkmd-do` implements the target, never commits or pushes, never uses an
    `in_progress` stage, and never touches board files. Before changing code it
    works on a branch whose name contains the item id (`<id>-<short-slug>`).

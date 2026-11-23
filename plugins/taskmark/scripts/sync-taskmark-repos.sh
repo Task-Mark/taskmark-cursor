@@ -40,14 +40,19 @@ done
 git_roots=("${unique[@]+"${unique[@]}"}")
 [[ ${#git_roots[@]} -gt 0 ]] || { echo "No git roots found." >&2; exit 1; }
 
+# A board has legacy epics/ or a 2.0 requests/ tree.
+is_board() {
+  [[ -d "$1/epics" || -d "$1/requests" ]]
+}
+
 boards=()
 products=()
 for root in "${git_roots[@]}"; do
-  if [[ "$(basename "$root")" == *-taskmark && -d "$root/epics" ]]; then
+  if [[ "$(basename "$root")" == *-taskmark ]] && is_board "$root"; then
     boards+=("$root")
   else
     products+=("$root")
-    [[ -d "$root/taskmark/epics" ]] && boards+=("$root/taskmark")
+    is_board "$root/taskmark" && boards+=("$root/taskmark")
   fi
 done
 
@@ -79,7 +84,10 @@ else
   exit 1
 fi
 
-mkdir -p "$board/epics"
+# Never create epics/ on a request board; a new board starts with requests/.
+if ! is_board "$board"; then
+  mkdir -p "$board/requests"
+fi
 if [[ "$mode" == "multi-project" && ! -d "$board/.git" ]]; then
   git -C "$board" init >/dev/null
 fi

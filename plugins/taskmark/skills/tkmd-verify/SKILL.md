@@ -22,7 +22,8 @@ resolvers, acceptance criteria, Prompt & feedback, Work log, or Commits.
 
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.
 - Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or `CHANGELOG.md`.
-- Never delete an existing `CHANGELOG.md`, `epics/`, `node_modules/`, or `out/`.
+- Never delete an existing `CHANGELOG.md`, `epics/`, `requests/`, `meetings/`,
+  `node_modules/`, or `out/`.
 - Never set an item to `in_progress` or change any status.
 - Never add, edit, or remove status, lifecycle dates, resolvers, criteria
   checkboxes, or Prompt & feedback, Work log, or Commits rows or sections.
@@ -37,7 +38,11 @@ Use the same discovery as `taskmark-init` and `sync-taskmark-repos.sh`:
 
 - One product git root: `<product>/taskmark/`.
 - Multiple product git roots: sibling `<common>-taskmark` repository root
-  (`epics/` at that root).
+  (`requests/` or legacy `epics/` at that root).
+
+Verify does not move a legacy `epics/` board to requests. That migration
+belongs to `npx taskmark init` (or `npx taskmark migrate`); suggest it when the
+board has `epics/` and no `requests/`.
 
 If the board is missing, run `taskmark-init` first, then continue. Extra
 `taskmark/` trees in product repos are **reported**, not deleted, unless they
@@ -89,7 +94,10 @@ under a multi-git board). It does not create those files.
 
 ### 4. Migrate item markdown
 
-The same `verify-board.py` scan of `epics/**/*.md` is mechanical only:
+The same `verify-board.py` scan of item markdown under legacy `epics/**` and
+`requests/*/epics/**` is mechanical only. It never reads or rewrites request
+briefs (`requests/<slug>/brief.md`), request logs (`requests/<slug>/log/`), or
+meetings (`meetings/`):
 
 - Strip retired frontmatter: `owner`, `estimate_minutes`, `estimate_source`,
   `estimate_basis`, `actual_minutes`, `actual_ms`, `size_source`, `size_basis`,

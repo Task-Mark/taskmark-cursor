@@ -31,7 +31,9 @@ GitHub / Bitbucket App marks work done from pushes and merged pull requests.
 
 Accept an ID, markdown path, or unambiguous title. Search frontmatter and
 filenames using both legacy IDs (`T-297`) and collision-resistant IDs
-(`T-MM-a8f31c2d`).
+(`T-MM-a8f31c2d`), under `requests/*/epics/**` and legacy `epics/**`. On a
+request board the request brief of an item is the `brief.md` of the
+`requests/<slug>/` folder that contains it.
 
 - Task/bug target: implement that leaf unless it is cancelled or shelved.
   Those terminal outcomes are not implementation scope.

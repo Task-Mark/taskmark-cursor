@@ -186,6 +186,175 @@ class PluginSurfaceTests(unittest.TestCase):
         self.assertIn("Use the `tkmd-save-do` skill", normalized_command)
         self.assertIn("never commits or pushes", normalized_command)
 
+    def test_plan_and_save_write_new_work_under_requests(self) -> None:
+        plan = " ".join(
+            (PLUGIN / "skills" / "tkmd-plan" / "SKILL.md").read_text(encoding="utf-8").split()
+        )
+        save = " ".join(
+            (PLUGIN / "skills" / "tkmd-save" / "SKILL.md").read_text(encoding="utf-8").split()
+        )
+
+        for instruction in (
+            "requests/<slug>/brief.md",
+            "requests/<slug>/epics",
+            "id: R-<slug>",
+            "type: request",
+            "status: <proposed|ready>",
+            "requested_by:",
+            "owner:",
+            "created: <UTC YYYY-MM-DD>",
+            "## Goal",
+            "## Why",
+            "## Done when",
+            "## Out of scope",
+            "## Open questions",
+            "`aliases`",
+            "never edit an existing request `brief.md`",
+            "`epics/` and no `requests/`",
+            "npx taskmark init",
+            "Leave those tables empty",
+            "allocate-id.py",
+        ):
+            self.assertIn(instruction, plan)
+
+        for instruction in (
+            "requests/<slug>/brief.md",
+            "requests/<slug>/epics/...",
+            "never edit its `brief.md`",
+            "Goal, Why, Done when, Out of scope, Open questions",
+            "`epics/` and no `requests/`",
+            "npx taskmark init",
+            "never edit an existing request `brief.md`",
+        ):
+            self.assertIn(instruction, save)
+
+        for name in ("tkmd-plan-do", "tkmd-save-do"):
+            skill = " ".join(
+                (PLUGIN / "skills" / name / "SKILL.md").read_text(encoding="utf-8").split()
+            )
+            self.assertIn("requests/<slug>/brief.md", skill, name)
+            self.assertIn("every request brief", skill, name)
+            self.assertIn("A new request brief is context, not an implementation target", skill, name)
+
+        for name in ("tkmd-plan", "tkmd-save"):
+            command = " ".join(
+                (PLUGIN / "commands" / f"{name}.md").read_text(encoding="utf-8").split()
+            )
+            self.assertIn("requests/<slug>/epics/...", command, name)
+            self.assertIn("requests/<slug>/brief.md", command, name)
+            self.assertIn("npx taskmark init", command, name)
+        for name in ("tkmd-plan-do", "tkmd-save-do"):
+            command = " ".join(
+                (PLUGIN / "commands" / f"{name}.md").read_text(encoding="utf-8").split()
+            )
+            self.assertIn("existing or new request", command, name)
+
+    def test_init_delegates_to_taskmark_cli(self) -> None:
+        skill = " ".join(
+            (PLUGIN / "skills" / "taskmark-init" / "SKILL.md").read_text(encoding="utf-8").split()
+        )
+        command = " ".join(
+            (PLUGIN / "commands" / "tkmd-init.md").read_text(encoding="utf-8").split()
+        )
+
+        for instruction in (
+            "npx taskmark init",
+            "npx @taskmark/ui init",
+            "let the user answer each prompt there",
+            "GitHub or Bitbucket",
+            "OpenAI or Claude key",
+            "`AGENTS.md`",
+            "`CLAUDE.md`",
+            "migrates a legacy `epics/` board to requests",
+            "initial reconciliation",
+            "Do not hand-create board files when the CLI can run",
+            "Only when `npx` cannot run at all",
+            "`requests/` and `meetings/`",
+            "Do not create `epics/` on a new board",
+            "Tell the user to run `npx taskmark init` later",
+        ):
+            self.assertIn(instruction, skill)
+        self.assertNotIn("Create the board directory and `epics/`", skill)
+
+        for instruction in (
+            "npx taskmark init",
+            "GitHub or Bitbucket",
+            "OpenAI or Claude key",
+            "Do not hand-create board files",
+            "`requests/`, `meetings/`",
+            "npm/npx is unavailable",
+        ):
+            self.assertIn(instruction, command)
+
+    def test_conventions_and_rules_describe_request_layout(self) -> None:
+        conventions = " ".join(
+            (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+        rule = " ".join(
+            (PLUGIN / "rules" / "taskmark-conventions.mdc").read_text(encoding="utf-8").split()
+        )
+        memory = " ".join(
+            (PLUGIN / "rules" / "taskmark-project-memory.mdc").read_text(encoding="utf-8").split()
+        )
+
+        for instruction in (
+            "## Board layouts",
+            "requests/<slug>/brief.md",
+            "requests/<slug>/epics/",
+            "requests/<slug>/log/",
+            "meetings/<date>-<slug>.md",
+            "`R-<slug>`",
+            "Legacy board:",
+            "`development`, `testing`, `production`",
+            "never by agents",
+            "Reconciliation belongs to the App",
+        ):
+            self.assertIn(instruction, conventions)
+        for text in (rule, memory):
+            self.assertIn("requests/<slug>/brief.md", text)
+            self.assertIn("meetings/", text)
+            self.assertIn("`epics/`", text)
+        self.assertIn("Reconciliation belongs to the App", memory)
+        self.assertIn("npx taskmark init", memory)
+
+    def test_readmes_cover_requests_and_any_agent(self) -> None:
+        for path in (ROOT / "README.md", PLUGIN / "README.md"):
+            text = " ".join(path.read_text(encoding="utf-8").split())
+            self.assertIn("https://taskmark.dev/docs/agents", text, str(path))
+            self.assertIn("one integration", text, str(path))
+            self.assertIn("brief.md", text, str(path))
+            self.assertIn("npx taskmark init", text, str(path))
+
+    def test_request_board_prose_has_no_dashes(self) -> None:
+        paths = [
+            ROOT / "README.md",
+            PLUGIN / "README.md",
+            *(PLUGIN / "rules").glob("*.mdc"),
+            *(
+                PLUGIN / "skills" / name / "SKILL.md"
+                for name in (
+                    "taskmark-init",
+                    "taskmark-conventions",
+                    "tkmd-plan",
+                    "tkmd-save",
+                    "tkmd-plan-do",
+                    "tkmd-save-do",
+                    "tkmd-do",
+                    "tkmd-verify",
+                )
+            ),
+            *(
+                PLUGIN / "commands" / f"{name}.md"
+                for name in ("tkmd-init", "tkmd-plan", "tkmd-save", "tkmd-plan-do", "tkmd-save-do")
+            ),
+        ]
+        for path in paths:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn("—", text, str(path))
+            self.assertNotIn("–", text, str(path))
+
     def test_allocator_is_collision_resistant_and_legacy_compatible(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             board = Path(tmp)
@@ -457,6 +626,116 @@ class PluginSurfaceTests(unittest.TestCase):
             )
             self.assertEqual(report_ignored.returncode, 0)
             self.assertFalse(FORBIDDEN_BOARD_FILES.intersection(p.name for p in board.iterdir()))
+
+    def test_sync_repos_detects_request_board_and_never_creates_epics(self) -> None:
+        script = str(PLUGIN / "scripts" / "sync-taskmark-repos.sh")
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            # Existing request board inside a single product repo.
+            repo = Path(tmp) / "product"
+            board = repo / "taskmark"
+            (board / "requests" / "careers" / "epics").mkdir(parents=True)
+            subprocess.run(["git", "init", str(repo)], check=True, capture_output=True)
+            out = subprocess.run(
+                [script, str(repo)], check=True, capture_output=True, text=True
+            ).stdout
+            self.assertIn("Mode: single-project", out)
+            self.assertIn(f"Canonical: {board.resolve()}", out)
+            self.assertTrue((board / "REPOS.md").exists())
+            self.assertFalse((board / "epics").exists())
+
+            # Dedicated multi-repo board detected by requests/ alone.
+            ws = Path(tmp) / "ws"
+            for name in ("acme-api", "acme-web", "acme-taskmark"):
+                (ws / name).mkdir(parents=True)
+                subprocess.run(["git", "init", str(ws / name)], check=True, capture_output=True)
+            (ws / "acme-taskmark" / "requests").mkdir()
+            out = subprocess.run(
+                [script, str(ws)], check=True, capture_output=True, text=True
+            ).stdout
+            self.assertIn("Mode: multi-project", out)
+            self.assertIn("acme-taskmark", out)
+            self.assertFalse((ws / "acme-taskmark" / "epics").exists())
+
+            # A brand new board starts with requests/, not epics/.
+            fresh = Path(tmp) / "fresh"
+            fresh.mkdir()
+            subprocess.run(["git", "init", str(fresh)], check=True, capture_output=True)
+            subprocess.run([script, str(fresh)], check=True, capture_output=True)
+            self.assertTrue((fresh / "taskmark" / "requests").is_dir())
+            self.assertFalse((fresh / "taskmark" / "epics").exists())
+
+    def test_verify_board_scans_request_items_but_not_briefs_logs_or_meetings(self) -> None:
+        legacy_fm = "owner: Ada\nestimate_minutes: 12\n"
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            board = Path(tmp) / "acme-taskmark"
+            request = board / "requests" / "careers"
+            epic_dir = request / "epics" / "E-001-careers"
+            items = epic_dir / "items"
+            items.mkdir(parents=True)
+            (request / "log").mkdir()
+            (board / "meetings").mkdir()
+            brief = (
+                "---\nid: R-careers\ntype: request\ntitle: Careers\n"
+                + legacy_fm
+                + "---\n\n# Careers\n\n## Goal\n\nHire.\n\n## Stories\n\n- keep\n"
+            )
+            log = "---\nkind: note\nat: 2026-11-20T10:00:00Z\n" + legacy_fm + "---\nNote.\n"
+            meeting = "---\nid: M-1\ntitle: Kickoff\n" + legacy_fm + "---\n## Summary\n"
+            (request / "brief.md").write_text(brief, encoding="utf-8")
+            (request / "log" / "2026-11-20-note.md").write_text(log, encoding="utf-8")
+            (board / "meetings" / "2026-11-18-kickoff.md").write_text(meeting, encoding="utf-8")
+            (epic_dir / "epic.md").write_text(
+                "---\nid: E-001\ntype: epic\ntitle: Careers\nstatus: backlog\n"
+                + legacy_fm
+                + "---\n\n# E-001\n\n## Goal\n\nKeep.\n\n## Stories\n\n- S-001 child list\n",
+                encoding="utf-8",
+            )
+            (items / "T-001-leaf.md").write_text(
+                "---\nid: T-001\ntype: task\ntitle: Leaf\nstatus: done\nstage: production\n"
+                + legacy_fm
+                + "---\n\n# T-001\n\n## Work log\n\n| Actor | Started (UTC) | Ended (UTC) | Summary |\n"
+                "|-------|---------------|-------------|---------|\n"
+                "| Ada | 2026-01-01T00:00:00Z | 2026-01-01T00:10:00Z | Did work. |\n",
+                encoding="utf-8",
+            )
+            legacy_epic = board / "epics" / "E-002-old"
+            legacy_epic.mkdir(parents=True)
+            (legacy_epic / "epic.md").write_text(
+                "---\nid: E-002\ntype: epic\ntitle: Old\n" + legacy_fm + "---\n\n# E-002\n",
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                ["python3", str(PLUGIN / "scripts" / "verify-board.py"), str(board)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            report = json.loads(result.stdout)
+            rewritten = set(report["rewritten"])
+            self.assertIn("requests/careers/epics/E-001-careers/epic.md", rewritten)
+            self.assertIn("requests/careers/epics/E-001-careers/items/T-001-leaf.md", rewritten)
+            self.assertIn("epics/E-002-old/epic.md", rewritten)
+
+            epic = (epic_dir / "epic.md").read_text(encoding="utf-8")
+            self.assertNotIn("owner:", epic)
+            self.assertNotIn("## Stories", epic)
+            leaf = (items / "T-001-leaf.md").read_text(encoding="utf-8")
+            self.assertNotIn("estimate_minutes:", leaf)
+            self.assertIn("stage: production", leaf)
+            self.assertIn("Did work.", leaf)
+            self.assertNotIn("owner:", (legacy_epic / "epic.md").read_text(encoding="utf-8"))
+
+            self.assertEqual((request / "brief.md").read_text(encoding="utf-8"), brief)
+            self.assertEqual(
+                (request / "log" / "2026-11-20-note.md").read_text(encoding="utf-8"), log
+            )
+            self.assertEqual(
+                (board / "meetings" / "2026-11-18-kickoff.md").read_text(encoding="utf-8"),
+                meeting,
+            )
+            self.assertTrue((board / "requests").is_dir())
+            self.assertTrue((board / "meetings").is_dir())
 
     def test_verify_skill_forbids_commit_and_generated_files(self) -> None:
         skill = (PLUGIN / "skills" / "tkmd-verify" / "SKILL.md").read_text(

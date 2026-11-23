@@ -1,9 +1,9 @@
 # Taskmark
 
 Taskmark is conflict-resistant markdown product memory plus a local board UI.
-Work lives as epic, story, task, and bug files. Parent status, points, people,
-dates, and logs are derived in the UI from descendant leaves — not generated
-dashboard markdown.
+Work lives as requests (a brief plus the epics, stories, tasks, and bugs that
+deliver it) and meetings. Parent status, points, people, dates, and logs are
+derived in the UI from descendant leaves, not generated dashboard markdown.
 
 This file is static project documentation written by `/tkmd-init`. It is not
 a generated dashboard: there is no Last synced metric, Current speed, or
@@ -17,7 +17,7 @@ by `/tkmd-changelog` and `/tkmd-version`.
 
 | Repository | Role |
 |------------|------|
-| example-taskmark | Board (`epics/` and UI stubs) |
+| example-taskmark | Board (`requests/`, `meetings/`, and UI stubs) |
 | example-cursor | Cursor plugin |
 | example-frontend | Board UI (`@taskmark/ui`) |
 | example-website | Public website and docs |
@@ -45,7 +45,7 @@ npx taskmark dev
 
 `npx taskmark` (the `taskmark` **bin**) works only after a local `@taskmark/ui`
 install. Do not run `npx taskmark` in a folder that has not installed that
-package — npm may fetch an unrelated `taskmark` package.
+package: npm may fetch an unrelated `taskmark` package.
 
 ## Production build
 

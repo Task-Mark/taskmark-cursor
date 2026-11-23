@@ -53,7 +53,7 @@ PARENT_DROP_HEADINGS = {
 }
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 KEY_RE = re.compile(r"^([A-Za-z0-9_]+)\s*:")
-KEEP_NAMES = {"CHANGELOG.md", "epics", "node_modules", "out"}
+KEEP_NAMES = {"CHANGELOG.md", "epics", "requests", "meetings", "node_modules", "out"}
 
 
 def is_generated_dashboard(text: str) -> bool:
@@ -165,12 +165,17 @@ def looks_like_generated_duplicate(folder: Path) -> bool:
     if not folder.is_dir():
         return False
     names = {p.name for p in folder.iterdir() if p.name != ".DS_Store"}
-    if "epics" in names:
-        epics = folder / "epics"
-        has_items = any(epics.rglob("*.md")) if epics.is_dir() else False
-        if has_items:
-            return False
-    allowed = FORBIDDEN_GENERATED | ID_COUNTER_NAMES | {"README.md", "epics"}
+    for content_dir in ("epics", "requests", "meetings"):
+        if content_dir in names:
+            path = folder / content_dir
+            if path.is_dir() and any(path.rglob("*.md")):
+                return False
+    allowed = FORBIDDEN_GENERATED | ID_COUNTER_NAMES | {
+        "README.md",
+        "epics",
+        "requests",
+        "meetings",
+    }
     return names <= allowed
 
 
@@ -212,6 +217,28 @@ def find_extra_taskmark_dirs(board: Path, workspaces: list[Path]) -> list[Path]:
     return extras
 
 
+def item_roots(board: Path) -> list[Path]:
+    """Folders holding epic folders: legacy `epics/` and `requests/<slug>/epics/`.
+
+    Only item markdown lives under these roots. Request briefs
+    (`requests/<slug>/brief.md`), request logs (`requests/<slug>/log/`), and
+    meetings (`meetings/`) are never scanned or rewritten.
+    """
+    roots: list[Path] = []
+    legacy = board / "epics"
+    if legacy.is_dir():
+        roots.append(legacy)
+    requests = board / "requests"
+    if requests.is_dir():
+        for request in sorted(requests.iterdir()):
+            if request.name.startswith(".") or not request.is_dir():
+                continue
+            epics = request / "epics"
+            if epics.is_dir():
+                roots.append(epics)
+    return roots
+
+
 def verify(board: Path, dry_run: bool, workspaces: list[Path]) -> dict:
     board = board.resolve()
     deleted: list[str] = []
@@ -243,8 +270,7 @@ def verify(board: Path, dry_run: bool, workspaces: list[Path]) -> dict:
             if delete_if_present(nested, dry_run):
                 deleted.append(str(nested))
 
-    epics = board / "epics"
-    if epics.is_dir():
+    for epics in item_roots(board):
         for md in sorted(epics.rglob("*.md")):
             if migrate_markdown(md, dry_run):
                 rewritten.append(str(md.relative_to(board)))

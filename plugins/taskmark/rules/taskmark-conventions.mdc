@@ -1,6 +1,6 @@
 ---
 description: Enforce conflict-resistant Taskmark leaf markdown conventions
-globs: taskmark/**/*.md
+globs: taskmark/**/*.md, requests/**/*.md, meetings/**/*.md, epics/**/*.md
 alwaysApply: false
 ---
 
@@ -8,17 +8,24 @@ alwaysApply: false
 
 When creating or editing Taskmark markdown:
 
+- Board layouts: 2.0 request boards keep `requests/<slug>/brief.md`,
+  `requests/<slug>/epics/...`, `requests/<slug>/log/`, and `meetings/`;
+  legacy boards keep `epics/`. On a request board new work goes under an
+  existing request or a new request brief (`R-<slug>`, status `proposed` or
+  `ready`); on a legacy board it stays under `epics/`.
 - Accept legacy IDs like `T-297` and new IDs like `T-MM-a8f31c2d`.
 - New IDs come from `scripts/allocate-id.py`; never use a shared counter.
 - Static sizes only: XS=1, S=3, M=5, L=8, XL=13, XXL=21.
-- There is no estimate or owner property. Actual is derived only from closed
-  leaf Work log intervals; parent Actual sums descendant leaves.
+- Items have no estimate or owner property (only a request brief names an
+  owner). Actual is derived only from closed leaf Work log intervals;
+  parent Actual sums descendant leaves.
 - Create writes new item files only. Relationships come from `parent` and
   `epic`; never rewrite parent child lists or rollups.
-- Never edit an existing item file: no status, dates, resolvers, checked
-  criteria, Prompt & feedback, Work log, or Commits rows, no text edits. The
-  Taskmark GitHub / Bitbucket App reconciles them from pushes and merged pull
-  requests. `/tkmd-verify` is the only, maintainer-only exception.
+- Never edit an existing item file, request brief, request log entry, or
+  meeting: no status, stages, dates, resolvers, checked criteria, Prompt &
+  feedback, Work log, or Commits rows, no text edits. The Taskmark GitHub /
+  Bitbucket App reconciles them from pushes and merged pull requests.
+  `/tkmd-verify` is the only, maintainer-only exception.
 - Execution changes product code only and never commits or pushes.
 - Parent rollups, logs, status, people, and dates are read-time derived.
 - Never generate `INDEX.md`, `SIZING.md`, `VELOCITY.md`, a generated board

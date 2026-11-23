@@ -1,8 +1,9 @@
 ---
 name: taskmark-conventions
 description: >-
-  Canonical conflict-resistant Taskmark markdown conventions. Use before
-  initializing, creating, implementing, or committing Taskmark work.
+  Canonical conflict-resistant Taskmark markdown conventions, for 2.0 request
+  boards and legacy epic boards. Use before initializing, creating,
+  implementing, or committing Taskmark work.
 ---
 
 # Taskmark conventions
@@ -11,9 +12,12 @@ description: >-
 
 - One product git root: `<product>/taskmark/`.
 - Multiple product git roots: sibling `<common>-taskmark` repository root.
-- A board contains `epics/` plus UI stubs. It does not contain `INDEX.md`,
-  `SIZING.md`, `VELOCITY.md`, or a generated dashboard `README.md`.
-- `/tkmd-init` writes a **static project README** (purpose, product
+- A board contains `requests/` and `meetings/` (2.0 request board) or legacy
+  `epics/`, plus UI stubs. It does not contain `INDEX.md`, `SIZING.md`,
+  `VELOCITY.md`, or a generated dashboard `README.md`.
+- `npx taskmark init` sets the board up (run by `/tkmd-init`); the plugin
+  hand-creates the scaffold only when npm/npx is unavailable.
+- `/tkmd-init` may write a **static project README** (purpose, product
   repositories, run, build, deploy). Single-git: product-root `README.md`,
   not nested `taskmark/README.md`. Multi-git: `README.md` at the dedicated
   sibling `*-taskmark` board root. That file is static docs, not a generated
@@ -24,6 +28,46 @@ description: >-
 - `REPOS.md` is local-generated and must be listed in the board `.gitignore`.
 - `.reports/` holds personal `/tkmd-reportme` output. It is local-generated and
   must be listed in the board `.gitignore`.
+
+## Board layouts
+
+Taskmark 2.0 boards group work under the request it delivers. Legacy boards
+keep every epic under `epics/`. A board being migrated can have both; both are
+read.
+
+Request board (2.0):
+
+```text
+requests/<slug>/brief.md                     # the request: what, why, done when
+requests/<slug>/epics/<epic-id>-<slug>/...   # epics, stories, tasks, bugs
+requests/<slug>/log/<date>-<slug>.md         # append-only request log
+meetings/<date>-<slug>.md                    # meetings, decisions, tasks
+```
+
+- A folder under `requests/` is a request only when it has `brief.md`.
+- The brief frontmatter holds `id` (`R-<slug>`), `type: request`, `title`,
+  `status` (`proposed`, `ready`, `building`, `shipped`, `shelved`,
+  `cancelled`), `requested_by`, `owner`, `created`, `updated`, `forecast`,
+  `tags`, `aliases` (old ids, such as the epic a request was migrated from),
+  `source_meetings`, and `links`. Its sections are Goal, Why, Done when, Out of
+  scope, and Open questions.
+- Epics, stories, tasks, and bugs keep exactly the same files and frontmatter
+  as on a legacy board; they just live under the request. Relationships still
+  come from `parent` and `epic`; the request comes from the folder.
+- Agents may create a **new** request (`brief.md` with status `proposed` or
+  `ready`) and new items under a request. They never edit an existing brief.
+- Request logs, meetings, task `stage` (`development`, `testing`,
+  `production`), and `shipped_at` are written by the Taskmark App and by
+  people, never by agents.
+- `npx taskmark init` migrates a legacy board (one request per epic, the epic
+  id kept as an alias). On a legacy board the plugin keeps writing under
+  `epics/` and suggests running it.
+
+Legacy board:
+
+```text
+epics/<epic-id>-<slug>/...
+```
 
 ## Board writing language
 
@@ -45,7 +89,7 @@ description: >-
 ## IDs and paths
 
 New IDs use `<type>-<identity>-<random>`, for example `T-MM-a8f31c2d`.
-Type is `E`, `S`, `T`, or `B`; identity is 2–12 uppercase letters/digits from
+Type is `E`, `S`, `T`, or `B`; identity is 2 to 12 uppercase letters/digits from
 the git user; random is at least 8 lowercase hexadecimal characters. Generate
 with `scripts/allocate-id.py` and retry if any existing path or frontmatter
 already contains the candidate.
@@ -57,13 +101,17 @@ accept both:
 ^[ESBT]-(?:[0-9]{3}|[A-Z0-9]{2,12}-[a-z0-9]{8,})$
 ```
 
-Paths:
+Request ids are `R-<slug>`, unique because the request folder name is
+unique on the board.
+
+Paths, where `<root>` is `requests/<slug>/epics` on a request board and
+`epics` on a legacy board:
 
 ```text
-epics/<epic-id>-<slug>/epic.md
-epics/<epic-id>-<slug>/stories/<story-id>-<slug>/story.md
-epics/<epic-id>-<slug>/stories/<story-id>-<slug>/items/<task-or-bug-id>-<slug>.md
-epics/<epic-id>-<slug>/items/<task-or-bug-id>-<slug>.md
+<root>/<epic-id>-<slug>/epic.md
+<root>/<epic-id>-<slug>/stories/<story-id>-<slug>/story.md
+<root>/<epic-id>-<slug>/stories/<story-id>-<slug>/items/<task-or-bug-id>-<slug>.md
+<root>/<epic-id>-<slug>/items/<task-or-bug-id>-<slug>.md
 ```
 
 Relationships come from `parent` and `epic` frontmatter. Never add child lists
@@ -84,8 +132,9 @@ Use this map only. Do not calibrate from velocity or write time estimates.
 Parent size, points, status, people, logs, and lifecycle dates are read-time
 views derived from descendants.
 
-There is no estimate or owner property. Actual is not frontmatter: the UI
-sums valid closed Started → Ended intervals from leaf Work log rows. Parent
+Items (epics, stories, tasks, bugs) have no estimate or owner property; only
+a request brief names an `owner`. Actual is not frontmatter: the UI sums
+valid closed Started → Ended intervals from leaf Work log rows. Parent
 Actual is the sum of descendant leaf Actual values.
 
 ## Status
@@ -106,7 +155,7 @@ Actual is the sum of descendant leaf Actual values.
   item description, and its acceptance or fix criteria guide the work.
 - The Taskmark GitHub / Bitbucket App reconciles. On each push and merged pull
   request it marks items done and writes status, stages, dates, resolvers,
-  checked criteria, Work log rows, and Commits rows.
+  checked criteria, Work log rows, Commits rows, and request log entries.
 - Humans accept the App's proposals in the review inbox, and shelve or cancel
   items by hand when work is dropped.
 - Agents never change an existing epic, story, task, bug, request brief, or
@@ -117,11 +166,14 @@ Actual is the sum of descendant leaf Actual values.
 
 ## Write boundaries
 
-- Create writes only files for newly created items. Once written, they are
-  read-only like every other item.
+- Create writes only files for newly created items (and a new request
+  `brief.md` on a request board). Once written, they are read-only like every
+  other item.
 - Implementation writes product code only, never board files.
 - Commits, work notes, resolvers, status, and lifecycle dates live on leaf
   files and are written by the App. Parent views aggregate descendant leaves.
+- `/tkmd-plan` and `/tkmd-save` put new work under an existing request or a
+  new request on a request board, and under `epics/` on a legacy board.
 - `/tkmd-save` creates new item files from a Cursor Plan mode plan and never
   implements, commits, or pushes.
 - `/tkmd-save-do` runs `/tkmd-save` then `/tkmd-do` only on newly created

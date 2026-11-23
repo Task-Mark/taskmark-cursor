@@ -175,7 +175,7 @@ def copy_if_needed(board: Path, stub: Path, name: str, force: bool) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("board_root", type=Path, help="Board root containing epics/")
+    ap.add_argument("board_root", type=Path, help="Board root containing requests/ or legacy epics/")
     ap.add_argument("--name", default=None, help="package.json name override")
     ap.add_argument(
         "--force",
