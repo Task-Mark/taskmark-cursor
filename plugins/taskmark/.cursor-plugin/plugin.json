@@ -1,7 +1,7 @@
 {
   "name": "taskmark",
   "displayName": "Taskmark",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Conflict-resistant epic, story, task, and bug planning in markdown with /tkmd-init, /tkmd-verify, /tkmd-plan, /tkmd-save, /tkmd-save-do, /tkmd-plan-do, /tkmd-do, /tkmd-changelog, /tkmd-version, /tkmd-reportme, and /tkmd-commit.",
   "author": {
     "name": "menda0"
