@@ -17,17 +17,17 @@ Use the existing canonical board. For one product repository it is
 
 Read `taskmark.writingLanguage` from the board `package.json`. If missing, use
 the language the user usually uses with the Cursor agent. Write titles,
-descriptions, goals, user stories, acceptance criteria, and Prompt & feedback
-summaries in that language even when chat is in another language. Do not
-translate existing committed markdown.
+descriptions, goals, user stories, and acceptance criteria in that language
+even when chat is in another language. Do not translate existing committed
+markdown.
 
 Before planning anything new, search all open and done epics, stories, tasks,
 and bugs. Compare the request with titles, descriptions, goals, user stories,
 acceptance/fix criteria, and parent context.
 
 - If an exact or overlapping item already covers the request, create nothing.
-  Report the matching ID and path, then suggest `/tkmd-do` for open work or
-  Prompt & feedback on the matching done leaf for follow-up.
+  Report the matching ID and path, then suggest `/tkmd-do` on that match, for
+  open work or for follow-up on done work.
 - Prefer attaching work to an existing fitting story or epic over creating a
   parallel hierarchy.
 - Create a new epic only for a distinct initiative that fits nowhere on the
@@ -102,7 +102,10 @@ Never use a shared counter or `NEXT_IDS` file. Existing `E-NNN`, `S-NNN`,
 Create all required directories, but write only each new item's own markdown.
 Never edit an existing `epic.md`, `story.md`, or leaf. Never write child lists.
 Planning is append-by-new-file only: it must not rewrite existing parents or
-leaves, even to add links, rollups, logs, status, people, or dates.
+leaves, even to add links, rollups, logs, status, people, or dates. After the
+files are written, they belong to the board like any other item: later
+sessions treat them as read-only (see "Reconciliation belongs to the App" in
+`taskmark-conventions`).
 
 Use common frontmatter:
 
@@ -152,8 +155,8 @@ acceptance criteria. Task/bug leaves additionally contain:
 |-------|---------------|-------------|---------|
 ```
 
-Every newly planned task/bug leaf must include a `prompt` row summarizing the
-current user request. Never write Prompt & feedback on an epic or story file.
+Leave those tables empty. The Taskmark App fills Commits and Work log from
+pushes and merged pull requests; agents never write rows into them.
 
 If work needs a missing parent, create the smallest explicit hierarchy needed
 in the same operation. Creating those new parent files is allowed; modifying

@@ -13,12 +13,19 @@ Migrate an **existing** board to today’s layout. Keep `/tkmd-init` as first
 create / light repair. Do not skip discovery. Do not translate item bodies or
 rewrite IDs.
 
+This is a maintainer-only migration and the only exception to "Reconciliation
+belongs to the App" in `taskmark-conventions`: it may rewrite existing item
+files, but only to drop retired layout. It never touches status, dates,
+resolvers, acceptance criteria, Prompt & feedback, Work log, or Commits.
+
 ## Non-negotiable safety
 
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.
 - Never create `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or `CHANGELOG.md`.
 - Never delete an existing `CHANGELOG.md`, `epics/`, `node_modules/`, or `out/`.
-- Never set an item to `in_progress`.
+- Never set an item to `in_progress` or change any status.
+- Never add, edit, or remove status, lifecycle dates, resolvers, criteria
+  checkboxes, or Prompt & feedback, Work log, or Commits rows or sections.
 - Default is apply plus a summary. If the user asks not to write yet, run
   `verify-board.py --dry-run` and report what would change.
 
@@ -87,11 +94,12 @@ The same `verify-board.py` scan of `epics/**/*.md` is mechanical only:
 - Strip retired frontmatter: `owner`, `estimate_minutes`, `estimate_source`,
   `estimate_basis`, `actual_minutes`, `actual_ms`, `size_source`, `size_basis`,
   `points_source`, `session_cap_minutes`.
-- Keep current spec keys, titles, bodies, acceptance criteria, and
-  `in_progress` status. Do not rewrite IDs (legacy sequential IDs stay valid).
+- Keep current spec keys, titles, bodies, acceptance criteria, and every
+  status. Do not rewrite IDs (legacy sequential IDs stay valid).
 - On `epic.md` and `story.md` only, remove child-list sections (`## Stories`
-  and similar) and parent Commits / Work log / Prompt & feedback sections.
-- Do not strip Prompt & feedback, Commits, or Work log from task/bug leaves.
+  and similar).
+- Leave Prompt & feedback, Commits, and Work log sections untouched on every
+  file, parents included.
 
 ## Report
 

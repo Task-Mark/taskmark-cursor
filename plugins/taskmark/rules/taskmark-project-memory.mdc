@@ -5,46 +5,58 @@ alwaysApply: true
 
 # Taskmark project memory
 
-If a Taskmark board exists in the workspace, treat it as the source of truth for planned, in-flight, and done product work.
+If a Taskmark board exists in the workspace, treat it as the read-only reference for planned, in-flight, and done product work.
+
+## Reconciliation belongs to the App
+
+- Agents read and plan. The request brief, the item description, and its
+  acceptance or fix criteria guide the implementation.
+- The Taskmark GitHub / Bitbucket App reconciles on each push and merged pull
+  request: done status, stages, dates, resolvers, checked criteria, Work log,
+  Commits, and shelving.
+- Humans accept the App's proposals in the review inbox.
+- Never change an existing epic, story, task, bug, request brief, or meeting
+  file in any way: no status, dates, resolvers, checked criteria, Prompt &
+  feedback, Work log, or Commits rows, and no text edits.
+
+## Rules
 
 1. Board location:
    - One git product: `<project>/taskmark/`.
    - Multiple git products: dedicated sibling `<common>-taskmark` repository
      root. Never copy the board into product repos.
    - `REPOS.md` is local-generated and gitignored.
-2. Before product work, search for a matching item. Prefer an open task/bug
-   that fits; if the work is follow-up on something already shipped, append
-   Prompt & feedback on that done leaf. Use `/tkmd-plan`, `/tkmd-save`,
-   `/tkmd-save-do`, or `/tkmd-plan-do` only when nothing fits. Every session
-   that does product work writes a `prompt` (and `feedback` when the user
-   replies) row on the chosen leaf — never on `epic.md` or `story.md`.
+2. Before product work, search for a matching item and use it as the spec,
+   whether it is open or already done. Use `/tkmd-plan`, `/tkmd-save`,
+   `/tkmd-save-do`, or `/tkmd-plan-do` only when nothing fits.
 3. Use only `/tkmd-init`, `/tkmd-verify`, `/tkmd-plan`, `/tkmd-save`,
-   `/tkmd-save-do`, `/tkmd-plan-do`, `/tkmd-do`, `/tkmd-shelf`,
-   `/tkmd-changelog`, `/tkmd-version`, `/tkmd-reportme`, and `/tkmd-commit`.
+   `/tkmd-save-do`, `/tkmd-plan-do`, `/tkmd-do`, `/tkmd-changelog`,
+   `/tkmd-version`, `/tkmd-reportme`, and `/tkmd-commit`.
 4. Creation writes new item files only. Never edit existing parent markdown to
    add links, rollups, logs, people, status, or dates.
 5. `/tkmd-do` implements the target, never commits or pushes, never uses an
-   `in_progress` stage, and marks each successfully executed leaf `done` before
-   stopping. During execution, only those leaf board files may change.
-6. `/tkmd-shelf` discards never-implemented work without committing or pushing.
-   It writes only eligible task/bug leaves as `status: shelved`; parent markdown
-   remains unchanged.
-7. `/tkmd-commit` is the only user command that commits.
-8. `/tkmd-changelog` writes only board-root `CHANGELOG.md`. `/tkmd-version`
+   `in_progress` stage, and never touches board files. Before changing code it
+   works on a branch whose name contains the item id (`<id>-<short-slug>`).
+   Commits keep the id in the branch or message; the `prepare-commit-msg` hook
+   from `npx taskmark hooks install` adds a `Task: <id>` trailer.
+6. `/tkmd-commit` is the only user command that commits.
+7. `/tkmd-changelog` writes only board-root `CHANGELOG.md`. `/tkmd-version`
    writes that changelog plus the chosen SemVer on the board `package.json`,
    every linked product-root `package.json`, and the Cursor plugin
    `plugin.json`. They never commit or write a README changelog.
    `/tkmd-reportme` writes only `.reports/report-YYYYMMDD.md` on the board,
    reporting the current git identity's done leaves since the previous report.
    That directory is local-generated and gitignored.
-9. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
+8. Parent hierarchy, rollups, logs, status, implementers, and lifecycle dates
    are read-time views over descendant leaves.
-10. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a
-    generated board dashboard README. `/tkmd-init` may create or repair the
-    static project README (product-root, or `*-taskmark` board root).
-    `/tkmd-verify` may delete leftover generated files and strip legacy item
-    markdown. Never write a Last synced field or a README changelog.
-11. Agent-written board markdown uses the board writing language stored as
+9. Never create or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or a
+   generated board dashboard README. `/tkmd-init` may create or repair the
+   static project README (product-root, or `*-taskmark` board root).
+   `/tkmd-verify` is the only exception for existing items: a maintainer-only
+   migration that deletes leftover generated files and strips retired
+   frontmatter and parent child lists, never status, logs, commits, or
+   criteria. Never write a Last synced field or a README changelog.
+10. Agent-written board markdown uses the board writing language stored as
     `taskmark.writingLanguage` in board `package.json` (any language chosen at
     init; default is the usual Cursor-agent language). Chat language does not
     change that. If the field is missing, use the init default. Do not

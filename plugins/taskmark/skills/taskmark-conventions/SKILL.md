@@ -35,10 +35,10 @@ description: >-
 - Read that field at the start of every `/tkmd-*` session that writes markdown.
   If it is missing, follow the same init default. Do not invent a second
   ad-hoc locale.
-- Write work-item markdown (titles, descriptions, goals, user stories,
-  acceptance/fix criteria, Prompt & feedback summaries, work-log summaries),
-  changelog prose, the static project README, and other agent-authored board
-  markdown in that stored language even when the chat is in another language.
+- Write new work-item markdown (titles, descriptions, goals, user stories,
+  acceptance/fix criteria), changelog prose, the static project README, and
+  other agent-authored board markdown in that stored language even when the
+  chat is in another language.
 - Do not translate existing committed markdown unless the current task
   explicitly rewrites that file.
 
@@ -94,42 +94,51 @@ Actual is the sum of descendant leaf Actual values.
 - `done`, `shelved`, and `cancelled` are terminal.
 - `done` means implemented; `shelved` means deliberately discarded without
   implementation; `cancelled` remains a separate legacy/latch outcome.
-- `/tkmd-shelf` sets only eligible task/bug leaves to `status: shelved` with
-  `completed_at` set. It does not check acceptance criteria, set
-  `cancelled: true`, or edit parent markdown.
 - Parent status is derived from descendants: a terminal mix containing at least
   one done leaf rolls up to `done`; without done, any shelved leaf rolls up to
   `shelved`; all cancelled leaves roll up to `cancelled`.
 - Hide-completed and completeness sorting treat all three terminal statuses as
   complete.
 
+## Reconciliation belongs to the App
+
+- Agents read and plan. The board is the reference: the request brief, the
+  item description, and its acceptance or fix criteria guide the work.
+- The Taskmark GitHub / Bitbucket App reconciles. On each push and merged pull
+  request it marks items done and writes status, stages, dates, resolvers,
+  checked criteria, Work log rows, Commits rows, and shelving.
+- Humans accept the App's proposals in the review inbox.
+- Agents never change an existing epic, story, task, bug, request brief, or
+  meeting file in any way: no status, dates, resolvers, checked criteria,
+  Prompt & feedback, Work log, or Commits rows, and no text edits.
+- Agents help the App match work through branch names and commit messages
+  that contain the item id.
+
 ## Write boundaries
 
-- Create writes only files for newly created items.
-- Execution writes only the task/bug leaf files actually implemented.
-- Epic and story files are immutable while adding or executing descendants.
-- Prompt/feedback, commits, work notes, implementers, status, and lifecycle
-  dates live on leaf files. Parent views aggregate descendant leaves.
-- Every agent session that changes product work appends Prompt & feedback on a
-  matching leaf: prefer an open task/bug that fits, else a done leaf whose
-  scope still covers the change, else create a new task/bug. Never write those
-  rows on `epic.md` or `story.md`.
+- Create writes only files for newly created items. Once written, they are
+  read-only like every other item.
+- Implementation writes product code only, never board files.
+- Commits, work notes, resolvers, status, and lifecycle dates live on leaf
+  files and are written by the App. Parent views aggregate descendant leaves.
 - `/tkmd-save` creates new item files from a Cursor Plan mode plan and never
   implements, commits, or pushes.
 - `/tkmd-save-do` runs `/tkmd-save` then `/tkmd-do` only on newly created
   items; it never commits or pushes and never uses `in_progress`.
 - `/tkmd-plan-do` runs `/tkmd-plan` then `/tkmd-do` only on newly created
   items; it never commits or pushes and never uses `in_progress`.
-- `/tkmd-do` never commits or pushes, never uses `in_progress`, and never
+- `/tkmd-do` works on a branch whose name contains the item id, never touches
+  board files, never commits or pushes, never uses `in_progress`, and never
   writes `CHANGELOG.md`.
 - `/tkmd-verify` migrates an existing board (scaffold repair, delete leftover
-  generated files, strip retired frontmatter and parent-only sections). It
-  never commits or pushes and never creates `INDEX.md`, `SIZING.md`,
-  `VELOCITY.md`, or `CHANGELOG.md`.
-- `/tkmd-shelf` never implements, commits, pushes, or edits parent markdown.
+  generated files, strip retired frontmatter and parent child lists). It is
+  the only command that rewrites existing item files, it is maintainer-only,
+  and it never touches status, logs, commits, or criteria. It never commits
+  or pushes and never creates `INDEX.md`, `SIZING.md`, `VELOCITY.md`, or
+  `CHANGELOG.md`.
 - `/tkmd-changelog` rebuilds Unreleased in board-root `CHANGELOG.md` from
-  done leaves completed after the last release and from post-cutoff Prompt
-  & feedback or Work log rows on already-done leaves, in the board writing
+  done leaves completed after the last release and from post-cutoff Work log
+  rows (written by the App) on already-done leaves, in the board writing
   language. It never edits item markdown, the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into `## x.y.z - YYYY-MM-DD`, sets that
   SemVer on the board `package.json`, every linked product-root `package.json`,
@@ -155,8 +164,7 @@ Each Unreleased bullet is one user-visible outcome in past tense. Newly
 completed leaves (completed after the last dated release) are phrased from
 the user story, acceptance criteria, or title. Follow-up work on a leaf
 already completed on or before that cutoff is phrased from post-cutoff Work
-log summaries first, then Prompt & feedback rows — not from the original
-title. Do not repeat an outcome that already appears in a released section.
+log summaries, not from the original title. Do not repeat an outcome that already appears in a released section.
 Visible text must not include work-item codes (`T-` / `B-` / `S-` / `E-`).
 Related leaves or follow-ups from the same story may be merged when that
 reads better.

@@ -19,8 +19,8 @@ board writing language.
 - Never set an item to `in_progress`; there is no start stage.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
   `README.md`, `CHANGELOG.md`, or `REPOS.md`.
-- Planning writes new item files only. The do phase may change only executed
-  leaf markdown among existing board files.
+- Planning writes new item files only. The do phase follows `tkmd-do` and
+  changes no board file, including the items just created.
 
 ## Plan first
 
@@ -34,7 +34,7 @@ Record every markdown path created in this planning step.
 
 When an exact or overlapping item already covers the request, create nothing.
 Report the matching ID and path. Do not start implementation. Suggest
-`/tkmd-do` for open work or Prompt & feedback on the matching done leaf.
+`/tkmd-do` on that match.
 
 ## Implement only newly created items
 
@@ -48,9 +48,11 @@ work:
   leaf.
 - Do not implement pre-existing open items that planning did not create.
 
-During the do phase, follow `tkmd-do` safety and completion rules: no commit,
-no push, no `in_progress`; mark successfully executed leaves `done` in those
-leaf files only.
+During the do phase, follow `tkmd-do` in full: no commit, no push, no
+`in_progress`, work on a branch named after the new item id (the highest new
+parent id when several leaves were created), and no edits to any board file,
+including the items just created. The Taskmark App marks them done after the
+work is merged.
 
 Return the planned hierarchy, implemented leaves, checks, blockers, and
 uncommitted changes.

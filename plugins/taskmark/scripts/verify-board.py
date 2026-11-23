@@ -2,8 +2,10 @@
 """Migrate an existing Taskmark board to the current layout.
 
 Deletes leftover generated files at the canonical board root and strips
-retired frontmatter / parent-only sections from item markdown. Does not
-commit, push, create INDEX/SIZING/VELOCITY/CHANGELOG, or rewrite IDs.
+retired frontmatter / parent child lists from item markdown. Does not
+commit, push, create INDEX/SIZING/VELOCITY/CHANGELOG, or rewrite IDs. Never
+touches status, dates, resolvers, criteria, or Prompt & feedback / Commits /
+Work log sections: those are reconciled by the Taskmark App.
 
 Usage:
   python3 verify-board.py <board-root> [--dry-run] [--workspace PATH ...]
@@ -48,9 +50,6 @@ PARENT_DROP_HEADINGS = {
     "children",
     "work items",
     "child list",
-    "prompt & feedback",
-    "commits",
-    "work log",
 }
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 KEY_RE = re.compile(r"^([A-Za-z0-9_]+)\s*:")

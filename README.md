@@ -13,19 +13,22 @@ tasks, and bugs remain useful across chats without generated board files.
 | `/tkmd-save` | Turn a Cursor Plan mode plan into board items, keeping diagrams/visuals |
 | `/tkmd-save-do` | Save like `/tkmd-save`, then implement only the newly created items |
 | `/tkmd-plan-do` | Plan like `/tkmd-plan`, then implement only the newly created items |
-| `/tkmd-do` | Implement a target and finish executed leaves without committing |
-| `/tkmd-shelf` | Discard never-implemented work as shelved without committing |
+| `/tkmd-do` | Implement a target on an id-named branch without touching the board or committing |
 | `/tkmd-changelog` | Rebuild CHANGELOG Unreleased from recent done work and post-release follow-ups |
 | `/tkmd-version` | Promote Unreleased and set that SemVer on every linked product |
 | `/tkmd-reportme` | Report my done work since the last report into `.reports/` |
 | `/tkmd-commit` | Commit dirty linked repositories (the only commit command) |
 
-`/tkmd-plan-do`, `/tkmd-save-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-verify`, `/tkmd-shelf`, `/tkmd-changelog`,
+`/tkmd-plan-do`, `/tkmd-save-do`, `/tkmd-do`, `/tkmd-save`, `/tkmd-verify`, `/tkmd-changelog`,
 `/tkmd-version`, and `/tkmd-reportme` never commit or push. Do, plan-do, and save-do do not use an
-`in_progress` stage; shelf keeps discarded work distinct from done. Changelog
-and version write `CHANGELOG.md` (and `/tkmd-version` the same SemVer on every
-linked product), never a README changelog. Agent sessions log Prompt & feedback on a matching leaf,
-including a done task that still fits.
+`in_progress` stage. Changelog and version write `CHANGELOG.md` (and
+`/tkmd-version` the same SemVer on every linked product), never a README
+changelog.
+
+Agents read the board and plan new items; they never edit existing items.
+The Taskmark GitHub / Bitbucket App reconciles status, dates, resolvers,
+criteria, Work log, and Commits on each push and merged pull request, and
+humans accept its proposals in the review inbox.
 
 ## Board layout
 

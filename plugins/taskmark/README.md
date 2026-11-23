@@ -9,8 +9,9 @@ Taskmark exposes these user commands:
   the user usually uses with the Cursor agent), and writes or repairs a
   static project README (not a generated dashboard).
 - `/tkmd-verify` migrates an existing board to the current layout: repairs
-  scaffold like init, deletes leftover generated files, and strips legacy
-  item markdown. It never commits or pushes.
+  scaffold like init, deletes leftover generated files, and strips retired
+  frontmatter and parent child lists. It is maintainer-only, never touches
+  status, logs, commits, or criteria, and never commits or pushes.
 - `/tkmd-plan` searches the canonical board and creates the smallest useful
   hierarchy from prose using collision-resistant IDs.
 - `/tkmd-save` turns a Cursor Plan mode plan into epic, story, task, and bug
@@ -22,16 +23,13 @@ Taskmark exposes these user commands:
 - `/tkmd-plan-do` runs the same planning as `/tkmd-plan`, then implements only
   the newly created items like `/tkmd-do`. If planning creates nothing, it
   reports the match and skips implementation.
-- `/tkmd-do` implements a target, never commits or pushes, and finishes only
-  executed leaf files. Agent sessions log Prompt & feedback on a matching
-  leaf (including a done task that still fits) or create a new task when
-  nothing matches.
-- `/tkmd-shelf` discards never-implemented work as `status: shelved`, never
-  commits or pushes, and changes only eligible task/bug leaf files.
+- `/tkmd-do` implements a target using the item as the spec, on a branch
+  whose name contains the item id. It never touches board files, commits, or
+  pushes.
 - `/tkmd-changelog` rebuilds the Unreleased section of board-root
-  `CHANGELOG.md` from recent done work and from post-release follow-ups
-  logged as Prompt & feedback or Work log on already-done leaves, in the
-  board writing language. It never writes the README, commits, or pushes.
+  `CHANGELOG.md` from recent done work and from post-release Work log
+  follow-ups on already-done leaves, in the board writing language. It never
+  writes the README, commits, or pushes.
 - `/tkmd-version` promotes Unreleased into a dated `x.y.z` section and sets
   that SemVer on the board `package.json`, every linked product-root
   `package.json`, and the Cursor plugin `plugin.json`. It never tags,
@@ -64,6 +62,13 @@ product root (single-git) or the dedicated `*-taskmark` board root
 `/tkmd-changelog` and `/tkmd-version`.
 
 Parent relationships and rollups are queried at read time. Creating descendants
-does not rewrite parent files; executing work changes only implemented leaves.
+does not rewrite parent files.
+
+Agents treat existing items as read-only. The Taskmark GitHub / Bitbucket App
+reconciles status, dates, resolvers, criteria, Work log, and Commits on each
+push and merged pull request, and humans accept its proposals in the review
+inbox. Keep the item id in the branch name or commit message; the
+`prepare-commit-msg` hook from `npx taskmark hooks install` adds a
+`Task: <id>` trailer.
 
 For plugin development, run `scripts/rsync-plugin-local.sh` after changes.

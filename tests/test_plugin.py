@@ -26,7 +26,6 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-plan-do",
                 "tkmd-commit",
                 "tkmd-do",
-                "tkmd-shelf",
                 "tkmd-changelog",
                 "tkmd-version",
                 "tkmd-reportme",
@@ -66,7 +65,6 @@ class PluginSurfaceTests(unittest.TestCase):
                 "tkmd-save",
                 "tkmd-save-do",
                 "tkmd-do",
-                "tkmd-shelf",
                 "tkmd-changelog",
                 "tkmd-version",
                 "tkmd-reportme",
@@ -106,7 +104,7 @@ class PluginSurfaceTests(unittest.TestCase):
             "parent: <story-id>",
             "parent: <epic-id>",
             "Never edit an existing `epic.md`, `story.md`, or leaf",
-            "Every newly planned task/bug leaf must include a `prompt` row",
+            "Leave those tables empty",
             "taskmark.writingLanguage",
         ):
             self.assertIn(instruction, normalized_plan_skill)
@@ -252,7 +250,7 @@ class PluginSurfaceTests(unittest.TestCase):
             re.compile(r"^[ESBT]-(?:[0-9]{3}|[A-Z0-9]{2,12}-[a-z0-9]{8,})$"),
         )
 
-    def test_agent_sessions_log_prompt_on_matching_leaf(self) -> None:
+    def test_agents_treat_existing_items_as_read_only(self) -> None:
         do_skill = (PLUGIN / "skills" / "tkmd-do" / "SKILL.md").read_text(
             encoding="utf-8"
         )
@@ -262,16 +260,20 @@ class PluginSurfaceTests(unittest.TestCase):
         conventions = (PLUGIN / "skills" / "taskmark-conventions" / "SKILL.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("Prompt & feedback", do_skill)
-        self.assertIn("Create a new leaf only when", do_skill)
-        self.assertIn("Prompt & feedback", memory)
-        self.assertIn("done leaf", conventions)
+        normalized_do = " ".join(do_skill.split())
+        self.assertIn("Never edit, rename, move, or delete any existing board file", normalized_do)
+        self.assertIn("Do not log anything on the item", normalized_do)
+        self.assertIn("`<id>-<short-slug>`", normalized_do)
+        self.assertIn("npx taskmark hooks install", normalized_do)
+        self.assertIn("Reconciliation belongs to the App", memory)
+        self.assertIn("Reconciliation belongs to the App", conventions)
+        self.assertNotIn("appends Prompt & feedback", conventions)
+        self.assertNotIn("appends Prompt & feedback", memory)
         self.assertIn("no estimate or owner property", conventions)
         self.assertIn("closed Started → Ended intervals", conventions)
         self.assertIn("taskmark.writingLanguage", conventions)
         self.assertNotIn("Portuguese-only", conventions)
         self.assertIn("board writing language", memory)
-        self.assertIn("board writing language", do_skill)
 
     def test_changelog_skills_follow_board_language_not_hardcoded_portuguese(self) -> None:
         changelog = (PLUGIN / "skills" / "tkmd-changelog" / "SKILL.md").read_text(
@@ -313,7 +315,7 @@ class PluginSurfaceTests(unittest.TestCase):
             normalized_do_skill,
         )
         self.assertIn(
-            "requires zero open, non-cancelled, non-shelved task/bug leaves",
+            "Do not voluntarily stop after a subset",
             normalized_do_skill,
         )
         self.assertIn(
@@ -321,7 +323,7 @@ class PluginSurfaceTests(unittest.TestCase):
             normalized_do_command,
         )
         self.assertIn(
-            "Do not stop successfully until all required descendants are done",
+            "report the whole target incomplete",
             normalized_do_command,
         )
 
@@ -370,28 +372,13 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertEqual(pkg["customKey"], "stay")
             self.assertFalse(FORBIDDEN_BOARD_FILES.intersection(p.name for p in board.iterdir()))
 
-    def test_shelf_command_and_skill_define_terminal_leaf_writes(self) -> None:
-        shelf_skill = (PLUGIN / "skills" / "tkmd-shelf" / "SKILL.md").read_text(
-            encoding="utf-8"
-        )
-        shelf_command = (PLUGIN / "commands" / "tkmd-shelf.md").read_text(
-            encoding="utf-8"
-        )
-        normalized_skill = " ".join(shelf_skill.split())
-        normalized_command = " ".join(shelf_command.split())
-
-        for instruction in (
-            "status: shelved",
-            "Never run `git commit`",
-            "Never edit epic or story markdown",
-            "Never set `cancelled: true`",
-            "open, non-cancelled, non-shelved",
-            "Set `updated` and `completed_at`",
-            "Preserve `cancelled: false`",
-        ):
-            self.assertIn(instruction, normalized_skill)
-        self.assertIn("Use the `tkmd-shelf` skill", normalized_command)
-        self.assertIn("never commits or pushes", normalized_command)
+    def test_shelf_command_is_removed(self) -> None:
+        self.assertFalse((PLUGIN / "skills" / "tkmd-shelf").exists())
+        self.assertFalse((PLUGIN / "commands" / "tkmd-shelf.md").exists())
+        for path in [*PLUGIN.rglob("*.md"), *PLUGIN.rglob("*.mdc"), *PLUGIN.rglob("*.json")]:
+            if "node_modules" in path.parts:
+                continue
+            self.assertNotIn("tkmd-shelf", path.read_text(encoding="utf-8"), str(path))
 
     def test_reportme_reports_own_done_work_since_last_report(self) -> None:
         skill = (PLUGIN / "skills" / "tkmd-reportme" / "SKILL.md").read_text(
@@ -529,7 +516,8 @@ class PluginSurfaceTests(unittest.TestCase):
                 "---\n\n"
                 "# E-001: Legacy\n\n"
                 "## Goal\n\nKeep this.\n\n"
-                "## Stories\n\n- S-001 child list\n",
+                "## Stories\n\n- S-001 child list\n\n"
+                "## Work log\n\n- legacy parent row\n",
                 encoding="utf-8",
             )
             (items / "T-001-leaf.md").write_text(
@@ -593,6 +581,7 @@ class PluginSurfaceTests(unittest.TestCase):
             self.assertNotIn("owner:", epic)
             self.assertNotIn("estimate_minutes:", epic)
             self.assertNotIn("## Stories", epic)
+            self.assertIn("legacy parent row", epic)
             self.assertIn("status: in_progress", epic)
             self.assertIn("id: E-001", epic)
             self.assertIn("## Goal", epic)

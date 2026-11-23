@@ -43,8 +43,7 @@ title, sections, and todos with titles, descriptions, goals, user stories,
 acceptance/fix criteria, and parent context.
 
 If an exact or overlapping item already covers the plan, create nothing.
-Report the matching ID and path, then suggest `/tkmd-do` for open work or
-Prompt & feedback on the matching done leaf.
+Report the matching ID and path, then suggest `/tkmd-do` on that match.
 
 Prefer attaching work to an existing fitting story or epic over creating a
 parallel hierarchy. Create a new epic only for a distinct initiative that fits
@@ -69,10 +68,8 @@ Strongly split XL unless it is one indivisible executable unit. Items created
 with children use `size: null` and `points: null`.
 
 Allocate IDs with `scripts/allocate-id.py`. Write only each new item's own
-markdown, in the board writing language. Every newly planned task/bug leaf
-must include a `prompt` row summarizing that the work came from this Cursor
-plan (summary in the board language). Never write Prompt & feedback on an
-epic or story file.
+markdown, in the board writing language, using the `tkmd-plan` template. Leave
+its log tables empty; the Taskmark App fills them.
 
 ## Carry plan diagrams and visuals
 

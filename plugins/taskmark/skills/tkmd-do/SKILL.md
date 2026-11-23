@@ -1,25 +1,28 @@
 ---
 name: tkmd-do
 description: >-
-  Implement a Taskmark target without committing or pushing. Changes only
-  executed leaf markdown and marks completed leaves done before stopping.
+  Implement a Taskmark target using the board item as the spec, without
+  committing, pushing, or touching any board file. Works on a branch named
+  after the item so the Taskmark App can reconcile it.
 ---
 
 # tkmd-do
 
-Read `taskmark-conventions` first.
+Read `taskmark-conventions` first, including "Reconciliation belongs to the
+App".
 
-Write new and updated leaf markdown in the board writing language
-(`taskmark.writingLanguage`, or the Cursor-agent usual language if missing).
-Chat language does not change the written language. Do not translate existing
-committed markdown unless the current leaf explicitly requires rewriting that
-file.
+The board is a read-only reference here. The request brief, the item
+description, and its acceptance or fix criteria are the spec. The Taskmark
+GitHub / Bitbucket App marks work done from pushes and merged pull requests.
 
 ## Non-negotiable safety
 
 - Never run `git commit`, `commit-all-repos.sh`, `git push`, or any equivalent.
-- Never set an item to `in_progress`; there is no start stage.
-- Never edit parent markdown to reflect descendant work.
+- Never edit, rename, move, or delete any existing board file: no status, no
+  dates, no resolvers, no checked criteria, no Prompt & feedback, Work log, or
+  Commits rows, no text edits. This includes the target and its parents.
+- Never create new board items. Planning belongs to `/tkmd-plan`,
+  `/tkmd-save`, `/tkmd-plan-do`, and `/tkmd-save-do`.
 - Never generate or refresh `INDEX.md`, `SIZING.md`, `VELOCITY.md`, board
   `README.md`, `CHANGELOG.md`, or `REPOS.md`.
 - Never run `/tkmd-changelog` or `/tkmd-version`.
@@ -30,55 +33,54 @@ Accept an ID, markdown path, or unambiguous title. Search frontmatter and
 filenames using both legacy IDs (`T-297`) and collision-resistant IDs
 (`T-MM-a8f31c2d`).
 
-- Task/bug target: execute that leaf unless it is cancelled or shelved. Those
-  terminal outcomes are not implementation scope.
+- Task/bug target: implement that leaf unless it is cancelled or shelved.
+  Those terminal outcomes are not implementation scope.
 - Story/epic target: derive every descendant task/bug leaf by `parent`/`epic`
   frontmatter before implementation. Every open, non-cancelled, non-shelved
-  descendant is mandatory scope: implement and complete all of them, even when
-  the user's prompt mentions only the parent ID.
-- A target story/epic with no child items is itself a structural leaf and may
-  be executed and completed in its own file.
+  descendant is mandatory scope: implement all of them, even when the user's
+  prompt mentions only the parent ID.
+- A target story/epic with no child items is itself a structural leaf; its own
+  description and criteria are the spec.
+- A target that is already `done`: treat the request as follow-up and just
+  implement it. Do not log anything on the item.
 
-Read parent context, but treat parent fields and sections as immutable.
+If nothing on the board fits the request, do not invent an item. Suggest
+`/tkmd-plan-do` (or `/tkmd-plan`) instead.
 
-When the request is follow-up on work already `done`, append Prompt &
-feedback (and a Work log row if you spent time) on that existing leaf
-instead of inventing a duplicate task. Create a new leaf only when no
-open or done task/bug still covers the request.
+Read parent context and the request brief, but never write to them.
+
+## Branch
+
+Before changing code in each product repository you touch:
+
+1. The branch id is the target task/bug id. For a story/epic target with
+   several leaves, use the story or epic id.
+2. If the current branch name already contains that id, stay on it.
+3. Otherwise create and switch to `<id>-<short-slug>` from the current branch,
+   for example `T-MM-457b0290-login-mockup`. Use a short lowercase slug from
+   the item title. If that branch already exists, ask before reusing it.
+
+Never commit or push on that branch.
 
 ## Implement
 
-1. Read the target acceptance criteria and relevant product code.
+1. Read the target acceptance criteria, the request brief, and relevant
+   product code.
 2. Make the required product changes.
-3. Run checks appropriate to each executed leaf.
-4. For every successfully executed leaf, update that leaf exactly once at the
-   end:
-   - check acceptance criteria that were actually met;
-   - set `status: done`;
-   - set `updated` and `completed_at` to current UTC ISO-8601;
-   - set `started_at` to the execution start if it is null;
-   - add the current git identity to `resolvers`;
-   - append concise Prompt & feedback (`prompt` for the user request,
-     `feedback` for later notes) and Work log rows when those sections
-     exist. Work-log time belongs only to that leaf. Every session that
-     did product work must leave at least one prompt row on the chosen
-     leaf.
-5. Do not mark blocked, skipped, or incomplete leaves done. Report their
-   blockers.
-6. For a story/epic target, re-scan all descendants before stopping. Success
-   requires zero open, non-cancelled, non-shelved task/bug leaves. Do not
-   voluntarily stop after a subset, and do not describe the parent target as
-   complete while any mandatory descendant remains open. A definitive blocker
-   may leave a leaf open, but the command must then report the whole parent
-   target incomplete.
+3. Run checks appropriate to each implemented leaf.
+4. For a story/epic target, implement every mandatory leaf. Do not
+   voluntarily stop after a subset. A definitive blocker may leave a leaf
+   unimplemented; report the whole parent target incomplete.
 
-Story and epic status are read-time rollups. Completing all descendant leaves
-makes those parents done; never write status or lifecycle fields to parent
-markdown.
+Before stopping, inspect the board diff. No existing board file may differ.
+New product files and normal product-code edits are allowed.
 
-Before stopping, inspect the board markdown diff. Among existing board
-markdown, only successfully executed leaf files may differ. New product files
-and normal product-code edits are allowed. Do not write parent rollups, logs,
-status, resolvers, points, or lifecycle dates; the UI derives them at read time.
+## Report
 
-Return implemented leaves, checks, blockers, and uncommitted changes.
+Return implemented leaves, the criteria each one meets, checks, blockers, the
+branch per repository, and uncommitted changes. Tell the user:
+
+- Commits must keep the item id in the branch name or the commit message. The
+  `prepare-commit-msg` hook from `npx taskmark hooks install` adds a
+  `Task: <id>` trailer automatically.
+- The Taskmark App marks the item done when the work is merged and CI passes.
