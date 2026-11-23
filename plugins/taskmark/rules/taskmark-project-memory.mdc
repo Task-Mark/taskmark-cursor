@@ -13,8 +13,9 @@ If a Taskmark board exists in the workspace, treat it as the read-only reference
   acceptance or fix criteria guide the implementation.
 - The Taskmark GitHub / Bitbucket App reconciles on each push and merged pull
   request: done status, stages, dates, resolvers, checked criteria, Work log,
-  Commits, and shelving.
-- Humans accept the App's proposals in the review inbox.
+  and Commits.
+- Humans accept the App's proposals in the review inbox, and shelve or cancel
+  items by hand when work is dropped.
 - Never change an existing epic, story, task, bug, request brief, or meeting
   file in any way: no status, dates, resolvers, checked criteria, Prompt &
   feedback, Work log, or Commits rows, and no text edits.

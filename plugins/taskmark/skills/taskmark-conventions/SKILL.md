@@ -106,8 +106,9 @@ Actual is the sum of descendant leaf Actual values.
   item description, and its acceptance or fix criteria guide the work.
 - The Taskmark GitHub / Bitbucket App reconciles. On each push and merged pull
   request it marks items done and writes status, stages, dates, resolvers,
-  checked criteria, Work log rows, Commits rows, and shelving.
-- Humans accept the App's proposals in the review inbox.
+  checked criteria, Work log rows, and Commits rows.
+- Humans accept the App's proposals in the review inbox, and shelve or cancel
+  items by hand when work is dropped.
 - Agents never change an existing epic, story, task, bug, request brief, or
   meeting file in any way: no status, dates, resolvers, checked criteria,
   Prompt & feedback, Work log, or Commits rows, and no text edits.
